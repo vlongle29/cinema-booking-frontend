@@ -1,0 +1,147 @@
+:root {
+   --primary-color: #f84565;
+   --primary-light: rgba(248, 69, 101, 0.1);
+   --secondary-color: #09090b;
+   --text-primary: #ffffff;
+   --text-secondary: #d1d5dc;
+   --text-muted: #797b7d;
+   --border-color: rgba(183, 183, 183, 0.15);
+   --bg-dark: #09090b;
+   --bg-card: #12161c;
+   --with-common: 1300px;
+}
+
+/* ======================= */
+/* FOOTER */
+/* ======================= */
+
+.footer {
+   margin-top: 100px;
+   padding: 60px 40px 40px;;
+   margin-left: auto;
+   margin-right: auto;
+   max-width: var(--with-common);
+}
+
+.footer-content {
+   max-width: 1440px;
+   margin: 0 auto;
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+   gap: 60px;
+   margin-bottom: 40px;
+}
+
+.footer-section {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.footer-links-section {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+   margin-bottom: 40px;
+}
+
+.logo-icon {
+   width: 56px;
+   height: 56px;
+   background: #000000;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-weight: 700;
+   font-size: 24px;
+}
+
+.footer-logo {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   font-weight: 600;
+   font-size: 28px;
+   margin-bottom: 10px;
+}
+
+.footer-section h3 {
+   font-size: 16px;
+   font-weight: 600;
+   color: var(--text-primary);
+   line-height: 1.875;
+}
+
+.footer-description {
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 1.26;
+   color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-section ul {
+   list-style: none;
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+}
+
+.footer-section a {
+   font-size: 14px;
+   font-weight: 400;
+   color: rgba(255, 255, 255, 0.8);
+   text-decoration: none;
+   transition: var(--transition);
+}
+
+.footer-section a:hover {
+   color: var(--primary-color);
+}
+
+.footer-section p {
+   font-size: 14px;
+   font-weight: 400;
+   color: rgba(255, 255, 255, 0.8);
+   line-height: 2.14;
+}
+
+.app-links {
+   display: flex;
+   gap: 12px;
+}
+
+.app-links img {
+   max-width: 100px;
+   height: auto;
+   cursor: pointer;
+   transition: var(--transition);
+}
+
+.app-links img:hover {
+   opacity: 0.8;
+}
+
+.footer-bottom {
+   text-align: center;
+   padding-top: 20px;
+   border-top: 1px solid #4b4f54;
+   font-size: 15px;
+   font-weight: 400;
+   color: rgba(255, 255, 255, 0.6);
+}
+
+/* ======================= */
+/* RESPONSIVE DESIGN */
+/* ======================= */
+
+@media (max-width: 768px) {
+   .footer-content {
+      grid-template-columns: 1fr;
+      gap: 40px;
+   }
+
+   .footer {
+      padding: 40px 20px 30px;
+   }
+}
