@@ -40,7 +40,6 @@ html {
    position: relative;
    width: 100%;
    height: 785px;
-   margin-top: 72px;
    overflow: hidden;
    display: flex;
    align-items: center;
@@ -85,7 +84,7 @@ html {
    z-index: 2;
    max-width: var(--with-common);
    width: 100%;
-   padding: 0 40px;
+   padding: 72px 40px 0;
    display: flex;
    flex-direction: column;
    gap: 20px;
@@ -178,16 +177,6 @@ html {
    box-shadow: 0 8px 20px rgba(248, 69, 101, 0.4);
 }
 
-.btn-secondary {
-   background: #1e2939;
-   color: var(--text-primary);
-}
-
-.btn-secondary:hover {
-   background: #2a3a4d;
-   transform: translateY(-2px);
-}
-
 /* ======================= */
 /* MOVIES SECTION */
 /* ======================= */
@@ -238,6 +227,8 @@ html {
 /* Movie Card */
 .movie-card {
    background: var(--bg-card);
+   text-decoration: none;
+   color: inherit;
    border-radius: 16px;
    overflow: hidden;
    transition: var(--transition);
@@ -377,7 +368,6 @@ html {
 @media (max-width: 768px) {
    .hero {
       height: 500px;
-      margin-top: 64px;
    }
 
    .hero-title {
@@ -391,7 +381,7 @@ html {
    }
 
    .hero-content {
-      padding: 0 20px;
+      padding: 64px 20px 0;
    }
 
    .hero-buttons {
