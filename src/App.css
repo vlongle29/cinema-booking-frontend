@@ -4,6 +4,16 @@
    background-color: #09090b;
 }
 
+.app-layout {
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+}
+
+.main-content {
+   flex: 1;
+}
+
 * {
    margin: 0;
    padding: 0;
@@ -17,8 +27,7 @@ body {
 }
 
 body {
-   font-family: "Outfit", "Heebo", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      sans-serif;
+   font-family: "Outfit", sans-serif;
    background-color: #09090b;
    color: #ffffff;
    line-height: 1.6;
