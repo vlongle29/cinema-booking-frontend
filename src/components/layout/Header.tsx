@@ -1,29 +1,39 @@
+import { Link, NavLink } from "react-router-dom";
 import { Search } from "lucide-react";
 import "../../styles/header.css";
+
+const navItems = [
+   { to: "/", label: "Home", end: true },
+   { to: "/movies", label: "Movies", end: false },
+   { to: "/theatres", label: "Theatres", end: false },
+   { to: "/releases", label: "Releases", end: false },
+];
 
 const Header = () => {
    return (
       <div>
          <nav className="navbar">
             <div className="navbar-container">
-               <div className="logo">
+               <Link to="/" className="logo">
                   <span className="logo-icon">Q</span>
                   <span className="logo-text">uickShow</span>
-               </div>
+               </Link>
 
                <div className="nav-links">
-                  <a href="#home" className="nav-link active">
-                     Home
-                  </a>
-                  <a href="#movies" className="nav-link">
-                     Movies
-                  </a>
-                  <a href="#theatres" className="nav-link">
-                     Theatres
-                  </a>
-                  <a href="#releases" className="nav-link">
-                     Releases
-                  </a>
+                  <div className="nav-links-pill">
+                     {navItems.map(({ to, label, end }) => (
+                        <NavLink
+                           key={to}
+                           to={to}
+                           end={end}
+                           className={({ isActive }) =>
+                              `nav-link ${isActive ? "active" : ""}`
+                           }
+                        >
+                           {label}
+                        </NavLink>
+                     ))}
+                  </div>
                </div>
 
                <div className="nav-actions">
