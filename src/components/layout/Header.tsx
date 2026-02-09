@@ -1,10 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
 import { Search } from "lucide-react";
+import MoviesDropdown from "./MoviesDropdown";
 import "../../styles/header.css";
 
 const navItems = [
    { to: "/", label: "Home", end: true },
-   { to: "/movies", label: "Movies", end: false },
    { to: "/theatres", label: "Theatres", end: false },
    { to: "/releases", label: "Releases", end: false },
 ];
@@ -33,6 +33,7 @@ const Header = () => {
                            {label}
                         </NavLink>
                      ))}
+                     <MoviesDropdown />
                   </div>
                </div>
 
