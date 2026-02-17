@@ -8,6 +8,8 @@ export default {
             secondary: "#09090b",
             "dark-bg": "#09090b",
             "card-bg": "#12161c",
+            "nav-pill": "#d4d4d4",
+            "border-custom": "rgba(183, 183, 183, 0.15)",
          },
          textColor: {
             primary: "#ffffff",
@@ -40,6 +42,22 @@ export default {
          },
          width: {
             173: "173px",
+         },
+         keyframes: {
+            slideDownAndFadeIn: {
+               from: {
+                  opacity: "0",
+                  transform: "translateY(-8px)",
+               },
+               to: {
+                  opacity: "1",
+                  transform: "translateY(0)",
+               },
+            },
+         },
+         animation: {
+            slideDownAndFadeIn:
+               "slideDownAndFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
          },
       },
    },
