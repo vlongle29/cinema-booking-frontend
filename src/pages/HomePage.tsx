@@ -1,17 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { Star, Calendar, Clock, ArrowRight } from "lucide-react";
 import marvellogo from "../assets/icons/marvelLogo.svg";
-
-interface Movie {
-   id: number;
-   title: string;
-   genre: string;
-   year: string;
-   duration: string;
-   rating: number;
-   image: string;
-}
+import MovieCard from "../features/movie/conponents/MovieCard";
+import type { Movie } from "../features/movie/types";
 
 // 1. Giả lập dữ liệu từ API (Sau này bạn gọi từ Spring Boot về)
 const videoData = [
@@ -236,43 +227,6 @@ const HomePage: React.FC = () => {
             </div>
          </section>
       </div>
-   );
-};
-
-// Movie Card Component
-const MovieCard: React.FC<{ movie: Movie }> = ({ movie }) => {
-   return (
-      <Link
-         to={`/movie/${movie.id}`}
-         className="bg-card-bg rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer flex flex-col h-full hover:-translate-y-2 hover:shadow-[0_16px_32px_rgba(248,69,101,0.2)] no-underline text-inherit"
-      >
-         <div className="w-full h-[250px] overflow-hidden bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a]">
-            <img
-               src={movie.image}
-               alt={movie.title}
-               className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-            />
-         </div>
-
-         <div className="p-3.5 flex flex-col gap-3 flex-grow">
-            <h3 className="text-sm font-bold leading-tight text-white m-0">
-               {movie.title}
-            </h3>
-            <p className="text-sm font-medium text-muted m-0 leading-loose">
-               {movie.year} - {movie.genre} - {movie.duration}
-            </p>
-
-            <div className="flex items-center justify-between mt-auto pt-3 border-t border-[rgba(248,69,101,0.2)]">
-               <button className="px-4 py-2 bg-primary text-white rounded-full text-sm font-semibold transition-all duration-300 hover:bg-[#ff5580] hover:scale-105 font-heebo">
-                  Buy Ticket
-               </button>
-               <div className="flex items-center gap-1.5 text-sm font-medium text-muted">
-                  <Star size={18} fill="#F84565" stroke="#F84565" />
-                  <span>{movie.rating}</span>
-               </div>
-            </div>
-         </div>
-      </Link>
    );
 };
 
