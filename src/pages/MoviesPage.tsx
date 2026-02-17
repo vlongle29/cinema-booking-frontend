@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import React from "react";
+import React, { useRef } from "react";
 import { FaStar } from "react-icons/fa";
 import { IoPlayCircle } from "react-icons/io5";
 import ShowtimeSelection from "./ShowtimeSelection";
@@ -32,6 +32,7 @@ const images = {
 
 export default function TicketBookingDetailPage() {
    const [selectedDate, setSelectedDate] = React.useState("Wed");
+   const showtimeSectionRef = useRef<HTMLDivElement>(null);
 
    const dates = [
       { day: "Tue", date: "15" },
@@ -78,6 +79,20 @@ export default function TicketBookingDetailPage() {
          rating: 4.5,
       },
    ];
+
+   const handleBuyTicketClick = () => {
+      if (showtimeSectionRef.current) {
+         const offset = 100; // muốn cách top 100px
+         const elementPosition =
+            showtimeSectionRef.current.getBoundingClientRect().top;
+         const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+         window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+         });
+      }
+   };
 
    return (
       <div className="bg-[#09090b] min-h-screen text-white">
@@ -129,7 +144,10 @@ export default function TicketBookingDetailPage() {
                      <IoPlayCircle size={20} />
                      Watch Trailer
                   </button>
-                  <button className="bg-[#f84565] px-6 py-3 rounded-lg text-white font-semibold">
+                  <button
+                     onClick={handleBuyTicketClick}
+                     className="bg-[#f84565] px-6 py-3 rounded-lg text-white font-semibold"
+                  >
                      Buy Tickets
                   </button>
                </div>
@@ -155,11 +173,13 @@ export default function TicketBookingDetailPage() {
             </div>
          </section>
          {/* Date Selection Section */}
-         <ShowtimeSelection
-            dates={dates}
-            selectedDate={selectedDate}
-            onSelectDate={setSelectedDate}
-         />
+         <div ref={showtimeSectionRef}>
+            <ShowtimeSelection
+               dates={dates}
+               selectedDate={selectedDate}
+               onSelectDate={setSelectedDate}
+            />
+         </div>
          {/* Recommendations Section */}
          <section className="max-w-7xl mx-auto px-8 py-12">
             <div className="flex items-center justify-between mb-8">
@@ -167,7 +187,7 @@ export default function TicketBookingDetailPage() {
                   You May Also Like
                </h2>
                <a
-                  href="#"
+                  href=""
                   className="text-sm text-[#99a1af] flex items-center gap-2"
                >
                   View All
