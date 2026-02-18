@@ -43,7 +43,7 @@ const SeatSelectPage: React.FC = () => {
          alert("Please select at least one seat to proceed.");
          return;
       }
-      navigate("/checkout", {
+      navigate("/order-snacks", {
          state: {
             seats: Array.from(selectedSeats),
             timing: selectedTiming,
