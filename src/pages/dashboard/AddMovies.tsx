@@ -221,8 +221,8 @@ export default function AddMovies() {
          {!isCreating ? (
             // Movies List View
             <>
-               <div className="mb-12 mt-6 flex items-center justify-between">
-                  <h1 className="text-4xl font-semibold text-white">
+               <div className="mb-6 mt-4 flex items-center justify-between">
+                  <h1 className="text-2xl font-semibold text-white">
                      All{" "}
                      <span className="underline decoration-[#f84565] text-[#f84565]">
                         Movies
@@ -230,39 +230,39 @@ export default function AddMovies() {
                   </h1>
                   <button
                      onClick={() => setIsCreating(true)}
-                     className="flex items-center gap-2 px-6 py-3 bg-[#f84565] hover:bg-[#f84565]/90 text-white font-semibold rounded-[6px] transition-colors"
+                     className="flex items-center gap-2 px-4 py-2 bg-[#f84565] hover:bg-[#f84565]/90 text-white font-semibold rounded-[6px] transition-colors text-sm"
                   >
-                     <Plus className="w-5 h-5" />
+                     <Plus className="w-4 h-4" />
                      Create Movie
                   </button>
                </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                   {movies.map((movie) => (
                      <div
                         key={movie.id}
                         className="bg-[rgba(248,69,101,0.1)] border border-[rgba(248,69,101,0.2)] rounded-[8px] overflow-hidden hover:border-[#f84565] transition-colors"
                      >
-                        <div className="h-48 overflow-hidden bg-[#1a1a1e]">
+                        <div className="h-40 overflow-hidden bg-[#1a1a1e]">
                            <img
                               src={movie.posterUrl}
                               alt={movie.title}
                               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                            />
                         </div>
-                        <div className="p-4">
-                           <h3 className="text-white font-semibold mb-2 truncate">
+                        <div className="p-3">
+                           <h3 className="text-white font-medium text-sm mb-1 truncate">
                               {movie.title}
                            </h3>
-                           <p className="text-[#d1d5dc] text-sm mb-2">
+                           <p className="text-[#d1d5dc] text-xs mb-2">
                               {movie.director}
                            </p>
-                           <div className="flex items-center justify-between mb-3">
-                              <span className="text-[#797b7d] text-xs">
+                           <div className="flex items-center justify-between mb-2">
+                              <span className="text-[#797b7d] text-[10px]">
                                  {movie.durationMinutes} mins
                               </span>
                               <span
-                                 className={`text-xs font-semibold px-2 py-1 rounded ${
+                                 className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
                                     movie.status === "NOW_SHOWING"
                                        ? "bg-green-500/20 text-green-400"
                                        : movie.status === "COMING_SOON"
@@ -273,7 +273,7 @@ export default function AddMovies() {
                                  {movie.status.replace(/_/g, " ")}
                               </span>
                            </div>
-                           <p className="text-[#797b7d] text-xs">
+                           <p className="text-[#797b7d] text-[10px]">
                               {new Date(movie.releaseDate).toLocaleDateString()}
                            </p>
                         </div>
@@ -284,14 +284,14 @@ export default function AddMovies() {
          ) : (
             // Create Movie Form View
             <>
-               <div className="mb-12 mt-6 flex items-center gap-4">
+               <div className="mb-6 mt-4 flex items-center gap-4">
                   <button
                      onClick={() => resetForm()}
-                     className="text-[#d1d5dc] hover:text-white transition-colors"
+                     className="text-[#d1d5dc] hover:text-white transition-colors text-sm"
                   >
                      ← Back to List
                   </button>
-                  <h1 className="text-4xl font-semibold text-white">
+                  <h1 className="text-2xl font-semibold text-white">
                      Create{" "}
                      <span className="underline decoration-[#f84565] text-[#f84565]">
                         Movie
@@ -299,17 +299,17 @@ export default function AddMovies() {
                   </h1>
                </div>
 
-               <div className="bg-[rgba(248,69,101,0.1)] border border-[rgba(248,69,101,0.2)] rounded-[8px] p-8">
-                  <form onSubmit={handleSubmit} className="space-y-8">
+               <div className="bg-[rgba(248,69,101,0.1)] border border-[rgba(248,69,101,0.2)] rounded-[8px] p-5">
+                  <form onSubmit={handleSubmit} className="space-y-5">
                      {/* Basic Information */}
                      <div>
-                        <h3 className="text-white text-lg font-semibold mb-6">
+                        <h3 className="text-white text-base font-semibold mb-3">
                            Basic Information
                         </h3>
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-2 gap-4">
                            {/* Title */}
                            <div>
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Title *
                               </label>
                               <input
@@ -319,13 +319,13 @@ export default function AddMovies() {
                                  onChange={handleInputChange}
                                  placeholder="Enter show title"
                                  required
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
                               />
                            </div>
 
                            {/* Director */}
                            <div>
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Director *
                               </label>
                               <input
@@ -335,13 +335,13 @@ export default function AddMovies() {
                                  onChange={handleInputChange}
                                  placeholder="Enter director name"
                                  required
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
                               />
                            </div>
 
                            {/* Cast */}
                            <div className="col-span-2">
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Cast *
                               </label>
                               <input
@@ -351,13 +351,13 @@ export default function AddMovies() {
                                  onChange={handleInputChange}
                                  placeholder="Enter cast members (comma separated)"
                                  required
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
                               />
                            </div>
 
                            {/* Description */}
                            <div className="col-span-2">
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Description *
                               </label>
                               <textarea
@@ -366,8 +366,8 @@ export default function AddMovies() {
                                  onChange={handleInputChange}
                                  placeholder="Enter show description"
                                  required
-                                 rows={4}
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white placeholder-[#797b7d] focus:outline-none focus:border-[#f84565] resize-none"
+                                 rows={3}
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm placeholder-[#797b7d] focus:outline-none focus:border-[#f84565] resize-none"
                               />
                            </div>
                         </div>
@@ -375,13 +375,13 @@ export default function AddMovies() {
 
                      {/* Show Details */}
                      <div>
-                        <h3 className="text-white text-lg font-semibold mb-6">
+                        <h3 className="text-white text-base font-semibold mb-3">
                            Show Details
                         </h3>
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-2 gap-4">
                            {/* Duration */}
                            <div>
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Duration (minutes) *
                               </label>
                               <input
@@ -392,13 +392,13 @@ export default function AddMovies() {
                                  placeholder="120"
                                  required
                                  min="0"
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
                               />
                            </div>
 
                            {/* Release Date */}
                            <div>
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Release Date *
                               </label>
                               <input
@@ -407,20 +407,20 @@ export default function AddMovies() {
                                  value={formData.releaseDate}
                                  onChange={handleInputChange}
                                  required
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
                               />
                            </div>
 
                            {/* Language */}
                            <div>
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Language *
                               </label>
                               <select
                                  name="language"
                                  value={formData.language}
                                  onChange={handleInputChange}
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white focus:outline-none focus:border-[#f84565]"
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm focus:outline-none focus:border-[#f84565]"
                               >
                                  {LANGUAGES.map((lang) => (
                                     <option key={lang} value={lang}>
@@ -432,14 +432,14 @@ export default function AddMovies() {
 
                            {/* Rating */}
                            <div>
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Rating *
                               </label>
                               <select
                                  name="rated"
                                  value={formData.rated}
                                  onChange={handleInputChange}
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white focus:outline-none focus:border-[#f84565]"
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm focus:outline-none focus:border-[#f84565]"
                               >
                                  {RATINGS.map((rating) => (
                                     <option key={rating} value={rating}>
@@ -451,14 +451,14 @@ export default function AddMovies() {
 
                            {/* Status */}
                            <div className="col-span-2">
-                              <label className="block text-[#d1d5dc] text-sm font-medium mb-2">
+                              <label className="block text-[#d1d5dc] text-xs font-medium mb-1">
                                  Status *
                               </label>
                               <select
                                  name="status"
                                  value={formData.status}
                                  onChange={handleInputChange}
-                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white focus:outline-none focus:border-[#f84565]"
+                                 className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm focus:outline-none focus:border-[#f84565]"
                               >
                                  {STATUSES.map((status) => (
                                     <option key={status} value={status}>
@@ -472,10 +472,10 @@ export default function AddMovies() {
 
                      {/* Genres */}
                      <div>
-                        <h3 className="text-white text-lg font-semibold mb-6">
+                        <h3 className="text-white text-base font-semibold mb-3">
                            Genres *
                         </h3>
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-3 gap-3">
                            {GENRES.map((genre) => (
                               <label
                                  key={genre.id}
@@ -487,9 +487,9 @@ export default function AddMovies() {
                                        genre.id,
                                     )}
                                     onChange={() => handleGenreToggle(genre.id)}
-                                    className="w-4 h-4 rounded border-[#393939] bg-[#1a1a1e] text-[#f84565] focus:ring-[#f84565]"
+                                    className="w-3.5 h-3.5 rounded border-[#393939] bg-[#1a1a1e] text-[#f84565] focus:ring-[#f84565]"
                                  />
-                                 <span className="ml-3 text-[#d1d5dc] text-sm">
+                                 <span className="ml-2 text-[#d1d5dc] text-xs">
                                     {genre.name}
                                  </span>
                               </label>
@@ -499,10 +499,10 @@ export default function AddMovies() {
 
                      {/* Poster */}
                      <div>
-                        <h3 className="text-white text-lg font-semibold mb-6">
+                        <h3 className="text-white text-base font-semibold mb-3">
                            Poster Image *
                         </h3>
-                        <div className="flex gap-4 mb-4">
+                        <div className="flex gap-3 mb-3">
                            <button
                               type="button"
                               onClick={() =>
@@ -511,7 +511,7 @@ export default function AddMovies() {
                                     poster: "url",
                                  }))
                               }
-                              className={`px-4 py-2 rounded-[6px] font-medium text-sm transition-colors ${
+                              className={`px-3 py-1.5 rounded-[6px] font-medium text-xs transition-colors ${
                                  uploadMode.poster === "url"
                                     ? "bg-[#f84565] text-white"
                                     : "bg-[#1a1a1e] text-[#d1d5dc] border border-[#393939]"
@@ -527,7 +527,7 @@ export default function AddMovies() {
                                     poster: "file",
                                  }))
                               }
-                              className={`px-4 py-2 rounded-[6px] font-medium text-sm transition-colors ${
+                              className={`px-3 py-1.5 rounded-[6px] font-medium text-xs transition-colors ${
                                  uploadMode.poster === "file"
                                     ? "bg-[#f84565] text-white"
                                     : "bg-[#1a1a1e] text-[#d1d5dc] border border-[#393939]"
@@ -549,12 +549,12 @@ export default function AddMovies() {
                               }
                               placeholder="https://example.com/poster.jpg"
                               required
-                              className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
+                              className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
                            />
                         ) : (
-                           <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-[#393939] rounded-[6px] p-8 cursor-pointer hover:border-[#f84565] transition-colors">
-                              <Upload className="w-8 h-8 text-[#797b7d] mb-2" />
-                              <span className="text-[#d1d5dc] text-sm">
+                           <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-[#393939] rounded-[6px] p-4 cursor-pointer hover:border-[#f84565] transition-colors">
+                              <Upload className="w-6 h-6 text-[#797b7d] mb-1" />
+                              <span className="text-[#d1d5dc] text-xs">
                                  Click to upload or drag and drop
                               </span>
                               <input
@@ -568,7 +568,7 @@ export default function AddMovies() {
                         )}
 
                         {posterPreview && (
-                           <div className="mt-4 relative w-32 h-48">
+                           <div className="mt-3 relative w-24 h-36">
                               <img
                                  src={posterPreview}
                                  alt="Poster preview"
@@ -577,9 +577,9 @@ export default function AddMovies() {
                               <button
                                  type="button"
                                  onClick={clearPosterPreview}
-                                 className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 rounded-full p-1"
+                                 className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 rounded-full p-0.5"
                               >
-                                 <X className="w-4 h-4 text-white" />
+                                 <X className="w-3 h-3 text-white" />
                               </button>
                            </div>
                         )}
@@ -587,10 +587,10 @@ export default function AddMovies() {
 
                      {/* Trailer */}
                      <div>
-                        <h3 className="text-white text-lg font-semibold mb-6">
+                        <h3 className="text-white text-base font-semibold mb-3">
                            Trailer Video *
                         </h3>
-                        <div className="flex gap-4 mb-4">
+                        <div className="flex gap-3 mb-3">
                            <button
                               type="button"
                               onClick={() =>
@@ -599,7 +599,7 @@ export default function AddMovies() {
                                     trailer: "url",
                                  }))
                               }
-                              className={`px-4 py-2 rounded-[6px] font-medium text-sm transition-colors ${
+                              className={`px-3 py-1.5 rounded-[6px] font-medium text-xs transition-colors ${
                                  uploadMode.trailer === "url"
                                     ? "bg-[#f84565] text-white"
                                     : "bg-[#1a1a1e] text-[#d1d5dc] border border-[#393939]"
@@ -615,7 +615,7 @@ export default function AddMovies() {
                                     trailer: "file",
                                  }))
                               }
-                              className={`px-4 py-2 rounded-[6px] font-medium text-sm transition-colors ${
+                              className={`px-3 py-1.5 rounded-[6px] font-medium text-xs transition-colors ${
                                  uploadMode.trailer === "file"
                                     ? "bg-[#f84565] text-white"
                                     : "bg-[#1a1a1e] text-[#d1d5dc] border border-[#393939]"
@@ -637,12 +637,12 @@ export default function AddMovies() {
                               }
                               placeholder="https://example.com/trailer.mp4"
                               required
-                              className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-4 py-2 text-white placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
+                              className="w-full bg-[#1a1a1e] border border-[#393939] rounded-[6px] px-3 py-1.5 text-white text-sm placeholder-[#797b7d] focus:outline-none focus:border-[#f84565]"
                            />
                         ) : (
-                           <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-[#393939] rounded-[6px] p-8 cursor-pointer hover:border-[#f84565] transition-colors">
-                              <Upload className="w-8 h-8 text-[#797b7d] mb-2" />
-                              <span className="text-[#d1d5dc] text-sm">
+                           <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-[#393939] rounded-[6px] p-4 cursor-pointer hover:border-[#f84565] transition-colors">
+                              <Upload className="w-6 h-6 text-[#797b7d] mb-1" />
+                              <span className="text-[#d1d5dc] text-xs">
                                  Click to upload or drag and drop
                               </span>
                               <input
@@ -658,7 +658,7 @@ export default function AddMovies() {
                         )}
 
                         {trailerPreview && (
-                           <div className="mt-4 relative w-full max-w-md h-64">
+                           <div className="mt-3 relative w-full max-w-xs h-40">
                               <video
                                  src={trailerPreview}
                                  className="w-full h-full object-cover rounded-[6px]"
@@ -667,26 +667,26 @@ export default function AddMovies() {
                               <button
                                  type="button"
                                  onClick={clearTrailerPreview}
-                                 className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 rounded-full p-1"
+                                 className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 rounded-full p-0.5"
                               >
-                                 <X className="w-4 h-4 text-white" />
+                                 <X className="w-3 h-3 text-white" />
                               </button>
                            </div>
                         )}
                      </div>
 
                      {/* Submit Button */}
-                     <div className="flex gap-4">
+                     <div className="flex gap-3">
                         <button
                            type="submit"
-                           className="px-8 py-3 bg-[#f84565] hover:bg-[#f84565]/90 text-white font-semibold rounded-[6px] transition-colors"
+                           className="px-5 py-2 bg-[#f84565] hover:bg-[#f84565]/90 text-white font-semibold rounded-[6px] transition-colors text-sm"
                         >
                            Add Show
                         </button>
                         <button
                            type="button"
                            onClick={() => resetForm()}
-                           className="px-8 py-3 bg-[#1a1a1e] hover:bg-[#252529] text-[#d1d5dc] font-semibold border border-[#393939] rounded-[6px] transition-colors"
+                           className="px-5 py-2 bg-[#1a1a1e] hover:bg-[#252529] text-[#d1d5dc] font-semibold border border-[#393939] rounded-[6px] transition-colors text-sm"
                         >
                            Cancel
                         </button>
