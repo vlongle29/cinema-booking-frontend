@@ -11,6 +11,13 @@ export const showtimeService = {
    },
 
    /**
+    * Tìm kiếm suất chiếu (phân trang)
+    */
+   searchShowtimes: <T = any>(params?: any): Promise<T> => {
+      return apiService.get(`${SHOWTIME_API_PATH}/search`, { params });
+   },
+
+   /**
     * Xem chi tiết suất chiếu
     */
    getShowtimeById: (id: string) => {
