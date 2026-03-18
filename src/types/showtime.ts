@@ -108,6 +108,11 @@ export interface Format {
    badge?: string;
 }
 
+export interface ShowtimeFormat {
+   format: string;
+   displayName: string;
+}
+
 export interface Theater {
    id: string;
    name: string;

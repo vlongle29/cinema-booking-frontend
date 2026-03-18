@@ -1,16 +1,8 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import apiService from "../services/apiService";
 import { AuthContext } from "../context/AuthContext";
+import type { Movie, Branch, Room, ShowtimeFormat, City } from "../types/showtime";
 
-export interface OptionItem {
-   id: string;
-   [key: string]: any;
-}
-
-export interface FormatItem {
-   format: string;
-   displayName: string;
-}
 
 export interface ShowtimeFormData {
    movieId: string;
@@ -61,11 +53,11 @@ export const useCreateShowtime = () => {
    const [formData, setFormData] = useState<ShowtimeFormData>(EMPTY_FORM);
 
    const [options, setOptions] = useState({
-      movies: [] as OptionItem[],
-      cities: [] as OptionItem[],
-      branch: [] as OptionItem[],
-      rooms: [] as OptionItem[],
-      formats: [] as FormatItem[],
+      movies: [] as Movie[],
+      cities: [] as City[],
+      branch: [] as Branch[],
+      rooms: [] as Room[],
+      formats: [] as ShowtimeFormat[],
       availableSlots: [] as string[],
    });
 
@@ -136,7 +128,7 @@ export const useCreateShowtime = () => {
       const fetchBranch = async () => {
          setStatus((prev) => ({ ...prev, isFetching: true, error: null }));
          try {
-            const branchRes = await apiService.get<ApiResponseWrapper<OptionItem[]>>(
+            const branchRes = await apiService.get<ApiResponseWrapper<Branch[]>>(
                "/branch",
                { params: { cityId: formData.cityId } }
             );
@@ -173,7 +165,7 @@ export const useCreateShowtime = () => {
       const fetchRooms = async () => {
          setStatus((prev) => ({ ...prev, isFetching: true, error: null }));
          try {
-            const roomsRes = await apiService.get<ApiResponseWrapper<OptionItem[]>>(
+            const roomsRes = await apiService.get<ApiResponseWrapper<Room[]>>(
                "/room/search",
                { params: { branchId: formData.branchId, isDeleted: false } }
             );
