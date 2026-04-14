@@ -7,14 +7,30 @@ interface MovieSearchParams {
    status?: string;
    releaseDateFrom?: string;
    releaseDateTo?: string;
+   page?: number;
+   size?: number;
 }
 
 export const movieService = {
    /**
     * Lấy danh sách phim
     */
-   getAllMovies: (params?: any) => {
+   getAllMovies: (params?: MovieSearchParams) => {
       return apiService.get(`${MOVIE_API_PATH}/search`, { params });
+   },
+
+   /**
+    * Lấy danh sách phim đang chiếu
+    */
+   getMoviesNowShowing: () => {
+      return apiService.get(`${MOVIE_API_PATH}/now-showing`);
+   },
+
+   /**
+    * Lấy danh sách phim sắp chiếu
+    */
+   getMoviesComingSoon: () => {
+      return apiService.get(`${MOVIE_API_PATH}/coming-soon`);
    },
 
    /**
@@ -22,6 +38,10 @@ export const movieService = {
     */
    getMovieById: (id: string) => {
       return apiService.get(`${MOVIE_API_PATH}/${id}`);
+   },
+
+   getAgeRating: () => {
+      return apiService.get(`${MOVIE_API_PATH}/age-ratings`);
    },
 
    /**

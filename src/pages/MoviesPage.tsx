@@ -31,17 +31,7 @@ const images = {
 };
 
 export default function TicketBookingDetailPage() {
-   const [selectedDate, setSelectedDate] = React.useState("Wed");
    const showtimeSectionRef = useRef<HTMLDivElement>(null);
-
-   const dates = [
-      { day: "Tue", date: "15" },
-      { day: "Wed", date: "16" },
-      { day: "Thu", date: "17" },
-      { day: "Fri", date: "18" },
-      { day: "Sat", date: "19" },
-      { day: "Sun", date: "20" },
-   ];
 
    const castMembers = [
       { name: "Chris Pratt", role: "Peter Quill", image: images.castMember1 },
@@ -174,14 +164,10 @@ export default function TicketBookingDetailPage() {
          </section>
          {/* Date Selection Section */}
          <div ref={showtimeSectionRef}>
-            <ShowtimeSelection
-               dates={dates}
-               selectedDate={selectedDate}
-               onSelectDate={setSelectedDate}
-            />
+            <ShowtimeSelection />
          </div>
          {/* Recommendations Section */}
-         <section className="max-w-7xl mx-auto px-8 py-12">
+         <section className="max-w-7xl mx-auto px-8">
             <div className="flex items-center justify-between mb-8">
                <h2 className="text-xl font-bold text-[#d1d5dc]">
                   You May Also Like
@@ -235,68 +221,6 @@ export default function TicketBookingDetailPage() {
                </button>
             </div>
          </section>
-         {/* Footer */}
-         <footer className="bg-[#0a0a0c] border-t border-[rgba(255,255,255,0.1)] mt-16 pt-12 pb-8">
-            <div className="px-8 grid grid-cols-3 gap-12 mb-12">
-               <div>
-                  <h3 className="text-white font-semibold mb-4">Company</h3>
-                  <ul className="space-y-2 text-sm text-[rgba(255,255,255,0.8)]">
-                     <li>
-                        <a href="#">Home</a>
-                     </li>
-                     <li>
-                        <a href="#">About us</a>
-                     </li>
-                     <li>
-                        <a href="#">Contact us</a>
-                     </li>
-                     <li>
-                        <a href="#">Privacy policy</a>
-                     </li>
-                  </ul>
-               </div>
-               <div>
-                  <p className="text-sm text-[rgba(255,255,255,0.8)] leading-relaxed">
-                     Lorem Ipsum has been the industry's standard dummy text
-                     ever since the 1500s, when an unknown printer took a galley
-                     of type and scrambled it to make a type specimen book.
-                  </p>
-                  <div className="flex gap-3 mt-4">
-                     <img
-                        src="/google-play.svg"
-                        alt="Google Play"
-                        className="h-9"
-                     />
-                     <img
-                        src="/app-store.svg"
-                        alt="App Store"
-                        className="h-9"
-                     />
-                  </div>
-               </div>
-               <div>
-                  <h3 className="text-white font-semibold mb-4">
-                     Get in touch
-                  </h3>
-                  <ul className="space-y-2 text-sm text-[rgba(255,255,255,0.8)]">
-                     <li>
-                        <a href="tel:+1-212-456-7890">+1-212-456-7890</a>
-                     </li>
-                     <li>
-                        <a href="mailto:contact@example.com">
-                           contact@example.com
-                        </a>
-                     </li>
-                  </ul>
-               </div>
-            </div>
-
-            <div className="border-t border-[rgba(255,255,255,0.1)] pt-8 px-8">
-               <p className="text-center text-xs text-[rgba(255,255,255,0.6)]">
-                  Copyright 2025 © GreatStack. All Right Reserved.
-               </p>
-            </div>
-         </footer>
       </div>
    );
 }
