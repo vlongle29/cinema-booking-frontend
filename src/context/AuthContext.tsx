@@ -24,15 +24,16 @@ interface AuthResponse {
    code: string;
    status: number;
    data: {
+      // sessionId & refreshToken are @JsonIgnore on backend — they come as httpOnly cookies, NOT in JSON
       accessToken: string;
       userInfo: User;
-      permissions: any[];
-      sessionId: string;
+      permissions: string[];
    };
 }
 
 interface AuthContextType {
    userInfo: User | null;
+   permissions: string[];
    isAuthenticated: boolean;
    loading: boolean;
    login: (credentials: any) => Promise<void>;
@@ -48,21 +49,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
    children,
 }) => {
    const [userInfo, setUserInfo] = useState<User | null>(null);
+   const [permissions, setPermissions] = useState<string[]>([]);
    const [loading, setLoading] = useState(true);
 
    useEffect(() => {
       const initAuth = async () => {
          try {
-            // Attempt to refresh token on load
-            const response =
-               await axiosInstance.post<AuthResponse>("/auth/refresh-token");
-            const { accessToken, userInfo } = response.data.data;
+            const response = await axiosInstance.post<AuthResponse>("/auth/refresh-token");
+            
+            const { accessToken, userInfo, permissions } = response.data.data;
             setAccessToken(accessToken);
             setUserInfo(userInfo);
-         } catch (error) {
-            // If refresh fails, userInfo is not authenticated
+            setPermissions(permissions ?? []);
+         } catch (error: any) {
             setAccessToken(null);
             setUserInfo(null);
+            setPermissions([]);
          } finally {
             setLoading(false);
          }
@@ -70,10 +72,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
       initAuth();
 
-      // Listen for logout events triggered by axios interceptors
+      // Listen for forced logout events triggered by axios interceptors (refresh token expired)
       const handleLogoutEvent = () => {
          setAccessToken(null);
          setUserInfo(null);
+         setPermissions([]);
       };
 
       window.addEventListener("auth:logout", handleLogoutEvent);
@@ -81,32 +84,41 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
    }, []);
 
    const login = async (credentials: any) => {
+      // withCredentials: true is set globally on axiosInstance
+      // Backend will respond with Set-Cookie (sessionId + refreshToken as httpOnly)
       const response = await axiosInstance.post<AuthResponse>(
          "/auth/login",
          credentials,
       );
-      const { accessToken, userInfo } = response.data.data;
+      const { accessToken, userInfo, permissions } = response.data.data;
 
       setAccessToken(accessToken);
       setUserInfo(userInfo);
-
-      console.log("Login successful:", response.data);
-      console.log("Access Token:", accessToken);
-      console.log("User Info:", userInfo);
+      setPermissions(permissions ?? []);
    };
 
    const register = async (data: any) => {
       await axiosInstance.post("/auth/register", data);
    };
 
-   const logout = async () => {
+   const logout = async (currentAccessToken?: string) => {
       try {
-         await axiosInstance.post("/auth/logout");
+         // Backend requires Authorization header for the logout endpoint
+         await axiosInstance.post("/auth/logout", undefined, {
+            headers: {
+               // Pass the current accessToken explicitly if provided,
+               // otherwise axiosInstance request interceptor will attach it automatically
+               ...(currentAccessToken
+                  ? { Authorization: `Bearer ${currentAccessToken}` }
+                  : {}),
+            },
+         });
       } catch (error) {
          console.error("Logout failed", error);
       } finally {
          setAccessToken(null);
          setUserInfo(null);
+         setPermissions([]);
       }
    };
 
@@ -114,6 +126,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       <AuthContext.Provider
          value={{
             userInfo,
+            permissions,
             isAuthenticated: !!userInfo,
             loading,
             login,
