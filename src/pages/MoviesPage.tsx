@@ -3,31 +3,31 @@ import React, { useRef } from "react";
 import { FaStar } from "react-icons/fa";
 import { IoPlayCircle } from "react-icons/io5";
 import ShowtimeSelection from "./ShowtimeSelection";
+import guardiansImg from "../assets/images/phim-kinh-di.png";
 
 // Image assets from localhost
 const images = {
-   guardians:
-      "http://localhost:3845/assets/3bafc3095fbbdb940c7f0a6b6c2666dd965cdcfa.png",
+   guardians: guardiansImg,
    castMember1:
-      "http://localhost:3845/assets/64cdce9f41da455f09a29c53114d7fb059045ccf.png",
+      "http://localhost:5173/assets/64cdce9f41da455f09a29c53114d7fb059045ccf.png",
    castMember2:
-      "http://localhost:3845/assets/f67e7feee08e208d29d018ec698d78e3e3851be0.png",
+      "http://localhost:5173/assets/f67e7feee08e208d29d018ec698d78e3e3851be0.png",
    castMember3:
-      "http://localhost:3845/assets/d0c836e2fc41fd70c3e848fdb33cc32a37fc5cff.png",
+      "http://localhost:5173/assets/d0c836e2fc41fd70c3e848fdb33cc32a37fc5cff.png",
    castMember4:
-      "http://localhost:3845/assets/6be78610716c74930fb36f18c7a0a8ffe65cf33e.png",
+      "http://localhost:5173/assets/6be78610716c74930fb36f18c7a0a8ffe65cf33e.png",
    castMember5:
-      "http://localhost:3845/assets/fffa5c5e6bcea9bc066e9c65e9063acb84feaa7f.png",
+      "http://localhost:5173/assets/fffa5c5e6bcea9bc066e9c65e9063acb84feaa7f.png",
    castMember6:
-      "http://localhost:3845/assets/b9a68d5c3751236e86986b370e849d48802ad8e5.png",
+      "http://localhost:5173/assets/b9a68d5c3751236e86986b370e849d48802ad8e5.png",
    castMember7:
-      "http://localhost:3845/assets/752a50ae4607f05ef9bc3a847390e78e259bddda.png",
+      "http://localhost:5173/assets/752a50ae4607f05ef9bc3a847390e78e259bddda.png",
    recommendedMovie1:
-      "http://localhost:3845/assets/1b26250be4903592d678845efae190b5f9bb5ea4.png",
+      "http://localhost:5173/assets/1b26250be4903592d678845efae190b5f9bb5ea4.png",
    recommendedMovie2:
-      "http://localhost:3845/assets/5ca0b4e10eebfea14a0be9b192287185a5c2a8d3.png",
+      "http://localhost:5173/assets/5ca0b4e10eebfea14a0be9b192287185a5c2a8d3.png",
    recommendedMovie3:
-      "http://localhost:3845/assets/09e5759e3191e1953a2ac189c49ecaf6aab6bbe8.png",
+      "http://localhost:5173/assets/09e5759e3191e1953a2ac189c49ecaf6aab6bbe8.png",
 };
 
 export default function TicketBookingDetailPage() {
@@ -144,7 +144,7 @@ export default function TicketBookingDetailPage() {
             </div>
          </section>
          {/* Cast Section */}
-         <section className="px-8 py-12 max-w-7xl inset-0 mx-auto">
+         {/* <section className="px-8 py-12 max-w-7xl inset-0 mx-auto">
             <h2 className="text-lg font-medium mb-6">Your Favorite Cast</h2>
             <div className="flex gap-6 overflow-x-auto pb-4">
                {castMembers.map((member, idx) => (
@@ -161,7 +161,7 @@ export default function TicketBookingDetailPage() {
                   </div>
                ))}
             </div>
-         </section>
+         </section> */}
          {/* Date Selection Section */}
          <div ref={showtimeSectionRef}>
             <ShowtimeSelection />
@@ -181,16 +181,16 @@ export default function TicketBookingDetailPage() {
                </a>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
                {recommendedMovies.map((movie, idx) => (
                   <div
                      key={idx}
                      className="bg-[#12161c] rounded-xl overflow-hidden"
                   >
                      <img
-                        src={movie.image}
+                        src={guardiansImg}
                         alt={movie.title}
-                        className="w-full h-40 object-cover"
+                        className="w-max h-max object-cover"
                      />
                      <div className="p-4">
                         <h3 className="font-bold text-white text-sm mb-2">

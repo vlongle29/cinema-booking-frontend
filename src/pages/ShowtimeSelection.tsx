@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-   AlertCircle,
-   Film,
-} from "lucide-react";
+import { AlertCircle, Film } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import LoginModal from "../components/common/LoginModal";
@@ -15,7 +12,6 @@ import TheaterCard from "../components/showtime/TheaterCard";
 import useShowtimeSelection from "../hooks/useShowtimeSelection";
 import SelectionSummary from "../components/showtime/SelectionSummary";
 
-
 // ============================================================================
 // Main Showtime Selection Component
 // ============================================================================
@@ -27,14 +23,25 @@ export default function ShowtimeSelection() {
 
    // Get all datas and setter function from Custom Hook
    const {
-      dates, selectedDate, setSelectedDate, datesApi,
-      cities, selectedCity, setSelectedCity, citiesApi,
-      formats, selectedFormat, setSelectedFormat, formatsApi,
-      theaters, theatersApi,
-      selectedShowtime, setSelectedShowtime
+      dates,
+      selectedDate,
+      setSelectedDate,
+      datesApi,
+      cities,
+      selectedCity,
+      setSelectedCity,
+      citiesApi,
+      formats,
+      selectedFormat,
+      setSelectedFormat,
+      formatsApi,
+      theaters,
+      theatersApi,
+      selectedShowtime,
+      setSelectedShowtime,
    } = useShowtimeSelection();
 
-  // Find selected date object for display
+   // Find selected date object for display
    const selectedDateObj = dates.find((d) => d.date === selectedDate);
 
    return (
@@ -127,12 +134,12 @@ export default function ShowtimeSelection() {
                            <TheaterCard
                               key={theater.id}
                               theater={theater}
-                               onShowtimeSelect={(t: Theater, s: Showtime) =>
-                                  setSelectedShowtime({
-                                     theater: t,
-                                     showtime: s,
-                                  })
-                               }
+                              onShowtimeSelect={(t: Theater, s: Showtime) =>
+                                 setSelectedShowtime({
+                                    theater: t,
+                                    showtime: s,
+                                 })
+                              }
                            />
                         ))}
                      </div>
@@ -145,12 +152,18 @@ export default function ShowtimeSelection() {
                <SelectionSummary
                   selectedDate={selectedDateObj?.fullDate}
                   cityName={cities.find((c) => c.id === selectedCity)?.name}
-                  formatName={formats.find((f) => f.id === selectedFormat)?.name}
+                  formatName={
+                     formats.find((f) => f.id === selectedFormat)?.name
+                  }
                   theaterName={selectedShowtime.theater.name}
                   showtime={selectedShowtime.showtime.time}
                   onProceed={() => {
-                     if (isAuthenticated) {
-                        navigate("/seat-select");
+                     if (isAuthenticated && selectedShowtime.showtime) {
+                        if (selectedShowtime.showtime.id) {
+                           navigate(
+                              `/seat-select/${selectedShowtime.showtime.id}`,
+                           );
+                        }
                      } else {
                         setIsLoginModalOpen(true);
                      }
@@ -164,7 +177,10 @@ export default function ShowtimeSelection() {
             onClose={() => setIsLoginModalOpen(false)}
             onLoginSuccess={() => {
                setIsLoginModalOpen(false);
-               navigate("/seat-select");
+               // Tương tự cho trường hợp đăng nhập thành công
+               if (selectedShowtime?.showtime.id) {
+                  navigate(`/seat-select/${selectedShowtime.showtime.id}`);
+               }
             }}
          />
       </div>

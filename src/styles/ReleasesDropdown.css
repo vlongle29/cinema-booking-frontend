@@ -1,0 +1,192 @@
+/* ======================= */
+/* RELEASES DROPDOWN STYLES */
+/* ======================= */
+
+:root {
+   --releases-dropdown-bg: rgba(30, 41, 59, 0.98);
+   --releases-dropdown-border: rgba(148, 163, 184, 0.12);
+   --releases-dropdown-item-default: #cbd5e1;
+   --releases-dropdown-item-hover: rgba(255, 255, 255, 0.15);
+   --releases-dropdown-item-hover-text: #f1f5f9;
+   --releases-dropdown-accent: #f84565;
+   --releases-dropdown-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+   --releases-dropdown-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.releases-dropdown-container {
+   position: relative;
+   display: inline-flex;
+   align-items: center;
+}
+
+/* Trigger Button Styling */
+.releases-dropdown-trigger {
+   font-size: 14px;
+   font-weight: 500;
+   color: var(--nav-pill-text, #d4d4d4);
+   background: transparent;
+   border: none;
+   padding: 0;
+   cursor: pointer;
+   position: relative;
+   transition: var(--releases-dropdown-transition);
+   opacity: 0.85;
+   text-decoration: none;
+}
+
+.releases-dropdown-trigger:hover {
+   opacity: 1;
+   color: #ffffff;
+}
+
+.releases-dropdown-trigger::after {
+   content: "";
+   position: absolute;
+   bottom: -2px;
+   left: 0;
+   width: 0;
+   height: 2px;
+   background: var(--releases-dropdown-accent);
+   transition: var(--releases-dropdown-transition);
+}
+
+.releases-dropdown-trigger:hover::after {
+   width: 100%;
+}
+
+/* Dropdown Popup */
+.releases-dropdown-popup {
+   position: absolute;
+   top: calc(100% + 12px);
+   right: 0;
+   background: var(--releases-dropdown-bg);
+   border: 1px solid var(--releases-dropdown-border);
+   border-radius: 12px;
+   box-shadow: var(--releases-dropdown-shadow);
+   overflow: hidden;
+   z-index: 2100;
+   animation: slideDownAndFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+   backdrop-filter: blur(8px);
+   min-width: 220px;
+}
+
+@keyframes slideDownAndFadeIn {
+   from {
+      opacity: 0;
+      transform: translateY(-8px);
+   }
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+/* Dropdown Menu */
+.releases-dropdown-menu {
+   display: flex;
+   flex-direction: column;
+   padding: 8px;
+   gap: 0;
+   margin: 0;
+   list-style: none;
+}
+
+/* Menu Items */
+.releases-dropdown-item {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 12px 16px;
+   color: var(--releases-dropdown-item-default);
+   text-decoration: none;
+   border-radius: 8px;
+   transition: var(--releases-dropdown-transition);
+   position: relative;
+   background-color: transparent;
+   font-size: 13px;
+   font-weight: 500;
+   cursor: pointer;
+}
+
+.releases-dropdown-item:hover {
+   background-color: var(--releases-dropdown-item-hover);
+   color: var(--releases-dropdown-item-hover-text);
+}
+
+.releases-dropdown-item.active {
+   background-color: var(--releases-dropdown-item-hover);
+   color: var(--releases-dropdown-item-hover-text);
+}
+
+/* Item Text */
+.releases-dropdown-item-text {
+   flex: 1;
+   letter-spacing: 0.3px;
+}
+
+/* Item Indicator (Accent on hover) */
+.releases-dropdown-item-indicator {
+   width: 0;
+   height: 2px;
+   background: var(--releases-dropdown-accent);
+   border-radius: 1px;
+   margin-left: 8px;
+   transition: var(--releases-dropdown-transition);
+   opacity: 0;
+}
+
+.releases-dropdown-item:hover .releases-dropdown-item-indicator,
+.releases-dropdown-item.active .releases-dropdown-item-indicator {
+   width: 12px;
+   opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+   .releases-dropdown-popup {
+      top: calc(100% + 8px);
+      right: auto;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 200px;
+      max-width: 90vw;
+   }
+
+   .releases-dropdown-item {
+      padding: 10px 14px;
+      font-size: 12px;
+   }
+}
+
+@media (max-width: 480px) {
+   .releases-dropdown-popup {
+      min-width: calc(100vw - 24px);
+   }
+
+   .releases-dropdown-item {
+      padding: 10px 12px;
+      font-size: 12px;
+   }
+
+   .releases-dropdown-item-text {
+      letter-spacing: 0;
+   }
+}
+
+/* Accessibility */
+.releases-dropdown-item:focus-visible {
+   outline: 2px solid var(--releases-dropdown-accent);
+   outline-offset: 0;
+}
+
+/* Smooth Color Transitions */
+.releases-dropdown-item-text {
+   transition: color 0.2s ease-out;
+}
+
+.releases-dropdown-item-indicator {
+   transition:
+      width 0.2s ease-out,
+      opacity 0.2s ease-out;
+}

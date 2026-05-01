@@ -32,6 +32,7 @@ interface AuthResponse {
 }
 
 interface AuthContextType {
+   accessToken: string | null;
    userInfo: User | null;
    permissions: string[];
    isAuthenticated: boolean;
@@ -49,6 +50,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
    children,
 }) => {
    const [userInfo, setUserInfo] = useState<User | null>(null);
+   const [accessToken, setAccessTokenState] = useState<string | null>(null);
    const [permissions, setPermissions] = useState<string[]>([]);
    const [loading, setLoading] = useState(true);
 
@@ -59,10 +61,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             
             const { accessToken, userInfo, permissions } = response.data.data;
             setAccessToken(accessToken);
+            setAccessTokenState(accessToken);
             setUserInfo(userInfo);
             setPermissions(permissions ?? []);
          } catch (error: any) {
             setAccessToken(null);
+            setAccessTokenState(null);
             setUserInfo(null);
             setPermissions([]);
          } finally {
@@ -75,6 +79,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       // Listen for forced logout events triggered by axios interceptors (refresh token expired)
       const handleLogoutEvent = () => {
          setAccessToken(null);
+         setAccessTokenState(null);
          setUserInfo(null);
          setPermissions([]);
       };
@@ -93,6 +98,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const { accessToken, userInfo, permissions } = response.data.data;
 
       setAccessToken(accessToken);
+      setAccessTokenState(accessToken);
       setUserInfo(userInfo);
       setPermissions(permissions ?? []);
    };
@@ -117,6 +123,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
          console.error("Logout failed", error);
       } finally {
          setAccessToken(null);
+         setAccessTokenState(null);
          setUserInfo(null);
          setPermissions([]);
       }
@@ -125,6 +132,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
    return (
       <AuthContext.Provider
          value={{
+            accessToken,
             userInfo,
             permissions,
             isAuthenticated: !!userInfo,

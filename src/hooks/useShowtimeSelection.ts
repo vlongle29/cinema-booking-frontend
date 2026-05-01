@@ -177,6 +177,7 @@ const useShowtimeSelection = () => {
                   
                   return {
                      id: st.showtimeId,
+                     roomId: st.roomId, // Lấy roomId từ API response
                      time: timeStr,
                      isPeak: isPeakHour,
                      isSoldOut: st.availableSeats <= 0,

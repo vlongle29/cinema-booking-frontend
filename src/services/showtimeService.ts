@@ -1,6 +1,6 @@
-import apiService from './apiService';
+import apiService from "./apiService";
 
-const SHOWTIME_API_PATH = '/showtimes';
+const SHOWTIME_API_PATH = "/showtimes";
 
 export const showtimeService = {
    /**
@@ -46,30 +46,52 @@ export const showtimeService = {
    },
 
    /**
+    * Lấy danh sách các ghế  với trạng thái
+    * @param movieId
+    * @returns
+    */
+   getAllSeatStatus: (showtimeId: string) => {
+      return apiService.get(`${SHOWTIME_API_PATH}/${showtimeId}/seats`);
+   },
+
+   /**
     * Lấy danh sách ngày có suất chiếu
     */
    getAvailableDate: (movieId: string) => {
-      return apiService.get(`${SHOWTIME_API_PATH}/available-dates?movieId=${movieId}`);
+      return apiService.get(
+         `${SHOWTIME_API_PATH}/available-dates?movieId=${movieId}`,
+      );
    },
 
    /**
     * Lấy danh sách thành phố có suất chiếu
     */
    getAvailableCity: (movieId: string, date: string) => {
-      return apiService.get(`${SHOWTIME_API_PATH}/available-cities?movieId=${movieId}&date=${date}`);
+      return apiService.get(
+         `${SHOWTIME_API_PATH}/available-cities?movieId=${movieId}&date=${date}`,
+      );
    },
 
    /**
     * Lấy danh sách định dạng có suất chiếu
     */
    getAvailableFormat: (movieId: string, date: string, cityId: string) => {
-      return apiService.get(`${SHOWTIME_API_PATH}/available-formats?movieId=${movieId}&date=${date}&cityId=${cityId}`);
+      return apiService.get(
+         `${SHOWTIME_API_PATH}/available-formats?movieId=${movieId}&date=${date}&cityId=${cityId}`,
+      );
    },
 
    /**
     * Lấy danh sách suất chiếu theo rạp
     */
-   getAvailableShowtimes: (movieId: string, date: string, cityId: string, format: string) => {
-      return apiService.get(`${SHOWTIME_API_PATH}/grouped-by-branch?movieId=${movieId}&date=${date}&cityId=${cityId}&format=${format}`);
-   }
+   getAvailableShowtimes: (
+      movieId: string,
+      date: string,
+      cityId: string,
+      format: string,
+   ) => {
+      return apiService.get(
+         `${SHOWTIME_API_PATH}/grouped-by-branch?movieId=${movieId}&date=${date}&cityId=${cityId}&format=${format}`,
+      );
+   },
 };

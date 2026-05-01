@@ -1,16 +1,16 @@
-// src/components/ui/Seat.tsx
 import React from "react";
-import { cn } from "../../lib/utils"; // Giả sử bạn cấu hình alias @, hoặc dùng đường dẫn tương đối
-import type { SeatStatus } from "../../types/booking";
+import { cn } from "../../lib/utils";
 
+// Giữ nguyên interface của bạn
 interface SeatProps {
    id: string;
+   seatNumber: string;
    label: string;
-   status: SeatStatus;
-   onClick: (id: string) => void;
+   status: "available" | "selected" | "occupied";
+   onClick: () => void; // Định nghĩa lại cho rõ: hàm không cần nhận tham số
 }
 
-const Seat: React.FC<SeatProps> = ({ id, label, status, onClick }) => {
+const Seat: React.FC<SeatProps> = ({ id, seatNumber, label, status, onClick }) => {
    const baseStyles =
       "w-10 h-8 md:w-11 md:h-9 rounded-md flex items-center justify-center text-[10px] md:text-xs font-medium transition-all duration-200 select-none cursor-pointer border";
 
@@ -25,7 +25,8 @@ const Seat: React.FC<SeatProps> = ({ id, label, status, onClick }) => {
 
    return (
       <button
-         onClick={() => status !== "occupied" && onClick(id)}
+         // Đã sửa onClick(id) thành onClick()
+         onClick={() => status !== "occupied" && onClick()}
          disabled={status === "occupied"}
          className={cn(baseStyles, styles[status])}
          title={
@@ -37,4 +38,5 @@ const Seat: React.FC<SeatProps> = ({ id, label, status, onClick }) => {
    );
 };
 
-export default Seat;
+// Sử dụng React.memo để chặn re-render thừa
+export default React.memo(Seat);

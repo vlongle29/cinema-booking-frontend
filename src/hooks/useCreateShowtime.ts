@@ -81,7 +81,7 @@ export const useCreateShowtime = () => {
       let isMounted = true;
 
       const fetchInitialData = async () => {
-         console.log("🚀 [useCreateShowtime] Fetching initial data...");
+         console.log("[useCreateShowtime] Fetching initial data...");
          setStatus((prev) => ({ ...prev, isFetching: true, error: null }));
          try {
             const [moviesRes, citiesRes, formatsRes] = await Promise.all([
@@ -201,7 +201,7 @@ export const useCreateShowtime = () => {
       let isMounted = true;
 
       const fetchSlots = async () => {
-         console.log("🕐 [useCreateShowtime] Fetching available time slots...");
+         console.log("[useCreateShowtime] Fetching available time slots...");
          setStatus((prev) => ({ ...prev, isFetchingSlots: true, error: null }));
          // Reset previously selected slots whenever deps change
          setFormData((prev) => ({ ...prev, selectedSlots: [] }));

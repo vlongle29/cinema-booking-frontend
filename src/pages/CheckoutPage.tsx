@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from "react";
+import { useLocation, useNavigate, useNavigationType } from "react-router-dom";
 import {
    ArrowLeft,
    CreditCard,
@@ -13,6 +13,9 @@ import {
    ShieldCheck,
 } from "lucide-react";
 import { cn } from "../lib/utils";
+import { bookingService } from "../services/bookingService";
+import { paymentService } from "../services/paymentService";
+import { seatHoldService } from "../services/seatHoldService";
 
 const MOCK_MOVIE_DETAILS = {
    title: "Phi Vụ Động Trời 2",
@@ -23,39 +26,137 @@ const MOCK_MOVIE_DETAILS = {
 
 const paymentMethods = [
    {
-      id: "momo",
-      name: "Momo E-Wallet",
-      icon: Smartphone,
-      logo: "https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png",
-   },
-   {
-      id: "zalopay",
-      name: "ZaloPay E-Wallet",
-      icon: Smartphone,
-      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/ZaloPay_Logo.png/640px-ZaloPay_Logo.png",
-   },
-   { id: "atm", name: "ATM Card", icon: Landmark, logo: null },
-   {
-      id: "international",
-      name: "International Card (Visa/Master)",
-      icon: CreditCard,
+      id: "atm",
+      name: "ATM card (Thẻ nội địa)",
+      icon: ({ className }: { className?: string }) => (
+         <img
+            src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/atm_icon.png"
+            alt="NCB Bank"
+            className={className}
+         />
+      ),
       logo: null,
    },
-   { id: "qr", name: "QR Code", icon: QrCode, logo: null },
+   {
+      id: "international",
+      name: "Thẻ quốc tế (Visa, Master, Amex, JCB)",
+      icon: ({ className }: { className?: string }) => (
+         <img
+            src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/visamaster_logo.png"
+            alt="international"
+            className={className}
+         />
+      ),
+      logo: null,
+   },
+   {
+      id: "momo",
+      name: "MoMo",
+      icon: ({ className }: { className?: string }) => (
+         <img
+            src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/momo_icon.png"
+            alt="momo"
+            className={className}
+         />
+      ),
+      logo: null,
+   },
+   {
+      id: "vnpay",
+      name: "VNPAY",
+      icon: ({ className }: { className?: string }) => (
+         <img
+            src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/vnpay_newlogo.png"
+            alt="vnpay"
+            className={className}
+         />
+      ),
+      logo: null,
+   },
+   {
+      id: "NCB",
+      name: "NCB Bank",
+      icon: ({ className }: { className?: string }) => (
+         <img
+            src="https://www.ncb-bank.vn/cache-buster-1695119533/website/static/images/logo.png "
+            alt="NCB Bank"
+            className={className}
+         />
+      ),
+      logo: "https://upload.wikimedia.org/wikipedia/vi/thumb/4/4e/NCB_Bank_logo.png/640px-NCB_Bank_logo.png",
+   },
 ];
 
 const CheckoutPage: React.FC = () => {
    const location = useLocation();
    const navigate = useNavigate();
+   const navType = useNavigationType();
 
+   // Lấy dữ liệu từ state của location
    const {
+      showtimeId,
+      seats,
+      timing = "",
+      bookingId,
       ticketPrice = 0,
       snackTotal = 0,
       finalTotal = 0,
-      seats = [],
+      totalAmount,
    } = location.state || {};
 
-   const [paymentMethod, setPaymentMethod] = useState("momo");
+   // 1. XỬ LÝ KHI ẤN NÚT BACK CỦA TRÌNH DUYỆT
+   useEffect(() => {
+      const handleBackNavigation = async () => {
+         if (navType === "POP" && location.state?.bookingId) {
+            try {
+               await seatHoldService.releaseSeats(location.state.bookingId);
+               navigate(`/seat-select/${location.state.showtimeId}`, {
+                  state: {
+                     showtimeId: location.state.showtimeId,
+                     seats: location.state.seats,
+                  },
+               });
+            } catch (error) {
+               console.error("Lỗi khi hủy ghế khi quay lại:", error);
+            }
+         }
+      };
+
+      handleBackNavigation();
+   }, [location, navType]);
+
+   // Hàm xử lý quay lại chung: Hủy booking và chuyển hướng
+   const handleBackToSeatSelection = useCallback(async () => {
+      if (bookingId) {
+         try {
+            await seatHoldService.releaseSeats(bookingId);
+            await bookingService.cancelBooking(
+               bookingId,
+               "User canceled during payment",
+            );
+         } catch (error) {
+            console.error("Lỗi khi hủy đơn hàng:", error);
+         }
+      }
+
+      navigate(`/seat-select/${showtimeId}`, {
+         state: { showtimeId, seats },
+         replace: true, // Thay thế entry hiện tại để tránh lặp lịch sử
+      });
+   }, [bookingId, navigate, showtimeId, seats]);
+
+   // Xử lý khi nhấn nút Back của trình duyệt
+   useEffect(() => {
+      window.addEventListener("popstate", handleBackToSeatSelection);
+
+      // Cleanup listener khi component unmount
+      return () => {
+         window.removeEventListener("popstate", handleBackToSeatSelection);
+      };
+   }, [handleBackToSeatSelection]);
+
+   const [paymentMethod, setPaymentMethod] = useState<string>("");
+   const [isProcessing, setIsProcessing] = useState(false);
    const [countdown, setCountdown] = useState(600); // 10 minutes
 
    useEffect(() => {
@@ -79,13 +180,81 @@ const CheckoutPage: React.FC = () => {
       }).format(amount);
    };
 
+   const handlePayment = async () => {
+      if (!bookingId || isProcessing) {
+         alert("Phiên đặt vé đã hết hạn hoặc không hợp lệ. Vui lòng thử lại.");
+         return;
+      }
+
+      setIsProcessing(true);
+      try {
+         // 1. Ánh xạ ID từ UI sang Enum mà Backend yêu cầu (CASH, CREDIT_CARD, E_WALLET)
+         let backendPaymentMethod = "E_WALLET"; // Mặc định cho VNPAY, Momo, ZaloPay, NCB, QR
+         if (paymentMethod === "international" || paymentMethod === "atm") {
+            backendPaymentMethod = "CREDIT_CARD";
+         }
+
+         // 2. Cập nhật phương thức thanh toán chung lên Server (Sử dụng Enum)
+         await bookingService.checkoutBooking(bookingId, backendPaymentMethod);
+
+         // 3. Xử lý logic riêng cho từng cổng thanh toán (Sử dụng ID cụ thể của UI)
+         if (
+            paymentMethod === "vnpay" ||
+            paymentMethod === "international" ||
+            paymentMethod === "atm"
+         ) {
+            // Nếu chọn NCB thì gửi bankCode là NCB, ngược lại để trống để VNPAY hiện danh sách ngân hàng
+            const bankCode = paymentMethod === "vnpay" ? " " : " ";
+
+            // VNPAY quy định: Số tiền thanh toán = Số tiền thực tế * 100
+            // Ưu tiên totalAmount hoặc finalTotal từ state
+            const actualAmount = totalAmount || finalTotal || 0;
+            if (actualAmount <= 0)
+               throw new Error("Số tiền thanh toán không hợp lệ");
+            const vnpAmount = (actualAmount * 100).toString();
+
+            const response = await paymentService.createVNPayPayment({
+               amount: vnpAmount,
+               bankCode,
+               bookingId,
+            });
+
+            // Axios đã tự động parse JSON.
+            // Theo cấu trúc ApiResponse của bạn, URL sẽ nằm trong field 'data'.
+            const paymentUrl = response.data.paymentUrl;
+
+            if (
+               paymentUrl &&
+               typeof paymentUrl === "string" &&
+               paymentUrl.startsWith("http")
+            ) {
+               window.location.href = paymentUrl;
+            } else {
+               alert("Không nhận được URL thanh toán hợp lệ từ máy chủ.");
+            }
+         } else {
+            // Các phương thức khác chưa tích hợp cổng thanh toán
+            alert(
+               `Bạn đã chọn ${paymentMethod}. Phương thức này đang được tích hợp, vui lòng chọn VNPAY để test.`,
+            );
+         }
+      } catch (error) {
+         console.error("Payment Error:", error);
+         alert("Lỗi kết nối đến hệ thống thanh toán. Vui lòng thử lại sau!");
+      } finally {
+         setIsProcessing(false);
+      }
+   };
+
+   const displayTotal = totalAmount || finalTotal || 0;
+
    return (
       <div className="min-h-screen bg-gray-50 text-gray-800 pb-40">
          {/* Header */}
          <header className="bg-[#0B0B0F] text-white py-4 shadow-md">
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-center relative">
                <button
-                  onClick={() => navigate(-1)}
+                  onClick={() => handleBackToSeatSelection()}
                   className="absolute left-6 p-2 rounded-full hover:bg-white/10 transition-colors"
                >
                   <ArrowLeft size={20} />
@@ -226,7 +395,7 @@ const CheckoutPage: React.FC = () => {
                            <div className="flex justify-between text-base font-bold">
                               <span>Total Amount</span>
                               <span className="text-rose-600">
-                                 {formatCurrency(finalTotal)}
+                                 {formatCurrency(displayTotal)}
                               </span>
                            </div>
                         </div>
@@ -246,7 +415,7 @@ const CheckoutPage: React.FC = () => {
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
                {/* Previous Button */}
                <button
-                  onClick={() => navigate(-1)}
+                  onClick={handleBackToSeatSelection}
                   className="px-6 py-3 rounded-lg font-semibold text-white hover:bg-white/10 transition-colors hidden md:block"
                >
                   Previous
@@ -277,14 +446,25 @@ const CheckoutPage: React.FC = () => {
                         Total
                      </span>
                      <p className="text-white font-bold text-xl">
-                        {formatCurrency(finalTotal)}
+                        {formatCurrency(displayTotal)}
                      </p>
                   </div>
                   <button
-                     // onClick={handlePayment}
-                     className="flex items-center gap-2 px-6 md:px-8 py-3 rounded-full font-bold bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all duration-300"
+                     onClick={handlePayment}
+                     disabled={isProcessing}
+                     className={cn(
+                        "flex items-center gap-2 px-6 md:px-8 py-3 rounded-full font-bold bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all duration-300",
+                        isProcessing && "opacity-70 cursor-not-allowed",
+                     )}
                   >
-                     PAYMENT
+                     {isProcessing ? (
+                        <div className="flex items-center gap-2">
+                           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                           PROCESSING...
+                        </div>
+                     ) : (
+                        "PAYMENT"
+                     )}
                   </button>
                </div>
             </div>

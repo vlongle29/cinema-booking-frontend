@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import type { Movie } from "../types";
+import guardiansImg from "../../../assets/images/phim-kinh-di.png";
 
 // Movie Card Component
 const MovieCard: React.FC<{ movie: Movie }> = ({ movie }) => {
@@ -12,7 +13,7 @@ const MovieCard: React.FC<{ movie: Movie }> = ({ movie }) => {
       >
          <div className="w-full h-[250px] overflow-hidden bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a]">
             <img
-               src={movie.image}
+               src={movie.image || guardiansImg}
                alt={movie.title}
                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105 bg-green-300"
             />

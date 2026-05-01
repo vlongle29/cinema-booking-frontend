@@ -3,6 +3,11 @@ import DashboardHome from "./DashboardHome";
 import AddMovies from "./AddMovies";
 import ListShows from "./ListShows";
 import ListBookings from "./ListBookings";
+import SeatTemplateList from "./seat-template/SeatTemplateList";
+import CreateSeatTemplate from "./seat-template/CreateSeatTemplate";
+import SeatTemplateEditor from "./seat-template/SeatTemplateEditor";
+import ApplyTemplateToRoom from "./seat-template/ApplyTemplateToRoom";
+
 
 const imgProfileImg =
    "http://localhost:3845/assets/228bdbc0f2f37782d9812b5350a009c2cda36a3e.png";
@@ -12,6 +17,7 @@ const sidebarItems = [
    { label: "Add Movies", path: "/dashboard/add-movies" },
    { label: "List Shows", path: "/dashboard/list-shows" },
    { label: "List Bookings", path: "/dashboard/list-bookings" },
+   { label: "Seat Template", path: "/dashboard/seat-template" },
 ];
 
 export default function Dashboard() {
@@ -69,6 +75,12 @@ export default function Dashboard() {
                <Route path="add-movies" element={<AddMovies />} />
                <Route path="list-shows" element={<ListShows />} />
                <Route path="list-bookings" element={<ListBookings />} />
+               <Route path="seat-template">
+                  <Route index element={<SeatTemplateList />} />
+                  <Route path="create" element={<CreateSeatTemplate />} />
+                  <Route path="edit/:id" element={<SeatTemplateEditor />} />
+                  <Route path="apply/:id" element={<ApplyTemplateToRoom />} />
+               </Route>
             </Routes>
          </main>
       </div>
