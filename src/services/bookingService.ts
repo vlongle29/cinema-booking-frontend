@@ -1,4 +1,4 @@
-import apiService from "./apiService";
+import apiService, { ApiResponse } from "./apiService";
 
 const BOOKING_API_PATH = "/booking";
 
@@ -25,12 +25,50 @@ export interface BookingCheckoutData {
    paymentMethod: PaymentMethod;
 }
 
+export interface BookingListItem {
+   id: string;
+   customerId: string | null;
+   staffId: string | null;
+   showtimeId: string;
+   promotionId: string | null;
+   totalTicketPrice: number;
+   totalFoodPrice: number;
+   discountAmount: number;
+   finalAmount: number;
+   bookingDate: string;
+   expiredAt: string | null;
+   status: string;
+   paymentMethod: PaymentMethod | null;
+   tickets: any;
+   products: any;
+}
+
+export interface BookingSearchResponse {
+   content: BookingListItem[];
+   totalPages?: number;
+   totalElements?: number;
+   size?: number;
+   number?: number;
+}
+
 export const bookingService = {
    /**
     * Lấy danh sách lượt đặt vé
     */
    getAllBookings: (params?: any) => {
       return apiService.get(BOOKING_API_PATH, { params });
+   },
+
+   /**
+    * Lấy danh sách đặt vé
+    */
+   searchBookings: (
+      params?: any,
+   ): Promise<ApiResponse<BookingSearchResponse>> => {
+      return apiService.get<BookingSearchResponse>(
+         `${BOOKING_API_PATH}/search`,
+         { params },
+      );
    },
 
    /**
