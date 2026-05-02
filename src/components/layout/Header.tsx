@@ -5,6 +5,15 @@ import MoviesDropdown from "./MoviesDropdown";
 import "../../styles/header.css";
 import LoginModal from "../common/LoginModal";
 import useAuth from "../../hooks/useAuth";
+import userIcon from "../../assets/icons/user.png";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuLabel,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const navItems = [
    { to: "/", label: "Home", end: true },
@@ -14,7 +23,7 @@ const navItems = [
 
 const Header = () => {
    const [isModalOpen, setIsModalOpen] = useState(false);
-   const { user, logout } = useAuth();
+   const { userInfo, logout } = useAuth();
 
    // This function would be called on successful login from the modal
    const handleLoginSuccess = () => {
@@ -44,6 +53,20 @@ const Header = () => {
                            {label}
                         </NavLink>
                      ))}
+                     {userInfo?.roles?.some((role) =>
+                        ["ADMIN", "SUPER_ADMIN", "EMPLOYEE"].includes(
+                           role.code,
+                        ),
+                     ) && (
+                        <NavLink
+                           to="/dashboard"
+                           className={({ isActive }) =>
+                              `nav-link ${isActive ? "active" : ""}`
+                           }
+                        >
+                           Dashboard
+                        </NavLink>
+                     )}
                      <MoviesDropdown />
                   </div>
                </div>
@@ -52,21 +75,53 @@ const Header = () => {
                   <button className="search-btn">
                      <Search size={20} />
                   </button>
-                  {user ? (
-                     // In a real app, this would open a user menu
-                     <button
-                        onClick={logout}
-                        className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                     >
-                        <img
-                           src={
-                              user.avatar ||
-                              "https://randomuser.me/api/portraits/men/75.jpg"
-                           }
-                           alt={user.name || "User"}
-                           className="w-full h-full object-cover"
-                        />
-                     </button>
+                  {userInfo ? (
+                     <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                           <button className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white cursor-pointer transition-transform hover:scale-105">
+                              <img
+                                 src={userInfo.avatar || userIcon}
+                                 alt={userInfo.name || "User"}
+                                 className="w-full h-full object-cover"
+                              />
+                           </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                           align="end"
+                           className="w-56 bg-[rgba(30,41,59,0.95)] backdrop-blur-lg border-[rgba(148,163,184,0.12)] text-white shadow-2xl"
+                        >
+                           <DropdownMenuLabel className="font-normal">
+                              <div className="flex flex-col space-y-1">
+                                 <p className="text-sm font-semibold leading-none text-white">
+                                    {userInfo.name}
+                                 </p>
+                                 <p className="text-xs leading-none text-gray-400">
+                                    {userInfo.email}
+                                 </p>
+                              </div>
+                           </DropdownMenuLabel>
+                           <DropdownMenuSeparator />
+                           <DropdownMenuItem
+                              asChild
+                              className="cursor-pointer focus:bg-white/10 focus:text-white"
+                           >
+                              <Link to="/bookings">My Bookings</Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuItem
+                              asChild
+                              className="cursor-pointer focus:bg-white/10 focus:text-white"
+                           >
+                              <Link to="/profile">Manage account</Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuSeparator />
+                           <DropdownMenuItem
+                              onClick={() => logout()}
+                              className="cursor-pointer text-red-400 focus:bg-red-500/10 focus:text-red-400"
+                           >
+                              Log out
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
                   ) : (
                      <button
                         className="login-btn"

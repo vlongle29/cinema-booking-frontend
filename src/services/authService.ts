@@ -1,6 +1,6 @@
-import apiService from './apiService';
+import apiService from "./apiService";
 
-const AUTH_API_PATH = '/auth';
+const AUTH_API_PATH = "/auth";
 
 export const authService = {
    /**
@@ -36,6 +36,8 @@ export const authService = {
     * Lấy thông tin người dùng hiện tại
     */
    getCurrentUser: () => {
-      return apiService.get(`${AUTH_API_PATH}/me`);
-   }
+      return apiService.get(`${AUTH_API_PATH}/info`, {
+         withCredentials: true, // Ensure cookies are sent for authentication
+      });
+   },
 };

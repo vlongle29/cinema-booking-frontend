@@ -10,6 +10,7 @@ export default {
             "card-bg": "#12161c",
             "nav-pill": "#d4d4d4",
             "border-custom": "rgba(183, 183, 183, 0.15)",
+            border: "hsl(var(--border))",
          },
          textColor: {
             primary: "#ffffff",

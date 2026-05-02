@@ -22,6 +22,9 @@ const movies = [
    { id: 1, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
    { id: 2, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
    { id: 3, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
+   { id: 3, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
+   { id: 3, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
+   { id: 3, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
 ];
 
 export default function DashboardHome() {
@@ -38,7 +41,7 @@ export default function DashboardHome() {
          </div>
 
          {/* Stats Cards Grid */}
-         <section className="grid grid-cols-4 gap-4 mb-16">
+         <section className="grid grid-cols-5 gap-4 mb-16">
             {statCards.map((stat, idx) => (
                <div
                   key={idx}
@@ -64,14 +67,14 @@ export default function DashboardHome() {
             </h2>
 
             {/* Movie Cards Grid */}
-            <div className="grid grid-cols-3 gap-5">
+            <div className="grid grid-cols-5 gap-5">
                {movies.map((movie) => (
                   <div
                      key={movie.id}
                      className="bg-[rgba(248,69,101,0.1)] border border-[rgba(248,69,101,0.2)] rounded-[8px] overflow-hidden transition-all hover:border-[#f84565]"
                   >
                      {/* Movie Poster */}
-                     <div className="relative w-full h-44 overflow-hidden rounded-t-[8px]">
+                     <div className="relative w-full h-52 overflow-hidden rounded-t-[8px]">
                         <img
                            src={imgWp49260591}
                            alt={movie.title}
