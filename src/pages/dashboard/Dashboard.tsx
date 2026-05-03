@@ -1,28 +1,32 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import DashboardHome from "./DashboardHome";
-import AddMovies from "./AddMovies";
+import ListMovies from "./ListMovies";
 import ListShows from "./ListShows";
 import ListBookings from "./ListBookings";
 import SeatTemplateList from "./seat-template/SeatTemplateList";
 import CreateSeatTemplate from "./seat-template/CreateSeatTemplate";
 import SeatTemplateEditor from "./seat-template/SeatTemplateEditor";
 import ApplyTemplateToRoom from "./seat-template/ApplyTemplateToRoom";
-
+import profileImg from "../../assets/images/profile-icon.png";
+import useAuth from "../../hooks/useAuth";
 
 const imgProfileImg =
    "http://localhost:3845/assets/228bdbc0f2f37782d9812b5350a009c2cda36a3e.png";
 
 const sidebarItems = [
    { label: "Dashboard", path: "/dashboard" },
-   { label: "Add Movies", path: "/dashboard/add-movies" },
-   { label: "List Shows", path: "/dashboard/list-shows" },
-   { label: "List Bookings", path: "/dashboard/list-bookings" },
-   { label: "Seat Template", path: "/dashboard/seat-template" },
+   { label: "Danh sách phim", path: "/dashboard/list-movies" },
+   { label: "Danh sách suất chiếu", path: "/dashboard/list-shows" },
+   { label: "Danh sách đặt chỗ", path: "/dashboard/list-bookings" },
+   { label: "Bản mẫu ghế", path: "/dashboard/seat-template" },
 ];
 
 export default function Dashboard() {
    const navigate = useNavigate();
    const location = useLocation();
+   const { userInfo } = useAuth();
+
+   console.log("user info", userInfo);
 
    const isActive = (path: string) => {
       if (path === "/dashboard") {
@@ -38,12 +42,18 @@ export default function Dashboard() {
             {/* Profile Section */}
             <div className="flex flex-col items-center py-8 border-b border-[#393939]">
                <img
-                  src={imgProfileImg}
-                  alt="Profile"
+                  src={userInfo?.avatar || profileImg}
+                  alt={userInfo?.name || "Profile"}
                   className="w-14 h-14 rounded-full mb-4 object-cover"
                />
                <p className="text-white font-medium text-base">
-                  Richard Sanford
+                  {userInfo?.name || "Guest"}
+               </p>
+               <p>
+                  <span className="text-[#797b7d] text-sm">
+                     {userInfo?.email || "No email"}
+                  </span>
+                  <br />
                </p>
             </div>
 
@@ -72,7 +82,7 @@ export default function Dashboard() {
             {/* Render nested routes - pages will change without reloading sidebar */}
             <Routes>
                <Route index element={<DashboardHome />} />
-               <Route path="add-movies" element={<AddMovies />} />
+               <Route path="list-movies" element={<ListMovies />} />
                <Route path="list-shows" element={<ListShows />} />
                <Route path="list-bookings" element={<ListBookings />} />
                <Route path="seat-template">

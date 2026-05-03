@@ -1,21 +1,23 @@
 import { useState } from "react";
 import DashboardEntityList from "../../components/dashboard/DashboardEntityList";
-import { useBookingList } from "../../hooks/useBookingList";
+import MovieForm from "../../components/dashboard/movies/MovieForm";
+import { useMovieList } from "../../hooks/useMovieList";
 import {
-   getBookingColumns,
-   getBookingFilters,
-} from "../../hooks/BookingTableConfig";
+   getMovieColumns,
+   getMovieFilters,
+} from "../../components/dashboard/movies/MovieTableConfig";
 
-export default function ListBookings() {
+export default function ListMovies() {
    const [isCreating, setIsCreating] = useState(false);
 
-   const { bookings, isLoading, searchParams, setSearchParams, pagination } =
-      useBookingList();
-
-   const handleAction = (id: string, type: string) => {
-      console.log(`Action ${type} on booking ${id}`);
-      // Thực hiện logic view/cancel ở đây
-   };
+   const {
+      movies,
+      isLoading,
+      searchParams,
+      setSearchParams,
+      pagination,
+      handleDelete,
+   } = useMovieList(isCreating);
 
    const handleSearchChange = (name: string, value: any) => {
       setSearchParams((prev: any) => ({
@@ -29,25 +31,31 @@ export default function ListBookings() {
       setSearchParams({
          page: 1,
          size: 10,
+         keyword: "",
          status: "",
-         search: "",
+         releaseDateFrom: "",
+         releaseDateTo: "",
       });
    };
 
-   const columns = getBookingColumns(handleAction);
-   const filters = getBookingFilters();
+   const handleSuccess = () => {
+      setIsCreating(false);
+   };
+
+   const columns = getMovieColumns(handleDelete);
+   const filters = getMovieFilters();
 
    return (
       <DashboardEntityList
-         title="Booking"
-         entityName="booking"
+         title="Movie"
+         entityName="movie"
          isCreating={isCreating}
          onToggleCreating={() => setIsCreating((prev) => !prev)}
          filters={filters}
          searchParams={searchParams}
          onSearchChange={handleSearchChange}
          onResetFilters={resetFilters}
-         data={bookings}
+         data={movies}
          columns={columns}
          isLoading={isLoading}
          pagination={{
@@ -59,9 +67,10 @@ export default function ListBookings() {
             setSearchParams((prev: any) => ({ ...prev, page }))
          }
          renderCreateForm={() => (
-            <div className="text-white p-4">
-               Booking creation is handled via customer app.
-            </div>
+            <MovieForm
+               onCancel={() => setIsCreating(false)}
+               onSuccess={handleSuccess}
+            />
          )}
       />
    );

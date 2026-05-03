@@ -16,7 +16,7 @@ import {
    Select,
    CircularProgress,
    IconButton,
-   type SelectChangeEvent
+   type SelectChangeEvent,
 } from "@mui/material";
 import {
    Plus,
@@ -25,8 +25,17 @@ import {
    RefreshCw,
    Search as SearchIcon,
    ChevronLeft,
-   ChevronRight
+   ChevronRight,
 } from "lucide-react";
+import {
+   Pagination,
+   PaginationContent,
+   PaginationEllipsis,
+   PaginationItem,
+   PaginationLink,
+   PaginationNext,
+   PaginationPrevious,
+} from "../ui/pagination";
 
 export interface Column<T> {
    id: string;
@@ -50,7 +59,7 @@ interface DashboardEntityListProps<T> {
    entityName: string;
    isCreating: boolean;
    onToggleCreating: () => void;
-   
+
    // Filters
    filters: FilterField[];
    searchParams: any;
@@ -61,7 +70,7 @@ interface DashboardEntityListProps<T> {
    data: T[];
    columns: Column<T>[];
    isLoading: boolean;
-   
+
    // Pagination
    pagination: {
       totalPages: number;
@@ -73,7 +82,8 @@ interface DashboardEntityListProps<T> {
 
    // Form
    renderCreateForm: () => ReactNode;
-   
+   renderCustomList?: (data: T[]) => ReactNode;
+
    // Custom Messages
    emptyMessage?: string;
    loadingMessage?: string;
@@ -100,12 +110,17 @@ export default function DashboardEntityList<T>({
    onPageChange,
    renderCreateForm,
    emptyMessage = "No matching items found.",
-   loadingMessage = "Searching items..."
+   loadingMessage = "Searching items...",
+   renderCustomList,
 }: DashboardEntityListProps<T>) {
-
    const handleFilterChange = (
-      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<any>
+      e:
+         | React.ChangeEvent<
+              | HTMLInputElement
+              | HTMLSelectElement
+              | { name?: string; value: unknown }
+           >
+         | SelectChangeEvent<any>,
    ) => {
       const { name, value } = e.target;
       if (name) {
@@ -116,10 +131,29 @@ export default function DashboardEntityList<T>({
    return (
       <Box sx={{ width: "100%" }}>
          {/* --- Header --- */}
-         <Box sx={{ mb: 4, mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Typography variant="h5" component="h1" sx={{ fontWeight: 600, color: "white" }}>
+         <Box
+            sx={{
+               mb: 4,
+               mt: 2,
+               display: "flex",
+               justifyContent: "space-between",
+               alignItems: "center",
+            }}
+         >
+            <Typography
+               variant="h5"
+               component="h1"
+               sx={{ fontWeight: 600, color: "white" }}
+            >
                {isCreating ? "Create " : "List "}
-               <Box component="span" sx={{ textDecoration: "underline", textDecorationColor: DASHBOARD_ACCENT, color: DASHBOARD_ACCENT }}>
+               <Box
+                  component="span"
+                  sx={{
+                     textDecoration: "underline",
+                     textDecorationColor: DASHBOARD_ACCENT,
+                     color: DASHBOARD_ACCENT,
+                  }}
+               >
                   {title}
                </Box>
             </Typography>
@@ -135,7 +169,7 @@ export default function DashboardEntityList<T>({
                      textTransform: "none",
                      fontWeight: 600,
                      borderRadius: 1.5,
-                     px: 3
+                     px: 3,
                   }}
                >
                   Add {title}
@@ -145,7 +179,11 @@ export default function DashboardEntityList<T>({
                   variant="text"
                   startIcon={<X size={16} />}
                   onClick={onToggleCreating}
-                  sx={{ color: DASHBOARD_TEXT_MUTED, "&:hover": { color: "white" }, textTransform: "none" }}
+                  sx={{
+                     color: DASHBOARD_TEXT_MUTED,
+                     "&:hover": { color: "white" },
+                     textTransform: "none",
+                  }}
                >
                   Cancel
                </Button>
@@ -153,46 +191,68 @@ export default function DashboardEntityList<T>({
          </Box>
 
          {isCreating ? (
-            <Box sx={{ 
-               bgcolor: "rgba(248, 69, 101, 0.05)", 
-               border: `1px solid rgba(248, 69, 101, 0.2)`, 
-               borderRadius: 2,
-               p: 4,
-               width: "100%"
-            }}>
+            <Box
+               sx={{
+                  bgcolor: "rgba(248, 69, 101, 0.05)",
+                  border: `1px solid rgba(248, 69, 101, 0.2)`,
+                  borderRadius: 2,
+                  p: 4,
+                  width: "100%",
+               }}
+            >
                {renderCreateForm()}
             </Box>
          ) : (
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                {/* --- Filters --- */}
-               <Paper 
+               <Paper
                   elevation={0}
-                  sx={{ 
-                     p: 3, 
-                     bgcolor: DASHBOARD_BG, 
-                     border: `1px solid ${DASHBOARD_BORDER}`, 
-                     borderRadius: 2 
+                  sx={{
+                     p: 3,
+                     bgcolor: DASHBOARD_BG,
+                     border: `1px solid ${DASHBOARD_BORDER}`,
+                     borderRadius: 2,
                   }}
                >
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+                  <Box
+                     sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 3,
+                     }}
+                  >
                      <Filter size={16} color={DASHBOARD_ACCENT} />
-                     <Typography sx={{ color: "white", fontWeight: 600, fontSize: "0.875rem" }}>
+                     <Typography
+                        sx={{
+                           color: "white",
+                           fontWeight: 600,
+                           fontSize: "0.875rem",
+                        }}
+                     >
                         Search Filters
                      </Typography>
                   </Box>
 
                   <Grid container spacing={2}>
                      {filters.map((filter) => (
-                        <Grid item xs={12} sm={6} md={3} lg={2} key={filter.name}>
-                           <Typography 
-                              variant="caption" 
-                              sx={{ 
-                                 display: "block", 
-                                 mb: 0.5, 
-                                 color: DASHBOARD_TEXT_MUTED, 
-                                 textTransform: "uppercase", 
-                                 fontWeight: 700, 
-                                 letterSpacing: 1 
+                        <Grid
+                           item
+                           xs={12}
+                           sm={6}
+                           md={3}
+                           lg={2}
+                           key={filter.name}
+                        >
+                           <Typography
+                              variant="caption"
+                              sx={{
+                                 display: "block",
+                                 mb: 0.5,
+                                 color: DASHBOARD_TEXT_MUTED,
+                                 textTransform: "uppercase",
+                                 fontWeight: 700,
+                                 letterSpacing: 1,
                               }}
                            >
                               {filter.label}
@@ -209,16 +269,25 @@ export default function DashboardEntityList<T>({
                                  sx={{
                                     bgcolor: "#252529",
                                     color: "white",
-                                    "& .MuiOutlinedInput-notchedOutline": { borderColor: DASHBOARD_BORDER },
-                                    "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: DASHBOARD_ACCENT },
-                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: DASHBOARD_ACCENT },
+                                    "& .MuiOutlinedInput-notchedOutline": {
+                                       borderColor: DASHBOARD_BORDER,
+                                    },
+                                    "&:hover .MuiOutlinedInput-notchedOutline":
+                                       { borderColor: DASHBOARD_ACCENT },
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                       { borderColor: DASHBOARD_ACCENT },
                                     fontSize: "0.75rem",
-                                    borderRadius: 1.5
+                                    borderRadius: 1.5,
                                  }}
                               >
-                                 <MenuItem value="">{filter.placeholder || `All ${filter.label}s`}</MenuItem>
-                                 {filter.options?.map(opt => (
-                                    <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+                                 <MenuItem value="">
+                                    {filter.placeholder ||
+                                       `All ${filter.label}s`}
+                                 </MenuItem>
+                                 {filter.options?.map((opt) => (
+                                    <MenuItem key={opt.value} value={opt.value}>
+                                       {opt.label}
+                                    </MenuItem>
                                  ))}
                               </Select>
                            ) : (
@@ -231,14 +300,26 @@ export default function DashboardEntityList<T>({
                                  placeholder={filter.placeholder}
                                  fullWidth
                                  size="small"
-                                 inputProps={{ sx: { color: "white", fontSize: "0.75rem", p: "8.5px 14px", colorScheme: "dark" } }}
+                                 inputProps={{
+                                    sx: {
+                                       color: "white",
+                                       fontSize: "0.75rem",
+                                       p: "8.5px 14px",
+                                       colorScheme: "dark",
+                                    },
+                                 }}
                                  sx={{
                                     bgcolor: "#252529",
-                                    "& .MuiOutlinedInput-notchedOutline": { borderColor: DASHBOARD_BORDER },
-                                    "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: DASHBOARD_ACCENT },
-                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: DASHBOARD_ACCENT },
+                                    "& .MuiOutlinedInput-notchedOutline": {
+                                       borderColor: DASHBOARD_BORDER,
+                                    },
+                                    "&:hover .MuiOutlinedInput-notchedOutline":
+                                       { borderColor: DASHBOARD_ACCENT },
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                       { borderColor: DASHBOARD_ACCENT },
                                     borderRadius: 1.5,
-                                    "& input::-webkit-calendar-picker-indicator": { filter: "invert(1)" }
+                                    "& input::-webkit-calendar-picker-indicator":
+                                       { filter: "invert(1)" },
                                  }}
                               />
                            )}
@@ -246,7 +327,15 @@ export default function DashboardEntityList<T>({
                      ))}
                   </Grid>
 
-                  <Box sx={{ mt: 3, pt: 3, borderTop: `1px solid ${DASHBOARD_BORDER}`, display: "flex", justifyContent: "flex-end" }}>
+                  <Box
+                     sx={{
+                        mt: 3,
+                        pt: 3,
+                        borderTop: `1px solid ${DASHBOARD_BORDER}`,
+                        display: "flex",
+                        justifyContent: "flex-end",
+                     }}
+                  >
                      <Button
                         variant="outlined"
                         startIcon={<RefreshCw size={14} />}
@@ -257,8 +346,11 @@ export default function DashboardEntityList<T>({
                            textTransform: "none",
                            fontWeight: 600,
                            fontSize: "0.75rem",
-                           "&:hover": { bgcolor: "#252529", borderColor: DASHBOARD_BORDER },
-                           borderRadius: 1.5
+                           "&:hover": {
+                              bgcolor: "#252529",
+                              borderColor: DASHBOARD_BORDER,
+                           },
+                           borderRadius: 1.5,
                         }}
                      >
                         Reset Filters
@@ -270,35 +362,40 @@ export default function DashboardEntityList<T>({
                {isLoading ? (
                   <Paper
                      elevation={0}
-                     sx={{ 
-                        p: 10, 
-                        display: "flex", 
-                        flexDirection: "column", 
-                        alignItems: "center", 
+                     sx={{
+                        p: 10,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
                         justifyContent: "center",
                         bgcolor: DASHBOARD_BG,
                         border: `1px solid ${DASHBOARD_BORDER}`,
-                        borderRadius: 2
+                        borderRadius: 2,
                      }}
                   >
-                     <CircularProgress size={40} sx={{ color: DASHBOARD_ACCENT, mb: 2 }} />
-                     <Typography variant="body2" sx={{ color: DASHBOARD_TEXT_MUTED }}>
+                     <CircularProgress
+                        size={40}
+                        sx={{ color: DASHBOARD_ACCENT, mb: 2 }}
+                     />
+                     <Typography
+                        variant="body2"
+                        sx={{ color: DASHBOARD_TEXT_MUTED }}
+                     >
                         {loadingMessage}
                      </Typography>
                   </Paper>
                ) : data.length > 0 ? (
-                  <Paper
-                     elevation={0}
-                     sx={{
-                        bgcolor: DASHBOARD_BG,
-                        border: `1px solid ${DASHBOARD_BORDER}`,
-                        borderRadius: 2,
-                        overflow: "hidden"
-                     }}
-                  >
-                     <TableContainer>
-                        <Table sx={{ minWidth: 650 }}>
-                           <TableHead sx={{ bgcolor: "#252529" }}>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                     {renderCustomList ? (
+                        renderCustomList(data)
+                     ) : (
+                        <Paper
+                           elevation={0}
+                           sx={{ bgcolor: DASHBOARD_BG, border: `1px solid ${DASHBOARD_BORDER}`, borderRadius: 2, overflow: "hidden" }}
+                        >
+                           <TableContainer>
+                              <Table sx={{ minWidth: 650 }}>
+                                 <TableHead sx={{ bgcolor: "#252529" }}>
                               <TableRow>
                                  {columns.map((col) => (
                                     <TableCell
@@ -313,7 +410,7 @@ export default function DashboardEntityList<T>({
                                           letterSpacing: 1,
                                           borderBottom: `1px solid ${DASHBOARD_BORDER}`,
                                           px: 3,
-                                          py: 2
+                                          py: 2,
                                        }}
                                     >
                                        {col.label}
@@ -326,96 +423,191 @@ export default function DashboardEntityList<T>({
                                  <TableRow
                                     key={item.id || index}
                                     sx={{
-                                       "&:hover": { bgcolor: "rgba(255,255,255,0.02)" },
-                                       "& .MuiTableCell-root": { borderBottom: `1px solid ${DASHBOARD_BORDER}`, px: 3, py: 2 }
+                                       "&:hover": {
+                                          bgcolor: "rgba(255,255,255,0.02)",
+                                       },
+                                       "& .MuiTableCell-root": {
+                                          borderBottom: `1px solid ${DASHBOARD_BORDER}`,
+                                          px: 3,
+                                          py: 2,
+                                       },
                                     }}
                                  >
                                     {columns.map((col) => (
-                                       <TableCell key={col.id} align={col.align}>
-                                          {col.render ? col.render(item) : (item as any)[col.id]}
+                                       <TableCell
+                                          key={col.id}
+                                          align={col.align}
+                                       >
+                                          {col.render
+                                             ? col.render(item)
+                                             : (item as any)[col.id]}
                                        </TableCell>
                                     ))}
                                  </TableRow>
                               ))}
                            </TableBody>
                         </Table>
-                     </TableContainer>
+                           </TableContainer>
+                        </Paper>
+                     )}
 
                      {/* Pagination */}
-                     <Box 
-                        sx={{ 
-                           p: 2, 
-                           bgcolor: "#252529", 
-                           borderTop: `1px solid ${DASHBOARD_BORDER}`, 
-                           display: "flex", 
-                           alignItems: "center", 
-                           justifyContent: "space-between" 
+                     <Paper
+                        sx={{
+                           p: 2,
+                           bgcolor: DASHBOARD_BG,
+                           border: `1px solid ${DASHBOARD_BORDER}`,
+                           borderRadius: 2,
+                           display: "flex",
+                           alignItems: "center",
+                           justifyContent: "space-between",
                         }}
                      >
-                        <Typography variant="caption" sx={{ color: DASHBOARD_TEXT_MUTED }}>
-                           Found <Box component="span" sx={{ color: "white", fontWeight: 700 }}>{pagination.totalElements}</Box> {entityName}s
+                        <Typography
+                           variant="caption"
+                           sx={{ color: DASHBOARD_TEXT_MUTED }}
+                        >
+                           Found{" "}
+                           <Box
+                              component="span"
+                              sx={{ color: "white", fontWeight: 700 }}
+                           >
+                              {pagination.totalElements}
+                           </Box>{" "}
+                           {entityName}s
                         </Typography>
-                        
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-                           <Typography variant="caption" sx={{ color: DASHBOARD_TEXT_MUTED }}>
-                              Page <Box component="span" sx={{ color: "white", fontWeight: 700 }}>{pagination.currentPage}</Box> of <Box component="span" sx={{ color: "white", fontWeight: 700 }}>{pagination.totalPages}</Box>
-                           </Typography>
-                           
-                           <Box sx={{ display: "flex", gap: 1 }}>
-                              <IconButton
-                                 size="small"
-                                 disabled={pagination.currentPage <= 1 || isLoading}
-                                 onClick={() => onPageChange(pagination.currentPage - 1)}
-                                 sx={{ 
-                                    bgcolor: DASHBOARD_BG, 
-                                    color: "white", 
-                                    border: `1px solid ${DASHBOARD_BORDER}`,
-                                    borderRadius: 1.5,
-                                    "&:hover": { bgcolor: "#2d2d33" },
-                                    "&.Mui-disabled": { opacity: 0.3 }
-                                 }}
-                              >
-                                 <ChevronLeft size={16} />
-                              </IconButton>
-                              <IconButton
-                                 size="small"
-                                 disabled={pagination.currentPage >= pagination.totalPages || isLoading}
-                                 onClick={() => onPageChange(pagination.currentPage + 1)}
-                                 sx={{ 
-                                    bgcolor: DASHBOARD_BG, 
-                                    color: "white", 
-                                    border: `1px solid ${DASHBOARD_BORDER}`,
-                                    borderRadius: 1.5,
-                                    "&:hover": { bgcolor: "#2d2d33" },
-                                    "&.Mui-disabled": { opacity: 0.3 }
-                                 }}
-                              >
-                                 <ChevronRight size={16} />
-                              </IconButton>
-                           </Box>
-                        </Box>
-                     </Box>
-                  </Paper>
+
+                        <Pagination>
+                           <PaginationContent>
+                              <PaginationItem>
+                                 <PaginationPrevious
+                                    href="#"
+                                    onClick={(e) => {
+                                       e.preventDefault();
+                                       if (pagination.currentPage > 1)
+                                          onPageChange(
+                                             pagination.currentPage - 1,
+                                          );
+                                    }}
+                                    className={
+                                       pagination.currentPage <= 1
+                                          ? "pointer-events-none opacity-20 text-white"
+                                          : "cursor-pointer text-white hover:bg-white/10"
+                                    }
+                                 />
+                              </PaginationItem>
+
+                              {Array.from(
+                                 { length: pagination.totalPages },
+                                 (_, i) => i + 1,
+                              )
+                                 .filter((page) => {
+                                    const { currentPage, totalPages } =
+                                       pagination;
+                                    // Hiển thị trang đầu, trang cuối và các trang lân cận trang hiện tại
+                                    return (
+                                       page === 1 ||
+                                       page === totalPages ||
+                                       (page >= currentPage - 1 &&
+                                          page <= currentPage + 1)
+                                    );
+                                 })
+                                 .map((page, index, array) => {
+                                    const items = [];
+                                    // Thêm dấu ba chấm nếu có khoảng cách giữa các số trang
+                                    if (
+                                       index > 0 &&
+                                       page - array[index - 1] > 1
+                                    ) {
+                                       items.push(
+                                          <PaginationItem
+                                             key={`ellipsis-${page}`}
+                                          >
+                                             {/* <PaginationEllipsis className="text-white opacity-50" /> */}
+                                          </PaginationItem>,
+                                       );
+                                    }
+                                    items.push(
+                                       <PaginationItem key={page}>
+                                          <PaginationLink
+                                             href="#"
+                                             isActive={
+                                                pagination.currentPage === page
+                                             }
+                                             onClick={(e) => {
+                                                e.preventDefault();
+                                                onPageChange(page);
+                                             }}
+                                             className={`cursor-pointer ${pagination.currentPage === page ? "bg-[#f84565] border-[#f84565] text-white hover:bg-[#b32d46] hover:text-white" : "text-white hover:bg-white/10 hover:text-white"}`}
+                                          >
+                                             {page}
+                                          </PaginationLink>
+                                       </PaginationItem>,
+                                    );
+                                    return items;
+                                 })}
+
+                              <PaginationItem>
+                                 <PaginationNext
+                                    href="#"
+                                    onClick={(e) => {
+                                       e.preventDefault();
+                                       if (
+                                          pagination.currentPage <
+                                          pagination.totalPages
+                                       )
+                                          onPageChange(
+                                             pagination.currentPage + 1,
+                                          );
+                                    }}
+                                    className={
+                                       pagination.currentPage >=
+                                       pagination.totalPages
+                                          ? "pointer-events-none opacity-20 text-white"
+                                          : "cursor-pointer text-white hover:bg-white/10"
+                                    }
+                                 />
+                              </PaginationItem>
+                           </PaginationContent>
+                        </Pagination>
+                     </Paper>
+                  </Box>
                ) : (
                   <Paper
                      elevation={0}
-                     sx={{ 
-                        p: 12, 
+                     sx={{
+                        p: 12,
                         textAlign: "center",
                         bgcolor: DASHBOARD_BG,
                         border: `1px solid ${DASHBOARD_BORDER}`,
-                        borderRadius: 2
+                        borderRadius: 2,
                      }}
                   >
-                     <SearchIcon size={64} style={{ opacity: 0.1, color: DASHBOARD_ACCENT, marginBottom: 16 }} />
-                     <Typography variant="h6" sx={{ color: "white", mb: 1 }}>{emptyMessage}</Typography>
-                     <Typography variant="body2" sx={{ color: DASHBOARD_TEXT_MUTED, mb: 3 }}>
+                     <SearchIcon
+                        size={64}
+                        style={{
+                           opacity: 0.1,
+                           color: DASHBOARD_ACCENT,
+                           marginBottom: 16,
+                        }}
+                     />
+                     <Typography variant="h6" sx={{ color: "white", mb: 1 }}>
+                        {emptyMessage}
+                     </Typography>
+                     <Typography
+                        variant="body2"
+                        sx={{ color: DASHBOARD_TEXT_MUTED, mb: 3 }}
+                     >
                         Try adjusting your filters or search criteria.
                      </Typography>
                      <Button
                         variant="contained"
                         onClick={onResetFilters}
-                        sx={{ bgcolor: DASHBOARD_ACCENT, "&:hover": { bgcolor: DASHBOARD_ACCENT + "e6" }, textTransform: "none" }}
+                        sx={{
+                           bgcolor: DASHBOARD_ACCENT,
+                           "&:hover": { bgcolor: DASHBOARD_ACCENT + "e6" },
+                           textTransform: "none",
+                        }}
                      >
                         Clear All Filters
                      </Button>

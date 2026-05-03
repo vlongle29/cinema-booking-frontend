@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
+import { movieService } from "../../services/movieService";
+import { showtimeService } from "@/services/showtimeService";
+import { API_BASE_URL } from "../../constants/api";
 
 const imgWp49260591 =
    "http://localhost:3845/assets/1b26250be4903592d678845efae190b5f9bb5ea4.png";
@@ -18,16 +22,41 @@ const statCards = [
    { label: "Total Users", value: "43", icon: imgUserUsers },
 ];
 
-const movies = [
-   { id: 1, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
-   { id: 2, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
-   { id: 3, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
-   { id: 3, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
-   { id: 3, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
-   { id: 3, title: "Alita Battle Angel 4k 2019", rating: 4.5, price: "$29" },
-];
+type Movie = {
+   id: string;
+   title: string;
+   rated: string;
+   durationMinutes: number;
+   posterUrl: string;
+   status: string;
+};
+
+type Showtime = {
+   id: string;
+   movieId: string;
+   startTime: string;
+   endTime: string;
+   theater: string;
+   movie: Movie;
+   price: number;
+};
 
 export default function DashboardHome() {
+   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
+
+   useEffect(() => {
+      const fetchData = async () => {
+         try {
+            const response = await showtimeService.searchShowtimes();
+            setShowtimes(response.data.content);
+         } catch (error) {
+            console.error("Error fetching dashboard stats:", error);
+         }
+      };
+
+      fetchData();
+   }, []);
+
    return (
       <>
          {/* Page Title */}
@@ -63,49 +92,86 @@ export default function DashboardHome() {
          {/* Active Movies Section */}
          <section>
             <h2 className="text-white text-base font-semibold mb-6">
-               Active Movies
+               Suất chiếu đang hoạt động
             </h2>
 
             {/* Movie Cards Grid */}
             <div className="grid grid-cols-5 gap-5">
-               {movies.map((movie) => (
-                  <div
-                     key={movie.id}
-                     className="bg-[rgba(248,69,101,0.1)] border border-[rgba(248,69,101,0.2)] rounded-[8px] overflow-hidden transition-all hover:border-[#f84565]"
-                  >
-                     {/* Movie Poster */}
-                     <div className="relative w-full h-52 overflow-hidden rounded-t-[8px]">
-                        <img
-                           src={imgWp49260591}
-                           alt={movie.title}
-                           className="w-full h-full object-cover"
-                        />
-                     </div>
+               {showtimes.map((showtime) => {
+                  // Format tiền VND
+                  const formattedPrice = new Intl.NumberFormat("vi-VN", {
+                     style: "currency",
+                     currency: "VND",
+                  }).format(showtime.price);
 
-                     {/* Movie Info */}
-                     <div className="p-4">
-                        <h3 className="text-white font-medium text-xs mb-3 line-clamp-2 leading-4">
-                           {movie.title}
-                        </h3>
+                  // Format thời gian sang Tiếng Việt (VD: "Th 7, 9 tháng 5 lúc 09:00")
+                  const date = new Date(showtime.startTime);
+                  const weekdays = [
+                     "CN",
+                     "Th 2",
+                     "Th 3",
+                     "Th 4",
+                     "Th 5",
+                     "Th 6",
+                     "Th 7",
+                  ];
+                  const dayOfWeek = weekdays[date.getDay()];
+                  const day = date.getDate();
+                  const month = date.getMonth() + 1;
+                  const hours = date.getHours().toString().padStart(2, "0");
+                  const minutes = date.getMinutes().toString().padStart(2, "0");
+                  const formattedTime = `${dayOfWeek}, ${day} tháng ${month} lúc ${hours}:${minutes}`;
 
-                        {/* Rating and Price */}
-                        <div className="flex items-center justify-between">
-                           <div className="flex items-center gap-1">
-                              <Star
-                                 size={16}
-                                 className="text-[#f84565] fill-[#f84565] flex-shrink-0"
-                              />
-                              <span className="text-[#797b7d] text-xs font-medium">
-                                 {movie.rating}
+                  return (
+                     <div
+                        key={showtime.id}
+                        // Màu nền tối (hơi pha đỏ/nâu) giống thiết kế
+                        className="bg-[#2a1c21] border border-[#3f252c] rounded-[8px] overflow-hidden transition-all hover:border-[#f84565] flex flex-col"
+                     >
+                        {/* Movie Poster */}
+                        {/* Tăng chiều cao (h-64 hoặc h-72) để tỷ lệ ảnh dọc giống hình */}
+                        <div className="relative w-full h-64 overflow-hidden rounded-t-[8px]">
+                           <img
+                              src={`${API_BASE_URL}${showtime.movie.posterUrl}`}
+                              alt={showtime.movie.title}
+                              className="w-full h-full object-cover"
+                           />
+                        </div>
+
+                        {/* Movie Info */}
+                        <div className="p-4 flex flex-col">
+                           {/* Title */}
+                           <h3 className="text-sm text-white font-bold text-base mb-3 line-clamp-1">
+                              {showtime.movie.title}
+                           </h3>
+
+                           {/* Price and Rating */}
+                           <div className="flex items-center justify-between mb-3">
+                              {/* Price */}
+                              <span className="text-white font-bold text-base">
+                                 {formattedPrice}
                               </span>
+
+                              {/* Rating (Dùng trường 'rated' của JSON, ví dụ T16) */}
+                              <div className="flex items-center gap-1.5">
+                                 <Star
+                                    size={16}
+                                    className="text-[#f84565] fill-[#f84565] flex-shrink-0"
+                                 />
+                                 <span className="text-[#9ca3af] text-sm font-medium">
+                                    {showtime.movie.rated || "N/A"}
+                                 </span>
+                              </div>
                            </div>
-                           <span className="text-white font-semibold text-base">
-                              {movie.price}
-                           </span>
+
+                           {/* Date & Time */}
+                           <div className="text-[#6b7280] text-sm font-medium">
+                              {formattedTime}
+                           </div>
                         </div>
                      </div>
-                  </div>
-               ))}
+                  );
+               })}
             </div>
          </section>
       </>

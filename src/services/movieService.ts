@@ -68,4 +68,12 @@ export const movieService = {
    deleteMovie: (id: string) => {
       return apiService.delete(`${MOVIE_API_PATH}/${id}`);
    },
+
+   /**
+    *
+    * Tìm kiếm phim theo tiêu chí
+    */
+   searchMovies: (param: MovieSearchParams) => {
+      return apiService.get(`${MOVIE_API_PATH}/search`, { params: param });
+   },
 };

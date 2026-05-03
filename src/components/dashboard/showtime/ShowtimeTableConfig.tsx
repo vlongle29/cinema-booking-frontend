@@ -3,8 +3,7 @@ import React from "react";
 import { Calendar, Clock, Monitor, Trash2 } from "lucide-react";
 import type { Showtime } from "../../../types/showtime";
 import type { Column, FilterField } from "../DashboardEntityList";
-
-const API_BASE_URL = "http://localhost:8080";
+import { API_BASE_URL } from "../../../constants/api";
 
 // Hàm trả về mảng columns, nhận vào hàm xử lý delete để gắn vào nút Trash2
 export const getShowtimeColumns = (
@@ -12,7 +11,7 @@ export const getShowtimeColumns = (
 ): Column<Showtime>[] => [
    {
       id: "movie",
-      label: "Movie",
+      label: "Phim",
       render: (show) => (
          <div className="flex items-center gap-4">
             <div className="w-12 h-16 rounded-[4px] bg-[#252529] flex-shrink-0 overflow-hidden border border-[#393939]">
@@ -37,7 +36,7 @@ export const getShowtimeColumns = (
    },
    {
       id: "branch",
-      label: "Branch & Room",
+      label: "CHi nhánh & Phòng",
       render: (show) => (
          <div>
             <div className="text-white text-sm font-medium">
@@ -52,7 +51,7 @@ export const getShowtimeColumns = (
    },
    {
       id: "time",
-      label: "Time",
+      label: "Thời gian",
       render: (show) => (
          <div className="flex flex-col">
             <div className="text-white text-sm font-semibold flex items-center gap-1.5">
@@ -71,7 +70,7 @@ export const getShowtimeColumns = (
    },
    {
       id: "format",
-      label: "Format",
+      label: "Định dạng",
       render: (show) => (
          <span className="px-2 py-1 bg-[#f84565]/10 text-[#f84565] border border-[#f84565]/20 rounded text-[10px] font-black uppercase tracking-tighter">
             {show.format.replace("_", " ")}
@@ -80,7 +79,7 @@ export const getShowtimeColumns = (
    },
    {
       id: "price",
-      label: "Price",
+      label: "Giá",
       render: (show) => (
          <div className="text-white text-sm font-bold">
             {show.price.toLocaleString("vi-VN")}đ
@@ -89,7 +88,7 @@ export const getShowtimeColumns = (
    },
    {
       id: "status",
-      label: "Status",
+      label: "Tình trạng",
       render: (show) => (
          <span
             className={`px-2 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-wider ${
@@ -104,7 +103,7 @@ export const getShowtimeColumns = (
    },
    {
       id: "actions",
-      label: "Actions",
+      label: "Hành động",
       align: "right",
       render: (show) => (
          <button

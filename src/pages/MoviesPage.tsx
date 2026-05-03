@@ -1,9 +1,13 @@
 import { ArrowLeft } from "lucide-react";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { IoPlayCircle } from "react-icons/io5";
 import ShowtimeSelection from "./ShowtimeSelection";
 import guardiansImg from "../assets/images/phim-kinh-di.png";
+import { API_BASE_URL } from "../constants/api";
+import { Movie } from "@/types/movie";
+import { movieService } from "@/services/movieService";
 
 // Image assets from localhost
 const images = {
@@ -70,6 +74,30 @@ export default function TicketBookingDetailPage() {
       },
    ];
 
+   const [movieDetail, setMovieDetail] = useState<Movie>();
+
+   const { id: movieId } = useParams<{ id: string }>();
+
+   useEffect(() => {
+      if (!movieId) {
+         console.error("Movie ID is missing from URL parameters");
+         return;
+      }
+
+      const fetchMovieDetail = async () => {
+         try {
+            const response = await movieService.getMovieById(movieId);
+            setMovieDetail(response.data);
+         } catch (error) {
+            console.error("Failed to fetch movie detail:", error);
+         }
+      };
+
+      fetchMovieDetail();
+   }, [movieId]);
+
+   console.log("movieDetail", movieDetail);
+
    const handleBuyTicketClick = () => {
       if (showtimeSectionRef.current) {
          const offset = 100; // muốn cách top 100px
@@ -91,8 +119,12 @@ export default function TicketBookingDetailPage() {
             {/* Movie Poster */}
             <div className="flex-shrink-0">
                <img
-                  src={images.guardians}
-                  alt="Guardians of the Galaxy"
+                  src={
+                     movieDetail
+                        ? `${API_BASE_URL}${movieDetail.posterUrl}`
+                        : images.guardians
+                  }
+                  alt={movieDetail?.title || "Movie Poster"}
                   className="w-[278px] h-[417px] rounded-[18px] object-cover"
                />
             </div>
@@ -100,32 +132,27 @@ export default function TicketBookingDetailPage() {
             {/* Movie Info */}
             <div className="flex-1">
                <span className="text-[#f84565] text-sm font-semibold tracking-wider">
-                  ENGLISH
+                  {movieDetail?.language || "LOADING..."}
                </span>
                <h1 className="text-5xl font-bold mt-3 mb-6">
-                  Guardians
-                  <br />
-                  of the Galaxy
+                  {movieDetail?.title || "Movie Title"}
                </h1>
 
                <div className="flex items-center gap-4 mb-6">
                   <FaStar size={24} className="text-[#f84565]" />
                   <span className="text-sm text-[#d1d5dc]">
-                     4.5 IMDb Rating
+                     {movieDetail?.rated || "T16"} Rated
                   </span>
                </div>
 
                <p className="text-[#99a1af] text-sm leading-relaxed mb-4 max-w-2xl">
-                  From the Marvel Cinematic Universe comes an epic space
-                  adventure. Peter Quill, a brash space adventurer who calls
-                  himself Star-Lord, finds himself the target of relentless
-                  bounty hunters after stealing a mysterious orb. To evade
-                  capture, he forms an uneasy alliance with a group of misfits:
-                  Gamora, Drax the Destroyer, Rocket Raccoon, and Groot.
+                  {movieDetail?.description || "Loading description..."}
                </p>
 
                <p className="text-[#d1d5dc] text-sm mb-6">
-                  2h 19m • Action | Adventure • 1 May, 2025
+                  {movieDetail?.durationMinutes}m •{" "}
+                  {movieDetail?.genres?.map((g) => g.name).join(" | ")} •{" "}
+                  {movieDetail?.releaseDate}
                </p>
 
                {/* Action Buttons */}

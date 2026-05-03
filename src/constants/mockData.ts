@@ -12,3 +12,5 @@ export const MOVIE_TIMINGS = [
 export const BOOKED_SEATS = new Set(["D3", "H4", "F7", "A5", "C2"]);
 
 export const TICKET_PRICE = 12; // $12
+
+export const API_BASE_URL = "http://localhost:8080";

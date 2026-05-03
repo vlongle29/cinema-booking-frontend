@@ -18,7 +18,6 @@ import {
 const navItems = [
    { to: "/", label: "Home", end: true },
    { to: "/theatres", label: "Theatres", end: false },
-   { to: "/releases", label: "Releases", end: false },
 ];
 
 const Header = () => {
@@ -88,7 +87,7 @@ const Header = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                            align="end"
-                           className="w-56 bg-[rgba(30,41,59,0.95)] backdrop-blur-lg border-[rgba(148,163,184,0.12)] text-white shadow-2xl"
+                           className="mt-4 w-56 bg-[rgba(30,41,59,0.95)] backdrop-blur-lg border-[rgba(148,163,184,0.12)] text-white shadow-2xl"
                         >
                            <DropdownMenuLabel className="font-normal">
                               <div className="flex flex-col space-y-1">

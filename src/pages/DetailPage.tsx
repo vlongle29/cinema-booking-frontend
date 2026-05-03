@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
    Star,
    Calendar,
@@ -9,6 +9,9 @@ import {
    ArrowRight,
 } from "lucide-react";
 import marvellogo from "../assets/icons/marvelLogo.svg";
+import { movieService } from "@/services/movieService";
+import { Movie } from "@/types/movie";
+import { API_BASE_URL } from "@/constants/mockData";
 
 const videoData = [
    { id: "WpW36ldAqnM", title: "Ironheart Official Trailer" },
@@ -17,17 +20,17 @@ const videoData = [
    { id: "umiKiW4En9g", title: "What If...? Season 3" },
 ];
 
-const movieDetail = {
-   id: 1,
-   title: "Guardians of the Galaxy",
-   genre: "Action | Adventure | Sci-Fi",
-   year: "2018",
-   duration: "2h 8m",
-   rating: 4.5,
-   image: "/src/assets/images/hero-bg.jpg",
-   description:
-      "In a post-apocalyptic world where cities ride on wheels and consume each other to survive, two people meet in London and try to stop a conspiracy.",
-};
+// const movieDetail = {
+//    id: 1,
+//    title: "Guardians of the Galaxy",
+//    genre: "Action | Adventure | Sci-Fi",
+//    year: "2018",
+//    duration: "2h 8m",
+//    rating: 4.5,
+//    image: "/src/assets/images/hero-bg.jpg",
+//    description:
+//       "In a post-apocalyptic world where cities ride on wheels and consume each other to survive, two people meet in London and try to stop a conspiracy.",
+// };
 
 const DetailPage: React.FC = () => {
    const [currentVideo, setCurrentVideo] = useState(videoData[0]);
@@ -39,7 +42,11 @@ const DetailPage: React.FC = () => {
             {/* Background */}
             <div className="absolute inset-0 z-0">
                <img
-                  src={movieDetail.image}
+                  src={
+                     movieDetail
+                        ? `${API_BASE_URL}${movieDetail.posterUrl}`
+                        : "/src/assets/images/hero-bg.jpg"
+                  }
                   alt={movieDetail.title}
                   className="w-full h-full object-cover brightness-40"
                />

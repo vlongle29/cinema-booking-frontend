@@ -1,8 +1,19 @@
+interface genres {
+   id: string;
+   name: string;
+   description: string;
+}
+
 export interface Movie {
    id: string;
    title: string;
    director: string;
    releaseDate: string;
+   description: string;
+   genres: genres[];
+   rating: number;
+   year: number;
+   duration: string;
    status: string;
    posterUrl: string;
    durationMinutes: number;
