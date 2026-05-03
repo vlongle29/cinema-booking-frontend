@@ -92,7 +92,7 @@ const SeatTemplateList = () => {
                </div>
             </div>
          ) : filteredTemplates.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                {filteredTemplates.map((template: any) => (
                   <TemplateCard
                      key={template.id}
