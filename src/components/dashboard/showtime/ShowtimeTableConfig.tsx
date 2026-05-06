@@ -1,6 +1,6 @@
 // src/components/dashboard/showtime/showtimeTableConfig.tsx
 import React from "react";
-import { Calendar, Clock, Monitor, Trash2 } from "lucide-react";
+import { Calendar, Clock, Monitor, Trash2, Pencil } from "lucide-react";
 import type { Showtime } from "../../../types/showtime";
 import type { Column, FilterField } from "../DashboardEntityList";
 import { API_BASE_URL } from "../../../constants/api";
@@ -8,6 +8,7 @@ import { API_BASE_URL } from "../../../constants/api";
 // Hàm trả về mảng columns, nhận vào hàm xử lý delete để gắn vào nút Trash2
 export const getShowtimeColumns = (
    onDelete: (id: string) => void,
+   onUpdate: (id: string) => void,
 ): Column<Showtime>[] => [
    {
       id: "movie",
@@ -106,13 +107,22 @@ export const getShowtimeColumns = (
       label: "Hành động",
       align: "right",
       render: (show) => (
-         <button
-            className="p-2 text-[#797b7d] hover:text-[#f84565] hover:bg-[#f84565]/10 rounded-lg transition-all"
-            title="Delete showtime"
-            onClick={() => onDelete(show.id)}
-         >
-            <Trash2 className="w-4 h-4" />
-         </button>
+         <div className="flex gap-3">
+            <button
+               className="flex p-2 text-[#797b7d] hover:text-[#f84565] hover:bg-[#f84565]/10 rounded-lg transition-all"
+               title="Delete showtime"
+               onClick={() => onDelete(show.id)}
+            >
+               <Pencil className="w-4 h-4" />
+            </button>
+            <button
+               className="flex p-2 text-[#797b7d] hover:text-[#f84565] hover:bg-[#f84565]/10 rounded-lg transition-all"
+               title="Delete showtime"
+               onClick={() => onDelete(show.id)}
+            >
+               <Trash2 className="w-4 h-4" />
+            </button>
+         </div>
       ),
    },
 ];

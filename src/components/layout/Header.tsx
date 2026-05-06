@@ -5,7 +5,6 @@ import MoviesDropdown from "./MoviesDropdown";
 import "../../styles/header.css";
 import LoginModal from "../common/LoginModal";
 import useAuth from "../../hooks/useAuth";
-import userIcon from "../../assets/icons/user.png";
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -14,11 +13,9 @@ import {
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import profileIcon from "../../assets/images/profile-icon.png";
 
-const navItems = [
-   { to: "/", label: "Home", end: true },
-   { to: "/theatres", label: "Theatres", end: false },
-];
+const navItems = [{ to: "/", label: "Home", end: true }];
 
 const Header = () => {
    const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,20 +74,22 @@ const Header = () => {
                   {userInfo ? (
                      <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                           <button className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white cursor-pointer transition-transform hover:scale-105">
-                              <img
-                                 src={userInfo.avatar || userIcon}
-                                 alt={userInfo.name || "User"}
-                                 className="w-full h-full object-cover"
-                              />
-                           </button>
+                           <img
+                              src={userInfo.avatar || profileIcon}
+                              alt={userInfo.name || "User"}
+                              className="cursor-pointer w-10 h-10 rounded-full overflow-hidden object-cover" // Áp dụng kích thước và bo tròn trực tiếp cho ảnh
+                              onError={(e) => {
+                                 (e.target as HTMLImageElement).src =
+                                    profileIcon;
+                              }}
+                           />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                            align="end"
                            className="mt-4 w-56 bg-[rgba(30,41,59,0.95)] backdrop-blur-lg border-[rgba(148,163,184,0.12)] text-white shadow-2xl"
                         >
                            <DropdownMenuLabel className="font-normal">
-                              <div className="flex flex-col space-y-1">
+                              <div className="flex flex-col space-y-2">
                                  <p className="text-sm font-semibold leading-none text-white">
                                     {userInfo.name}
                                  </p>
@@ -102,15 +101,15 @@ const Header = () => {
                            <DropdownMenuSeparator />
                            <DropdownMenuItem
                               asChild
-                              className="cursor-pointer focus:bg-white/10 focus:text-white"
+                              className="cursor-pointer focus:bg-white/10 focus:text-white py-2"
                            >
-                              <Link to="/bookings">My Bookings</Link>
+                              <Link to="/my-bookings">Lịch sử đặt vé</Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem
                               asChild
                               className="cursor-pointer focus:bg-white/10 focus:text-white"
                            >
-                              <Link to="/profile">Manage account</Link>
+                              <Link to="/profile">Quản lý tài  khoản</Link>
                            </DropdownMenuItem>
                            <DropdownMenuSeparator />
                            <DropdownMenuItem

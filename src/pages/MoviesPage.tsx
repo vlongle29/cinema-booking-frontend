@@ -96,8 +96,6 @@ export default function TicketBookingDetailPage() {
       fetchMovieDetail();
    }, [movieId]);
 
-   console.log("movieDetail", movieDetail);
-
    const handleBuyTicketClick = () => {
       if (showtimeSectionRef.current) {
          const offset = 100; // muốn cách top 100px

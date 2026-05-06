@@ -20,18 +20,6 @@ const videoData = [
    { id: "umiKiW4En9g", title: "What If...? Season 3" },
 ];
 
-// const movieDetail = {
-//    id: 1,
-//    title: "Guardians of the Galaxy",
-//    genre: "Action | Adventure | Sci-Fi",
-//    year: "2018",
-//    duration: "2h 8m",
-//    rating: 4.5,
-//    image: "/src/assets/images/hero-bg.jpg",
-//    description:
-//       "In a post-apocalyptic world where cities ride on wheels and consume each other to survive, two people meet in London and try to stop a conspiracy.",
-// };
-
 const DetailPage: React.FC = () => {
    const [currentVideo, setCurrentVideo] = useState(videoData[0]);
 

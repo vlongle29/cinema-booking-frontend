@@ -1,4 +1,10 @@
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import {
+   Routes,
+   Route,
+   useNavigate,
+   useLocation,
+   Link,
+} from "react-router-dom";
 import DashboardHome from "./DashboardHome";
 import ListMovies from "./ListMovies";
 import ListShows from "./ListShows";
@@ -37,6 +43,18 @@ export default function Dashboard() {
 
    return (
       <div className="relative min-h-screen bg-[#09090b] overflow-hidden">
+         {/* Top Header Logo Only */}
+         <header className="fixed top-0 left-0 right-0 h-[72px] bg-[#09090b] border-b border-[#393939] z-50 flex items-center px-8">
+            <Link to="/" className="flex items-center gap-3 no-underline group">
+               <span className="w-10 h-10 bg-[#f84565] rounded-xl flex items-center justify-center text-white font-bold text-2xl transition-transform group-hover:scale-105">
+                  Q
+               </span>
+               <span className="text-white text-xl font-bold tracking-tight">
+                  QuickShow
+               </span>
+            </Link>
+         </header>
+
          {/* Sidebar */}
          <aside className="fixed left-0 top-[72px] w-[245px] h-[calc(100vh-72px)] bg-[#09090b] border-r border-[#393939] z-40">
             {/* Profile Section */}
@@ -85,12 +103,7 @@ export default function Dashboard() {
                <Route path="list-movies" element={<ListMovies />} />
                <Route path="list-shows" element={<ListShows />} />
                <Route path="list-bookings" element={<ListBookings />} />
-               <Route path="seat-template">
-                  <Route index element={<SeatTemplateList />} />
-                  <Route path="create" element={<CreateSeatTemplate />} />
-                  <Route path="edit/:id" element={<SeatTemplateEditor />} />
-                  <Route path="apply/:id" element={<ApplyTemplateToRoom />} />
-               </Route>
+               <Route path="seat-template" element={<SeatTemplateList />} />
             </Routes>
          </main>
       </div>

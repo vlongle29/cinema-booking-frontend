@@ -23,6 +23,7 @@ export default function ListShows() {
       setSearchParams,
       pagination,
       handleDelete,
+      // handleUpdate,
    } = useShowtimeList(isCreating);
 
    // Xử lý thay đổi filter (có kết hợp updateField của hook CreateShowtime)

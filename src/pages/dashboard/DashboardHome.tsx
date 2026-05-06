@@ -16,10 +16,10 @@ const imgUserUsers =
    "http://localhost:3845/assets/16424f3b694c07e8e484a99b4476096d9d107ace.svg";
 
 const statCards = [
-   { label: "Total Bookings", value: "73", icon: imgGraphUp1 },
-   { label: "Total Revenue", value: "$1,060", icon: imgSvgRepoIconCarrier },
-   { label: "Active Movies", value: "3", icon: imgSvgRepoIconCarrier1 },
-   { label: "Total Users", value: "43", icon: imgUserUsers },
+   { label: "Tổng lượt đặt vé", value: "73", icon: imgGraphUp1 },
+   { label: "Doanh thu", value: "$1,060", icon: imgSvgRepoIconCarrier },
+   { label: "Phim hoạt động", value: "3", icon: imgSvgRepoIconCarrier1 },
+   { label: "Tổng số người dùng", value: "43", icon: imgUserUsers },
 ];
 
 type Movie = {

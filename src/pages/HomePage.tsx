@@ -3,6 +3,7 @@ import { Star, Calendar, Clock, ArrowRight } from "lucide-react";
 import marvellogo from "../assets/icons/marvelLogo.svg";
 import MovieCard from "../features/movie/conponents/MovieCard";
 import type { Movie } from "../features/movie/types";
+import useAuth from "../hooks/useAuth";
 import { movieService } from "../services/movieService";
 
 // 1. Giả lập dữ liệu từ API (Sau này bạn gọi từ Spring Boot về)
@@ -13,67 +14,6 @@ const videoData = [
    { id: "umiKiW4En9g", title: "What If...? Season 3" },
 ];
 
-// Sample movie data
-const nowShowingMovies: Movie[] = [
-   {
-      id: "c2fedd41-3e0a-48e9-971e-21f72cc94fe8",
-      title: "Guardians of the Galaxy",
-      genre: "Action | Adventure | Sci-Fi",
-      year: "2018",
-      duration: "2h 8m",
-      rating: 4.5,
-      image: "/images/guardians.jpg",
-   },
-   {
-      id: "c2fedd41-3e0a-48e9-971e-21f72cc94fe8",
-      title: "Alita Battle Angel",
-      genre: "Action, Adventure",
-      year: "2018",
-      duration: "2h 8m",
-      rating: 4.5,
-      image: "/images/alita1.jpg",
-   },
-   {
-      id: "c2fedd41-3e0a-48e9-971e-21f72cc94fe8",
-      title: "Alita Battle Angel",
-      genre: "Action, Adventure",
-      year: "2018",
-      duration: "2h 8m",
-      rating: 4.5,
-      image: "/images/alita2.jpg",
-   },
-   {
-      id: "c2fedd41-3e0a-48e9-971e-21f72cc94fe8",
-      title: "Alita Battle Angel",
-      genre: "Action, Adventure",
-      year: "2018",
-      duration: "2h 8m",
-      rating: 4.5,
-      image: "/images/alita3.jpg",
-   },
-];
-
-const moreMovies: Movie[] = [
-   {
-      id: "c2fedd41-3e0a-48e9-971e-21f72cc94fe8",
-      title: "Alita Battle Angel",
-      genre: "Action, Adventure",
-      year: "2018",
-      duration: "2h 8m",
-      rating: 4.5,
-      image: "/images/alita4.jpg",
-   },
-   {
-      id: "c2fedd41-3e0a-48e9-971e-21f72cc94fe8",
-      title: "Alita Battle Angel",
-      genre: "Action, Adventure",
-      year: "2018",
-      duration: "2h 8m",
-      rating: 4.5,
-      image: "/images/alita5.jpg",
-   },
-];
-
 const HomePage: React.FC = () => {
    // 2. State lưu video đang được chọn (mặc định lấy video đầu tiên)
    const [currentVideo, setCurrentVideo] = useState(videoData[0]);
@@ -82,6 +22,7 @@ const HomePage: React.FC = () => {
    // State for movies from API
    const [movies, setMovies] = useState<Movie[]>([]);
 
+   const { userInfo } = useAuth(); // Lấy thông tin người dùng từ hook useAuth
    useEffect(() => {
       const fetchMovies = async () => {
          try {
@@ -100,7 +41,7 @@ const HomePage: React.FC = () => {
       };
 
       fetchMovies();
-   }, []);
+   }, [userInfo]); // Thêm userInfo vào dependency array để fetch lại khi trạng thái đăng nhập thay đổi
 
    return (
       <div className="w-full bg-dark-bg overflow-x-hidden">

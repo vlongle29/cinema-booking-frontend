@@ -1,55 +1,12 @@
 import apiService, { ApiResponse } from "./apiService";
+import type {
+   BookingCheckoutData,
+   BookingSearchResponse,
+   PaymentMethod,
+   ProductItem,
+} from "../types/booking";
 
 const BOOKING_API_PATH = "/booking";
-
-interface ProductItem {
-   productId: string;
-   quantity: number;
-   priceAtPurchase: number;
-}
-
-/** Các phương thức thanh toán hỗ trợ */
-export type PaymentMethod =
-   | "CASH"
-   | "CREDIT_CARD"
-   | "E_WALLET"
-   | "momo"
-   | "zalopay"
-   | "vnpay"
-   | "NCB"
-   | string;
-
-export interface BookingCheckoutData {
-   promotionId?: string;
-   giftCardCode?: string;
-   paymentMethod: PaymentMethod;
-}
-
-export interface BookingListItem {
-   id: string;
-   customerId: string | null;
-   staffId: string | null;
-   showtimeId: string;
-   promotionId: string | null;
-   totalTicketPrice: number;
-   totalFoodPrice: number;
-   discountAmount: number;
-   finalAmount: number;
-   bookingDate: string;
-   expiredAt: string | null;
-   status: string;
-   paymentMethod: PaymentMethod | null;
-   tickets: any;
-   products: any;
-}
-
-export interface BookingSearchResponse {
-   content: BookingListItem[];
-   totalPages?: number;
-   totalElements?: number;
-   size?: number;
-   number?: number;
-}
 
 export const bookingService = {
    /**
@@ -138,5 +95,9 @@ export const bookingService = {
       return apiService.post(`${BOOKING_API_PATH}/${bookingId}/cancel`, {
          reason,
       });
+   },
+
+   getMyBookings: () => {
+      return apiService.get(`${BOOKING_API_PATH}/my-bookings`);
    },
 };

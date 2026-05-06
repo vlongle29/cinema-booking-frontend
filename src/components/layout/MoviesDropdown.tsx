@@ -50,7 +50,7 @@ const MoviesDropdown = () => {
          onMouseEnter={handleMouseEnter}
          onMouseLeave={handleMouseLeave}
       >
-         <button className="relative text-sm font-mediu0 bg-transparent border-0 p-0 cursor-pointer transition-all duration-200 opacity-85 hover:opacity-100 hover:text-white after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 after:bg-red-500 after:transition-all after:duration-200 hover:after:w-full">
+         <button className="relative text-sm font-medium bg-transparent border-0 p-0 cursor-pointer transition-all duration-200 opacity-85 hover:opacity-100 hover:text-white after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 after:bg-red-500 after:transition-all after:duration-200 hover:after:w-full">
             Movies
          </button>
 
