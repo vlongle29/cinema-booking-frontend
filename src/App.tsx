@@ -7,15 +7,13 @@ import SeatSelectPage from "./features/booking/SeatSelectPage";
 import MyBookingPage from "./pages/MyBookingPage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import ShowtimeSelection from "./pages/ShowtimeSelection";
-import NowShowingPage from "./pages/NowShowingPage";
-import ComingSoonPage from "./pages/ComingSoonPage";
+import ListMoviePage from "./pages/ListMoviesPage";
 import OrderSnacksPage from "./pages/OrderSnacksPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import { Toaster } from "react-hot-toast";
 import "./App.css";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
-import LayoutDashboard from "./components/layout/LayoutDashboard";
 
 function App() {
    return (
@@ -31,8 +29,10 @@ function App() {
                   path="/showtime-selection"
                   element={<ShowtimeSelection />}
                />
-               <Route path="movies/now-showing" element={<NowShowingPage />} />
-               <Route path="movies/coming-soon" element={<ComingSoonPage />} />
+               <Route
+                  path="movies/status/:status"
+                  element={<ListMoviePage />}
+               />
                {/* Protected Routes */}
                <Route element={<PrivateRoute />}>
                   <Route path="profile" element={<div>User Profile</div>} />

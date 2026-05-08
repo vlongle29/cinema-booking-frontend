@@ -15,7 +15,7 @@ export const movieService = {
    /**
     * Lấy danh sách phim
     */
-   getAllMovies: (params?: MovieSearchParams) => {
+      getAllMovies: (params?: MovieSearchParams) => {
       return apiService.get(`${MOVIE_API_PATH}/search`, { params });
    },
 

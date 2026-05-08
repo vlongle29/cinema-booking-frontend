@@ -70,7 +70,7 @@ export default function DashboardHome() {
          </div>
 
          {/* Stats Cards Grid */}
-         <section className="grid grid-cols-5 gap-4 mb-16">
+         <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
             {statCards.map((stat, idx) => (
                <div
                   key={idx}
@@ -96,7 +96,7 @@ export default function DashboardHome() {
             </h2>
 
             {/* Movie Cards Grid */}
-            <div className="grid grid-cols-5 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
                {showtimes.map((showtime) => {
                   // Format tiền VND
                   const formattedPrice = new Intl.NumberFormat("vi-VN", {

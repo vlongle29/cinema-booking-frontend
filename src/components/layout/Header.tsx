@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Search } from "lucide-react";
-import MoviesDropdown from "./MoviesDropdown";
 import "../../styles/header.css";
 import LoginModal from "../common/LoginModal";
 import useAuth from "../../hooks/useAuth";
@@ -14,8 +13,24 @@ import {
    DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import profileIcon from "../../assets/images/profile-icon.png";
+import {
+   HoverCard,
+   HoverCardContent,
+   HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
-const navItems = [{ to: "/", label: "Home", end: true }];
+const navItems = [
+   { to: "/", label: "Home", end: true },
+   {
+      to: "/movies",
+      label: "Movies",
+      end: false,
+      children: [
+         { to: "/movies/status/SHOWING", label: "Phim đang chiếu" },
+         { to: "/movies/status/COMING_SOON", label: "Phim sắp chiếu" },
+      ],
+   },
+];
 
 const Header = () => {
    const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,33 +52,51 @@ const Header = () => {
 
                <div className="nav-links">
                   <div className="nav-links-pill">
-                     {navItems.map(({ to, label, end }) => (
-                        <NavLink
-                           key={to}
-                           to={to}
-                           end={end}
-                           className={({ isActive }) =>
-                              `nav-link ${isActive ? "active" : ""}`
-                           }
-                        >
-                           {label}
-                        </NavLink>
-                     ))}
+                     {navItems.map(({ to, label, end, children }) => {
+                        const linkElement = (
+                           <NavLink to={to} end={end}>
+                              {label}
+                           </NavLink>
+                        );
+
+                        if (children) {
+                           return (
+                              <HoverCard
+                                 key={to}
+                                 openDelay={100}
+                                 closeDelay={200}
+                              >
+                                 <HoverCardTrigger
+                                    asChild
+                                    className="cursor-pointer"
+                                 >
+                                    {linkElement}
+                                 </HoverCardTrigger>
+                                 <HoverCardContent
+                                    sideOffset={12}
+                                    className="w-48 bg-[rgba(30,41,59,0.95)] backdrop-blur-lg border-[rgba(148,163,184,0.12)] p-2 flex flex-col gap-1 shadow-2xl z-[2000]"
+                                 >
+                                    {children.map((item) => (
+                                       <NavLink
+                                          key={item.to}
+                                          to={item.to}
+                                          className="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-colors no-underline"
+                                       >
+                                          {item.label}
+                                       </NavLink>
+                                    ))}
+                                 </HoverCardContent>
+                              </HoverCard>
+                           );
+                        }
+
+                        return linkElement;
+                     })}
                      {userInfo?.roles?.some((role) =>
                         ["ADMIN", "SUPER_ADMIN", "EMPLOYEE"].includes(
                            role.code,
                         ),
-                     ) && (
-                        <NavLink
-                           to="/dashboard"
-                           className={({ isActive }) =>
-                              `nav-link ${isActive ? "active" : ""}`
-                           }
-                        >
-                           Dashboard
-                        </NavLink>
-                     )}
-                     <MoviesDropdown />
+                     ) && <NavLink to="/dashboard">Dashboard</NavLink>}
                   </div>
                </div>
 
@@ -109,7 +142,7 @@ const Header = () => {
                               asChild
                               className="cursor-pointer focus:bg-white/10 focus:text-white"
                            >
-                              <Link to="/profile">Quản lý tài  khoản</Link>
+                              <Link to="/profile">Quản lý tài khoản</Link>
                            </DropdownMenuItem>
                            <DropdownMenuSeparator />
                            <DropdownMenuItem

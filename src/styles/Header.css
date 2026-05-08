@@ -107,7 +107,8 @@ html {
 }
 
 .nav-link:hover,
-.nav-link.active {
+.nav-link.active,
+.nav-link[data-state="open"] {
    opacity: 1;
 }
 
@@ -123,7 +124,8 @@ html {
 }
 
 .nav-link:hover::after,
-.nav-link.active::after {
+.nav-link.active::after,
+.nav-link[data-state="open"]::after {
    width: 100%;
 }
 
