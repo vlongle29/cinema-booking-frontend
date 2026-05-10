@@ -1,20 +1,21 @@
-import apiService from './apiService';
+import apiService from "./apiService";
+import type { ApiResponse } from "./apiService";
 
-const FORMAT_API_PATH = '/movie-formats';
+const FORMAT_API_PATH = "/movie-formats";
 
 export const movieFormatService = {
    /**
     * Lấy danh sách tất cả các định dạng
     */
    getAllFormats: () => {
-      return apiService.get(FORMAT_API_PATH);
+      return apiService.get<ApiResponse<any>>(FORMAT_API_PATH);
    },
 
    /**
     * Xem thông tin chi tiết định dạng
     */
    getFormatById: (id: string) => {
-      return apiService.get(`${FORMAT_API_PATH}/${id}`);
+      return apiService.get<ApiResponse<any>>(`${FORMAT_API_PATH}/${id}`);
    },
 
    // /**

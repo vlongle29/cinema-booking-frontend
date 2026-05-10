@@ -1,4 +1,5 @@
 import apiService from "./apiService";
+import type { ApiResponse } from "./apiService";
 
 const PAYMENT_API_PATH = "/payments";
 
@@ -13,6 +14,8 @@ export const paymentService = {
     * Create Payment
     */
    createVNPayPayment: (data: PaymentSearchParams) => {
-      return apiService.get(`${PAYMENT_API_PATH}/vn-pay`, { params: data });
+      return apiService.get<ApiResponse<any>>(`${PAYMENT_API_PATH}/vn-pay`, {
+         params: data,
+      });
    },
 };
