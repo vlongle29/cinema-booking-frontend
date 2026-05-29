@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Minus, Plus, ShoppingBag } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../utils/utils";
 import BookingHeader, { BookingInfo } from "./BookingHeader";
 
 interface Product {
@@ -162,7 +162,7 @@ const OrderSnacksPage: React.FC = () => {
             >
                <ArrowLeft className="w-6 h-6" />
             </button>
-            <h1 className="text-2xl font-bold">Select Snacks & Drinks</h1>
+            <h1 className="text-2xl font-bold">Chọn Đồ ăn & Thức uống</h1>
          </div>
 
          {/* Booking Info Header */}
@@ -262,13 +262,13 @@ const OrderSnacksPage: React.FC = () => {
             <div className="max-w-6xl mx-auto flex items-center justify-between">
                <div className="flex flex-col">
                   <span className="text-gray-400 text-xs uppercase">
-                     Total Payment
+                     Tổng thanh toán
                   </span>
                   <span className="text-white font-bold text-xl">
                      {formatCurrency(finalTotal)}
                   </span>
                   <span className="text-xs text-gray-500">
-                     (Tickets: {formatCurrency(ticketPrice)} + Snacks:{" "}
+                     (Vé: {formatCurrency(ticketPrice)} + Đồ ăn:{" "}
                      {formatCurrency(snackTotal)})
                   </span>
                </div>
@@ -277,7 +277,7 @@ const OrderSnacksPage: React.FC = () => {
                   onClick={handleProceed}
                   className="flex items-center gap-2 px-8 py-3 rounded-full font-bold bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all duration-300"
                >
-                  Proceed to Payment
+                  Tiếp tục thanh toán
                   <ArrowRight className="w-5 h-5" />
                </button>
             </div>

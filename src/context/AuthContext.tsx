@@ -57,8 +57,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
    useEffect(() => {
       const initAuth = async () => {
          try {
-            const response = await axiosInstance.post<AuthResponse>("/auth/refresh-token");
-            
+            const response = await axiosInstance.post<AuthResponse>(
+               "/auth/refresh-token",
+            );
+
             const { accessToken, userInfo, permissions } = response.data.data;
             setAccessToken(accessToken);
             setAccessTokenState(accessToken);
@@ -87,6 +89,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       window.addEventListener("auth:logout", handleLogoutEvent);
       return () => window.removeEventListener("auth:logout", handleLogoutEvent);
    }, []);
+
+   console.log("userInfo", userInfo);
 
    const login = async (credentials: any) => {
       // withCredentials: true is set globally on axiosInstance

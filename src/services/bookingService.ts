@@ -1,6 +1,6 @@
 import apiService from "./apiService";
 import type { ApiResponse } from "./apiService"; // Import ApiResponse từ apiService
-import {
+import type {
    BookingCheckoutData,
    BookingSearchResponse,
    PaymentMethod,
@@ -15,6 +15,21 @@ export const bookingService = {
     */
    getAllBookings: (params?: any) => {
       return apiService.get<ApiResponse<any>>(BOOKING_API_PATH, { params });
+   },
+
+   /**
+    * Delete booking
+    */
+   deleteBooking: (id: string) => {
+      return apiService.delete<ApiResponse<any>>(`${BOOKING_API_PATH}/${id}`);
+   },
+   
+
+   /**
+    * Get detail of a booking by ID
+    */
+   getBookingDetails: (id: string) => {
+      return apiService.get<ApiResponse<any>>(`${BOOKING_API_PATH}/${id}`);
    },
 
    /**

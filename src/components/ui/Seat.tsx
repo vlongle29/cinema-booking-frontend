@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../utils/utils";
 
 // Giữ nguyên interface của bạn
 interface SeatProps {
@@ -10,7 +10,13 @@ interface SeatProps {
    onClick: () => void; // Định nghĩa lại cho rõ: hàm không cần nhận tham số
 }
 
-const Seat: React.FC<SeatProps> = ({ id, seatNumber, label, status, onClick }) => {
+const Seat: React.FC<SeatProps> = ({
+   id,
+   seatNumber,
+   label,
+   status,
+   onClick,
+}) => {
    const baseStyles =
       "w-10 h-8 md:w-11 md:h-9 rounded-md flex items-center justify-center text-[10px] md:text-xs font-medium transition-all duration-200 select-none cursor-pointer border";
 

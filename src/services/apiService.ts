@@ -1,13 +1,26 @@
-import { AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios';
-import axiosInstance from '../api/axiosInstance';
+import { AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 /**
  * Interface for basic API response. Adjust according to your backend structure.
  */
-export interface ApiResponse<T = any> {
-   code?: number;
-   message?: string;
+export interface ApiResponse<T> {
+   success: boolean;
+   message: string;
+   code: string;
+   status: number;
    data: T;
+}
+
+export interface PageResponse<T> {
+   content: T[];
+   pageNumber: number;
+   pageSize: number;
+   totalElements: number;
+   totalPages: number;
+   first: boolean;
+   last: boolean;
+   empty: boolean;
 }
 
 /**
@@ -18,18 +31,25 @@ export const handleApiError = (error: unknown): never => {
       // Backend returned an error response
       if (error.response) {
          const { status, data } = error.response;
-         console.error(`[API Error] Status: ${status}, Message:`, data?.message || error.message);
+         console.error(
+            `[API Error] Status: ${status}, Message:`,
+            data?.message || error.message,
+         );
          // You can throw a custom error or just pass the data message
-         throw new Error(data?.message || 'Có lỗi xảy ra từ máy chủ, vui lòng thử lại sau.');
+         throw new Error(
+            data?.message || "Có lỗi xảy ra từ máy chủ, vui lòng thử lại sau.",
+         );
       } else if (error.request) {
          // The request was made but no response was received
-         console.error('[API Error] No response received:', error.request);
-         throw new Error('Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng.');
+         console.error("[API Error] No response received:", error.request);
+         throw new Error(
+            "Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng.",
+         );
       }
    }
    // Something happened in setting up the request
-   console.error('[API Error] Setting up request:', (error as Error).message);
-   throw new Error('Đã xảy ra lỗi không xác định.');
+   console.error("[API Error] Setting up request:", (error as Error).message);
+   throw new Error("Đã xảy ra lỗi không xác định.");
 };
 
 /**
@@ -41,7 +61,8 @@ class ApiService {
     */
    async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
       try {
-         const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.get(url, config);
+         const response: AxiosResponse<ApiResponse<T>> =
+            await axiosInstance.get(url, config);
          return response.data as any; // Adjust based on whether backend wraps data inside `data` property
       } catch (error) {
          return handleApiError(error);
@@ -51,9 +72,14 @@ class ApiService {
    /**
     * POST Request
     */
-   async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+   async post<T>(
+      url: string,
+      data?: any,
+      config?: AxiosRequestConfig,
+   ): Promise<T> {
       try {
-         const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.post(url, data, config);
+         const response: AxiosResponse<ApiResponse<T>> =
+            await axiosInstance.post(url, data, config);
          return response.data as any;
       } catch (error) {
          return handleApiError(error);
@@ -63,9 +89,14 @@ class ApiService {
    /**
     * PUT Request
     */
-   async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+   async put<T>(
+      url: string,
+      data?: any,
+      config?: AxiosRequestConfig,
+   ): Promise<T> {
       try {
-         const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.put(url, data, config);
+         const response: AxiosResponse<ApiResponse<T>> =
+            await axiosInstance.put(url, data, config);
          return response.data as any;
       } catch (error) {
          return handleApiError(error);
@@ -77,7 +108,8 @@ class ApiService {
     */
    async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
       try {
-         const response: AxiosResponse<ApiResponse<T>> = await axiosInstance.delete(url, config);
+         const response: AxiosResponse<ApiResponse<T>> =
+            await axiosInstance.delete(url, config);
          return response.data as any;
       } catch (error) {
          return handleApiError(error);

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import type { Movie } from "../features/movie/types";
-import MovieCard from "../features/movie/conponents/MovieCard";
+import type { Movie } from "@/types/movie";
+import MovieCard from "@/features/movie/components/MovieCard";
 import { movieService } from "@/services/movieService";
 
 function ListMoviesPage() {

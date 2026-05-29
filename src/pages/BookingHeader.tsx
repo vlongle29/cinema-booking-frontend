@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { formatTime } from "@/utils/formatters";
 
 export interface BookingInfo {
    movie: { title: string; format: string };
@@ -24,14 +25,6 @@ const BookingHeader: React.FC<BookingHeaderProps> = ({ data }) => {
       }, 1000);
       return () => clearInterval(timer);
    }, [timeLeft]);
-
-   const formatTime = (seconds: number) => {
-      const m = Math.floor(seconds / 60);
-      const s = seconds % 60;
-      return `${m.toString().padStart(2, "0")}:${s
-         .toString()
-         .padStart(2, "0")}`;
-   };
 
    return (
       <div className="max-w-6xl mx-auto mb-8 bg-[#1a1a1d] p-6 rounded-xl border border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-lg animate-[fadeIn_0.5s_ease-out]">
@@ -71,7 +64,7 @@ const BookingHeader: React.FC<BookingHeaderProps> = ({ data }) => {
 
          <div className="flex flex-col items-end bg-[#0B0B0F] px-6 py-3 rounded-lg border border-white/5 min-w-[160px]">
             <span className="text-xs text-gray-500 uppercase tracking-wider mb-1 font-semibold">
-               Time Remaining
+               Thời gian còn lại
             </span>
             <span className="text-3xl font-mono font-bold text-rose-500 tracking-wider">
                {formatTime(timeLeft)}

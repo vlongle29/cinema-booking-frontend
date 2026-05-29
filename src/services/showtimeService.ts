@@ -52,6 +52,17 @@ export const showtimeService = {
    },
 
    /**
+    * Get detail showing time by ID, including movie, room, branch, etc.
+    */
+   getShowtimeDetails: (id: string) => {
+      return apiService.get<ApiResponse<any>>(`${SHOWTIME_API_PATH}/${id}`);
+   },
+
+   /**
+
+    */
+
+   /**
     * Lấy danh sách các ghế  với trạng thái
     * @param movieId
     * @returns

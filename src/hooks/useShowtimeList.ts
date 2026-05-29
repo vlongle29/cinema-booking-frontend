@@ -1,20 +1,28 @@
-// src/hooks/useShowtimeList.ts
 import { useState, useCallback, useEffect } from "react";
 import { showtimeService } from "../services/showtimeService";
-import type { Showtime, ApiResponse, PaginatedResponse, ShowtimeSearchParams } from "../types/showtime";
+import type {
+   Showtime,
+   ShowtimeSearchParams,
+} from "../features/showtime/types/showtime.types";
 
 export const useShowtimeList = (isCreating: boolean) => {
    const [showtimes, setShowtimes] = useState<Showtime[]>([]);
    const [isLoadingList, setIsLoadingList] = useState(false);
    const [searchParams, setSearchParams] = useState<ShowtimeSearchParams>({
-      page: 1, size: 10, sortBy: "startTime", sortDirection: "DESC",
+      page: 1,
+      size: 10,
+      sortBy: "startTime",
+      sortDirection: "DESC",
    });
-   const [pagination, setPagination] = useState({ totalPages: 1, totalElements: 0 });
+   const [pagination, setPagination] = useState({
+      totalPages: 1,
+      totalElements: 0,
+   });
 
    const fetchShowtimes = useCallback(async (params: ShowtimeSearchParams) => {
       setIsLoadingList(true);
       try {
-         const response = await showtimeService.searchShowtimes<ApiResponse<PaginatedResponse<Showtime>>>(params);
+         const response = await showtimeService.searchShowtimes(params);
          if (response.success) {
             setShowtimes(response.data.content);
             setPagination({
@@ -47,7 +55,12 @@ export const useShowtimeList = (isCreating: boolean) => {
    };
 
    return {
-      showtimes, isLoadingList, searchParams, setSearchParams,
-      pagination, fetchShowtimes, handleDelete
+      showtimes,
+      isLoadingList,
+      searchParams,
+      setSearchParams,
+      pagination,
+      fetchShowtimes,
+      handleDelete,
    };
 };

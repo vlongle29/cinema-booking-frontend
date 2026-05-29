@@ -1,6 +1,6 @@
 import React from "react";
 
-const SkeletonLoader: React.FC<{ count?: number; type?: string }> = ({
+export const SkeletonLoader: React.FC<{ count?: number; type?: string }> = ({
    count = 3,
    type = "chip",
 }) => {
@@ -49,6 +49,4 @@ const SkeletonLoader: React.FC<{ count?: number; type?: string }> = ({
 
    return null;
 };
-
-export default SkeletonLoader;
 

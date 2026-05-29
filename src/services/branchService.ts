@@ -1,51 +1,54 @@
 import apiService from "./apiService";
 import type { ApiResponse } from "./apiService";
+import type { Branch, BranchRequest, BranchSearchDTO } from "@/types/branch";
 
 const BRANCH_API_PATH = "/branch";
 
 export const branchService = {
-   /**
-    * Lấy danh sách chi nhánh
-    */
-   getAllBranches: (params?: any) => {
-      return apiService.get<ApiResponse<any>>(BRANCH_API_PATH, { params });
+   create: (data: BranchRequest) => {
+      return apiService.post<ApiResponse<Branch>>(BRANCH_API_PATH, data);
    },
 
-   /**
-    * Xem chi tiết chi nhánh
-    */
-   getBranchById: (id: string) => {
-      return apiService.get<ApiResponse<any>>(`${BRANCH_API_PATH}/${id}`);
+   getById: (id: string) => {
+      return apiService.get<ApiResponse<Branch>>(`${BRANCH_API_PATH}/${id}`);
    },
 
-   /**
-    * Thêm chi nhánh mới
-    */
-   createBranch: (data: any) => {
-      return apiService.post<ApiResponse<any>>(BRANCH_API_PATH, data);
-   },
-
-   /**
-    * Cập nhật thông tin chi nhánh
-    */
-   updateBranch: (id: string, data: any) => {
-      return apiService.put<ApiResponse<any>>(`${BRANCH_API_PATH}/${id}`, data);
-   },
-
-   /**
-    * Xoá tĩnh/mềm chi nhánh
-    */
-   deleteBranch: (id: string) => {
-      return apiService.delete<ApiResponse<any>>(`${BRANCH_API_PATH}/${id}`);
-   },
-
-   /**
-    * Tìm kiếm chi nhánh
-    */
-   searchBranch: (data: any) => {
-      return apiService.post<ApiResponse<any>>(
-         `${BRANCH_API_PATH}/search`,
+   update: (id: string, data: BranchRequest) => {
+      return apiService.put<ApiResponse<Branch>>(
+         `${BRANCH_API_PATH}/${id}`,
          data,
+      );
+   },
+
+   delete: (id: string) => {
+      return apiService.delete<ApiResponse<void>>(`${BRANCH_API_PATH}/${id}`);
+   },
+
+   deleteCascade: (id: string) => {
+      return apiService.delete<ApiResponse<void>>(
+         `${BRANCH_API_PATH}/${id}/cascade`,
+      );
+   },
+
+   search: (params: BranchSearchDTO) => {
+      return apiService.get<ApiResponse<any>>(`${BRANCH_API_PATH}/search`, {
+         params,
+      });
+   },
+
+   getAll: () => {
+      return apiService.get<ApiResponse<Branch[]>>(BRANCH_API_PATH);
+   },
+
+   getRoomsByBranch: (branchId: string) => {
+      return apiService.get<ApiResponse<any[]>>(
+         `${BRANCH_API_PATH}/${branchId}/rooms`,
+      );
+   },
+
+   restore: (id: string) => {
+      return apiService.put<ApiResponse<Branch>>(
+         `${BRANCH_API_PATH}/${id}/restore`,
       );
    },
 };

@@ -1,71 +1,13 @@
 import apiService from "./apiService";
+import type { ApiResponse, PageResponse } from "./apiService";
+import type {
+   UserInfoResponse,
+   UserCreateRequest,
+   UserUpdateRequest,
+   UserIdRequest,
+} from "../types/user";
 
 const USER_API_PATH = "/users";
-
-/**
- * Types merged from user.ts
- */
-export interface PageResponse<T> {
-   content: T[];
-   pageNumber: number;
-   pageSize: number;
-   totalElements: number;
-   totalPages: number;
-   first: boolean;
-   last: boolean;
-   empty: boolean;
-}
-
-export interface RoleInfo {
-   id: string;
-   name: string;
-   code: string;
-}
-
-export interface UserInfoResponse {
-   id: string;
-   username: string;
-   name: string;
-   email: string;
-   phone: string;
-   avatar?: string;
-   lockFlag: string; // "0" = Active, "1" = Locked
-   systemFlag: string;
-   roles: RoleInfo[];
-}
-
-export interface SysUserSearchDTO {
-   username?: string;
-   email?: string;
-   name?: string;
-   phone?: string;
-   lockFlag?: "LOCK" | "UNLOCK" | null;
-   roleIds?: string[];
-   ids?: string[];
-   pageNumber: number;
-   pageSize: number;
-   sortBy?: string;
-   sortDirection?: "ASC" | "DESC";
-}
-
-export interface UserCreateRequest {
-   username: string;
-   password: string;
-   name: string;
-   email: string;
-   phone: string;
-   avatar?: string;
-   roleIds: string[];
-   branchId: string;
-}
-
-export interface UserUpdateRequest extends Partial<UserCreateRequest> {
-   lockFlag?: string;
-}
-
-export interface UserIdRequest {
-   ids: string[];
-}
 
 export const userService = {
    /**
@@ -73,10 +15,24 @@ export const userService = {
     * Tìm kiếm và phân trang người dùng
     */
    getAllUsers: (params?: any) => {
-      return apiService.post<ApiResponse<PageResponse<UserInfoResponse>>>(
-         `${USER_API_PATH}/search`,
-         params,
-      );
+      // Tự xây dựng query string để đảm bảo tham số luôn nằm trên URL
+      const searchParams = new URLSearchParams();
+      if (params) {
+         Object.entries(params).forEach(([key, value]) => {
+            // Chỉ lấy các giá trị hợp lệ (không null, undefined hoặc rỗng)
+            if (value !== undefined && value !== null && value !== "") {
+               if (Array.isArray(value)) {
+                  value.forEach((v) => searchParams.append(key, v));
+               } else {
+                  searchParams.append(key, String(value));
+               }
+            }
+         });
+      }
+      const queryString = searchParams.toString();
+      const url = `${USER_API_PATH}/search${queryString ? `?${queryString}` : ""}`;
+
+      return apiService.get<ApiResponse<PageResponse<UserInfoResponse>>>(url);
    },
 
    /**

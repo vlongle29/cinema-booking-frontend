@@ -1,15 +1,20 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import apiService from "../services/apiService";
 import { AuthContext } from "../context/AuthContext";
-import type { Movie, Branch, Room, ShowtimeFormat, City } from "../types/showtime";
-
+import type {
+   Movie,
+   Branch,
+   Room,
+   ShowtimeFormat,
+   City,
+} from "../features/showtime/types/showtime.types";
 
 export interface ShowtimeFormData {
    movieId: string;
    cityId: string;
    branchId: string;
    roomId: string;
-   date: string;          // YYYY-MM-DD — used to fetch available slots
+   date: string; // YYYY-MM-DD — used to fetch available slots
    selectedSlots: string[]; // e.g. ["09:00", "13:30"]
    format: string;
 }
@@ -48,7 +53,8 @@ const EMPTY_FORM: ShowtimeFormData = {
 };
 
 export const useCreateShowtime = () => {
-   const { isAuthenticated, loading: authLoading } = useContext(AuthContext) || {};
+   const { isAuthenticated, loading: authLoading } =
+      useContext(AuthContext) || {};
 
    const [formData, setFormData] = useState<ShowtimeFormData>(EMPTY_FORM);
 
@@ -74,7 +80,9 @@ export const useCreateShowtime = () => {
    useEffect(() => {
       if (authLoading || !isAuthenticated) {
          if (!authLoading)
-            console.log("⏹️ [useCreateShowtime] Fetch skipped: User not authenticated.");
+            console.log(
+               "⏹️ [useCreateShowtime] Fetch skipped: User not authenticated.",
+            );
          return;
       }
 
@@ -108,12 +116,15 @@ export const useCreateShowtime = () => {
                   error: error.message || "Lỗi khi tải dữ liệu ban đầu.",
                }));
          } finally {
-            if (isMounted) setStatus((prev) => ({ ...prev, isFetching: false }));
+            if (isMounted)
+               setStatus((prev) => ({ ...prev, isFetching: false }));
          }
       };
 
       fetchInitialData();
-      return () => { isMounted = false; };
+      return () => {
+         isMounted = false;
+      };
    }, [isAuthenticated, authLoading]);
 
    // ─── 2. Fetch Branches when cityId changes ────────────────────────────────
@@ -128,10 +139,9 @@ export const useCreateShowtime = () => {
       const fetchBranch = async () => {
          setStatus((prev) => ({ ...prev, isFetching: true, error: null }));
          try {
-            const branchRes = await apiService.get<ApiResponseWrapper<Branch[]>>(
-               "/branch",
-               { params: { cityId: formData.cityId } }
-            );
+            const branchRes = await apiService.get<
+               ApiResponseWrapper<Branch[]>
+            >("/branch", { params: { cityId: formData.cityId } });
             if (isMounted) {
                const branch = Array.isArray(branchRes.data)
                   ? branchRes.data
@@ -145,12 +155,15 @@ export const useCreateShowtime = () => {
                   error: error.message || "Lỗi khi tải danh sách chi nhánh.",
                }));
          } finally {
-            if (isMounted) setStatus((prev) => ({ ...prev, isFetching: false }));
+            if (isMounted)
+               setStatus((prev) => ({ ...prev, isFetching: false }));
          }
       };
 
       fetchBranch();
-      return () => { isMounted = false; };
+      return () => {
+         isMounted = false;
+      };
    }, [formData.cityId, isAuthenticated, authLoading]);
 
    // ─── 3. Fetch Rooms when branchId changes ────────────────────────────────
@@ -167,7 +180,7 @@ export const useCreateShowtime = () => {
          try {
             const roomsRes = await apiService.get<ApiResponseWrapper<Room[]>>(
                "/room/search",
-               { params: { branchId: formData.branchId, isDeleted: false } }
+               { params: { branchId: formData.branchId, isDeleted: false } },
             );
             if (isMounted) {
                const rooms = Array.isArray(roomsRes.data)
@@ -182,12 +195,15 @@ export const useCreateShowtime = () => {
                   error: error.message || "Lỗi khi tải danh sách phòng chiếu.",
                }));
          } finally {
-            if (isMounted) setStatus((prev) => ({ ...prev, isFetching: false }));
+            if (isMounted)
+               setStatus((prev) => ({ ...prev, isFetching: false }));
          }
       };
 
       fetchRooms();
-      return () => { isMounted = false; };
+      return () => {
+         isMounted = false;
+      };
    }, [formData.branchId, isAuthenticated, authLoading]);
 
    // ─── 4. Fetch Available Time Slots when roomId + movieId + date are set ──
@@ -209,7 +225,7 @@ export const useCreateShowtime = () => {
          try {
             const res = await apiService.get<ApiResponseWrapper<string[]>>(
                `/room/${formData.roomId}/available-slots`,
-               { params: { movieId: formData.movieId, date: formData.date } }
+               { params: { movieId: formData.movieId, date: formData.date } },
             );
             if (isMounted) {
                const slots = Array.isArray(res.data) ? res.data : [];
@@ -224,12 +240,15 @@ export const useCreateShowtime = () => {
                }));
             }
          } finally {
-            if (isMounted) setStatus((prev) => ({ ...prev, isFetchingSlots: false }));
+            if (isMounted)
+               setStatus((prev) => ({ ...prev, isFetchingSlots: false }));
          }
       };
 
       fetchSlots();
-      return () => { isMounted = false; };
+      return () => {
+         isMounted = false;
+      };
    }, [formData.roomId, formData.movieId, formData.date]);
 
    // ─── 5. Generic Field Update with Cascade Reset ───────────────────────────
@@ -247,7 +266,11 @@ export const useCreateShowtime = () => {
                newData.roomId = "";
                newData.date = "";
                newData.selectedSlots = [];
-            } else if (field === "roomId" || field === "movieId" || field === "date") {
+            } else if (
+               field === "roomId" ||
+               field === "movieId" ||
+               field === "date"
+            ) {
                newData.selectedSlots = [];
             }
 
@@ -258,7 +281,7 @@ export const useCreateShowtime = () => {
             setOptions((prev) => ({ ...prev, rooms: [], availableSlots: [] }));
          }
       },
-      []
+      [],
    );
 
    // Toggle a single slot on/off
@@ -276,11 +299,23 @@ export const useCreateShowtime = () => {
 
    // ─── 6. Submit — Calls batch endpoint /showtimes/batch ────────────────────
    const submitForm = async () => {
-      setStatus((prev) => ({ ...prev, isLoading: true, error: null, success: false, batchResult: null }));
+      setStatus((prev) => ({
+         ...prev,
+         isLoading: true,
+         error: null,
+         success: false,
+         batchResult: null,
+      }));
 
       const { movieId, roomId, date, selectedSlots, format } = formData;
 
-      if (!movieId || !roomId || !date || selectedSlots.length === 0 || !format) {
+      if (
+         !movieId ||
+         !roomId ||
+         !date ||
+         selectedSlots.length === 0 ||
+         !format
+      ) {
          setStatus((prev) => ({
             ...prev,
             isLoading: false,
@@ -298,21 +333,20 @@ export const useCreateShowtime = () => {
             format,
          };
 
-         const response = await apiService.post<ApiResponseWrapper<BatchCreateShowtimeResponse>>(
-            "/showtimes/batch",
-            payload
-         );
+         const response = await apiService.post<
+            ApiResponseWrapper<BatchCreateShowtimeResponse>
+         >("/showtimes/batch", payload);
 
          const batchData = response.data;
 
-         setStatus((prev) => ({ 
-            ...prev, 
-            isLoading: false, 
+         setStatus((prev) => ({
+            ...prev,
+            isLoading: false,
             success: batchData.created.length > 0,
-            batchResult: batchData 
+            batchResult: batchData,
          }));
 
-         // If all were created successfully, reset form. 
+         // If all were created successfully, reset form.
          // If some were rejected, maybe keep form but update available slots?
          // For now, let's reset if any were created.
          if (batchData.created.length > 0) {
@@ -323,7 +357,8 @@ export const useCreateShowtime = () => {
          setStatus((prev) => ({
             ...prev,
             isLoading: false,
-            error: error.message || "Đã xảy ra lỗi khi tạo suất chiếu hàng loạt.",
+            error:
+               error.message || "Đã xảy ra lỗi khi tạo suất chiếu hàng loạt.",
          }));
       }
    };

@@ -1,7 +1,7 @@
 import React from "react";
 import { AlertCircle } from "lucide-react";
 
-const EmptyState: React.FC<{ title: string; description: string }> = ({
+export const EmptyState: React.FC<{ title: string; description: string }> = ({
    title,
    description,
 }) => (
@@ -11,5 +11,3 @@ const EmptyState: React.FC<{ title: string; description: string }> = ({
       <p className="text-[#797b7d] text-sm max-w-sm">{description}</p>
    </div>
 );
-
-export default EmptyState;
