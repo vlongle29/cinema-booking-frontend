@@ -32,7 +32,7 @@ export const getUserFilters = (roles: SysRoleResponse[]): FilterField[] => [
       label: "Trạng thái",
       type: "select",
       options: [
-         { value: "UNLOCK", label: "Đang hoạt động" },
+         { value: "NORMAL", label: "Đang hoạt động" },
          { value: "LOCK", label: "Đã khóa" },
       ],
       placeholder: "Tất cả trạng thái",

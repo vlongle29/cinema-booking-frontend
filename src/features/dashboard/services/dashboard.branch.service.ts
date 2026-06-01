@@ -1,5 +1,5 @@
-import apiService from "./apiService";
-import type { ApiResponse } from "./apiService";
+import apiService from "../../../services/apiService";
+import type { ApiResponse } from "../../../services/apiService";
 import type { Branch, BranchRequest, BranchSearchDTO } from "@/types/branch";
 
 const BRANCH_API_PATH = "/branch";

@@ -3,7 +3,9 @@ export interface Branch {
    name: string;
    address: string;
    managerId: string;
+   managerName: string;
    cityId: string;
+   cityName: string;
    createTime: string;
    updateTime: string;
    updateBy: string;

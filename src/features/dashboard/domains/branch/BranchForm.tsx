@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { branchService } from "@/services/branchService";
+import { branchService } from "@/features/dashboard/services/dashboard.branch.service";
 import { Button } from "@/components/ui/button";
 import { X, Save } from "lucide-react";
 import type { Branch } from "@/types/branch";

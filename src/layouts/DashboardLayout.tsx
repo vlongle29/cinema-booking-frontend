@@ -5,11 +5,12 @@ import useAuth from "@/hooks/useAuth";
 
 const sidebarItems = [
    { label: "Dashboard", path: "/dashboard" },
-   { label: "Danh sách phim", path: "/dashboard/list-movies" },
-   { label: "Danh sách suất chiếu", path: "/dashboard/list-shows" },
-   { label: "Danh sách đặt chỗ", path: "/dashboard/list-bookings" },
-   { label: "Bản mẫu ghế", path: "/dashboard/seat-template" },
+   { label: "Quản lý phim", path: "/dashboard/movie-manage" },
+   { label: "Quản lý suất chiếu", path: "/dashboard/showtime-manage" },
+   { label: "Quản lý đặt chỗ", path: "/dashboard/booking-manage" },
+   { label: "Quản lý bản mẫu ghế", path: "/dashboard/seat-template-manage" },
    { label: "Quản lý người dùng", path: "/dashboard/user-manage" },
+   { label: "Quản lý chi nhánh", path: "/dashboard/branch-manage" },
 ];
 
 const DashboardLayout: React.FC = () => {

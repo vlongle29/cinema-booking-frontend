@@ -48,7 +48,7 @@ export const getBranchColumns = (handlers: {
       label: "Thành phố",
       render: (branch) => (
          <span className="text-[#d1d5dc] text-xs font-medium bg-white/5 px-2 py-1 rounded">
-            {branch.cityId} {/* Trong thực tế nên map với City Name */}
+            {branch.cityName} {/* Trong thực tế nên map với City Name */}
          </span>
       ),
    },
@@ -58,7 +58,7 @@ export const getBranchColumns = (handlers: {
       render: (branch) => (
          <div className="flex items-center gap-2 text-[#d1d5dc] text-xs">
             <User size={12} className="text-rose-500" />
-            {branch.managerId || "Chưa gán"}
+            {branch.managerName || "Chưa gán"}
          </div>
       ),
    },

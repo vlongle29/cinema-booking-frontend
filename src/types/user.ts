@@ -21,7 +21,7 @@ export interface SysUserSearchDTO {
    email?: string;
    name?: string;
    phone?: string;
-   lockFlag?: "LOCK" | "UNLOCK" | null;
+   lockFlag?: "LOCK" | "NORMAL" | null;
    roleIds?: string[];
    ids?: string[];
    pageNumber: number; // Bắt đầu từ 0

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { branchService } from "@/services/branchService";
+import { branchService } from "@/features/dashboard/services/dashboard.branch.service";
 import { Box, Tabs, Tab, Typography, Paper } from "@mui/material";
 
 export default function BranchDetail() {

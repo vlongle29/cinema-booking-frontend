@@ -60,7 +60,7 @@ const UserSearchForm: React.FC<UserSearchFormProps> = ({
             className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 outline-none text-sm bg-white"
          >
             <option value="">Trạng thái (Tất cả)</option>
-            <option value="UNLOCK">Đang hoạt động (UNLOCK)</option>
+            <option value="NORMAL">Đang hoạt động (UNLOCK)</option>
             <option value="LOCK">Đã khóa (LOCK)</option>
          </select>
 
