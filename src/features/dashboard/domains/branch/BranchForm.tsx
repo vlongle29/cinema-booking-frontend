@@ -17,12 +17,16 @@ const branchSchema = z.object({
 
 interface BranchFormProps {
    initialData?: Branch | null;
+   cityOptions: { value: string; label: string }[];
+   managerOptions: { value: string; label: string }[];
    onCancel: () => void;
    onSuccess: () => void;
 }
 
 const BranchForm: React.FC<BranchFormProps> = ({
    initialData,
+   cityOptions,
+   managerOptions,
    onCancel,
    onSuccess,
 }) => {

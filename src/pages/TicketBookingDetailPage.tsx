@@ -6,6 +6,7 @@ import {
    useMovieDetails,
 } from "@/features/movie/index";
 import ShowtimeSelection from "@/features/showtime/components/ShowtimeSelection";
+import MovieReviews from "@/components/common/MovieReviews";
 
 export default function TicketBookingDetailPage() {
    const { id: movieId } = useParams<{ id: string }>();
@@ -26,11 +27,27 @@ export default function TicketBookingDetailPage() {
       }
    };
 
-   if (isLoading) return <div>Loading...</div>;
-   if (!movieDetail) return <div>Movie not found</div>;
+   // Bọc trong container chung để tránh màn hình đen hoàn toàn khi loading
+   if (isLoading) {
+      return (
+         <div className="bg-[#09090b] min-h-screen text-white flex items-center justify-center">
+            <div className="animate-pulse text-rose-500 font-medium">
+               Đang tải thông tin phim...
+            </div>
+         </div>
+      );
+   }
+
+   if (!movieDetail) {
+      return (
+         <div className="bg-[#09090b] min-h-screen text-white flex items-center justify-center">
+            <div className="text-gray-400">Không tìm thấy phim yêu cầu.</div>
+         </div>
+      );
+   }
 
    return (
-      <div className="bg-[#09090b] min-h-screen text-white">
+      <div className="bg-[#09090b] min-h-screen text-white animate-in fade-in duration-500">
          {/* 1. Phần thông tin phim */}
          <MovieHero
             movie={movieDetail}
@@ -40,6 +57,11 @@ export default function TicketBookingDetailPage() {
          {/* 2. Phần chọn lịch chiếu (Feature khác) */}
          <div ref={showtimeSectionRef}>
             <ShowtimeSelection />
+         </div>
+
+         <div>
+            {/* 4. Phần đánh giá (Feature khác) */}
+            <MovieReviews movieId={movieId} />
          </div>
 
          {/* 3. Phần phim đề xuất */}

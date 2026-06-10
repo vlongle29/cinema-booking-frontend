@@ -120,19 +120,3 @@ export const getBranchColumns = (handlers: {
       ),
    },
 ];
-
-export const getBranchFilters = (): FilterField[] => [
-   {
-      name: "name",
-      label: "Tên chi nhánh",
-      type: "text",
-      placeholder: "Tìm tên...",
-   },
-   {
-      name: "cityId",
-      label: "Thành phố",
-      type: "select",
-      options: [], // Sẽ được fetch từ API City
-      placeholder: "Tất cả thành phố",
-   },
-];

@@ -75,8 +75,8 @@ axiosInstance.interceptors.response.use(
          isRefreshing = true;
 
          try {
-            console.log("🔄 [Auth] Attempting to refresh token...");
-            console.log("📤 [Auth] Request: POST /auth/refresh-token (withCredentials: true)");
+            console.log("[Auth] Attempting to refresh token...");
+            console.log("[Auth] Request: POST /auth/refresh-token (withCredentials: true)");
             // Note: httpOnly cookies are sent automatically by the browser and are NOT accessible via JavaScript console.
 
             const response = await axios.post(
@@ -85,8 +85,8 @@ axiosInstance.interceptors.response.use(
                { withCredentials: true },
             );
             
-            console.log("✅ [Auth] Token refreshed successfully!");
-            console.log("📥 [Auth] Response Data:", response.data);
+            console.log("[Auth] Token refreshed successfully!");
+            console.log("[Auth] Response Data:", response.data);
             
             const newAccessToken = response.data.data.accessToken;
             setAccessToken(newAccessToken);
@@ -95,7 +95,7 @@ axiosInstance.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return axiosInstance(originalRequest);
          } catch (refreshError: any) {
-            console.error("❌ [Auth] Refresh token failed:", refreshError.response?.data || refreshError.message);
+            console.error("[Auth] Refresh token failed:", refreshError.response?.data || refreshError.message);
             isRefreshing = false;
             setAccessToken(null);
             window.dispatchEvent(new Event("auth:logout"));
