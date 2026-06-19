@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Search } from "lucide-react";
-import LoginModal from "./LoginModal";
-import useAuth from "../../hooks/useAuth";
+import { LoginModal } from "@/features/auth/components";
+import useAuth from "../../features/auth/hooks/useAuth";
 import {
    DropdownMenu,
    DropdownMenuContent,

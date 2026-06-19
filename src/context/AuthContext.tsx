@@ -1,46 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import axiosInstance, { setAccessToken } from "../api/axiosInstance";
+import type { User, AuthResponse, AuthContextType } from "../types/auth";
 
-export interface User {
-   id: string;
-   username: string;
-   name: string;
-   email: string;
-   phone: string;
-   avatar: string | null;
-   lockFlag: string;
-   systemFlag: string;
-   roles: {
-      id: string;
-      name: string;
-      code: string;
-   }[];
-}
-
-interface AuthResponse {
-   success: boolean;
-   message: string;
-   code: string;
-   status: number;
-   data: {
-      // sessionId & refreshToken are @JsonIgnore on backend — they come as httpOnly cookies, NOT in JSON
-      accessToken: string;
-      userInfo: User;
-      permissions: string[];
-   };
-}
-
-interface AuthContextType {
-   accessToken: string | null;
-   userInfo: User | null;
-   permissions: string[];
-   isAuthenticated: boolean;
-   loading: boolean;
-   login: (credentials: any) => Promise<void>;
-   register: (data: any) => Promise<void>;
-   logout: () => Promise<void>;
-}
 
 export const AuthContext = createContext<AuthContextType | undefined>(
    undefined,
@@ -54,28 +16,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
    const [permissions, setPermissions] = useState<string[]>([]);
    const [loading, setLoading] = useState(true);
 
+   const initAuth = async () => {
+      try {
+         const response = await axiosInstance.post<AuthResponse>(
+            "/auth/refresh-token",
+         );
+
+         const { accessToken, userInfo, permissions } = response.data.data;
+         console.log(">>> [AuthContext] init Auth", response.data.data);
+         
+         setAccessToken(accessToken);
+         setAccessTokenState(accessToken);
+         setUserInfo(userInfo);
+         setPermissions(permissions ?? []);
+      } catch (error: any) {
+         setAccessToken(null);
+         setAccessTokenState(null);
+         setUserInfo(null);
+         setPermissions([]);
+      } finally {
+         setLoading(false);
+      }
+   };
+
    useEffect(() => {
-      const initAuth = async () => {
-         try {
-            const response = await axiosInstance.post<AuthResponse>(
-               "/auth/refresh-token",
-            );
-
-            const { accessToken, userInfo, permissions } = response.data.data;
-            setAccessToken(accessToken);
-            setAccessTokenState(accessToken);
-            setUserInfo(userInfo);
-            setPermissions(permissions ?? []);
-         } catch (error: any) {
-            setAccessToken(null);
-            setAccessTokenState(null);
-            setUserInfo(null);
-            setPermissions([]);
-         } finally {
-            setLoading(false);
-         }
-      };
-
       initAuth();
 
       // Listen for forced logout events triggered by axios interceptors (refresh token expired)
@@ -86,11 +50,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
          setPermissions([]);
       };
 
+      const handleLoginEvent = () => initAuth();
+
       window.addEventListener("auth:logout", handleLogoutEvent);
-      return () => window.removeEventListener("auth:logout", handleLogoutEvent);
+      window.addEventListener("auth:login", handleLoginEvent);
+      return () => {
+         window.removeEventListener("auth:logout", handleLogoutEvent);
+         window.removeEventListener("auth:login", handleLoginEvent);
+      };
    }, []);
 
-   console.log("userInfo", userInfo);
 
    const login = async (credentials: any) => {
       // withCredentials: true is set globally on axiosInstance
@@ -105,6 +74,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setAccessTokenState(accessToken);
       setUserInfo(userInfo);
       setPermissions(permissions ?? []);
+   };
+
+   const setAuthData = (data: {
+      accessToken: string;
+      userInfo: User;
+      permissions?: string[];
+   }) => {
+      setAccessToken(data.accessToken);
+      setUserInfo(data.userInfo);
+      setPermissions(data.permissions ?? []);
    };
 
    const register = async (data: any) => {
@@ -127,7 +106,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
          console.error("Logout failed", error);
       } finally {
          setAccessToken(null);
-         setAccessTokenState(null);
          setUserInfo(null);
          setPermissions([]);
       }
@@ -151,6 +129,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             isAuthenticated: !!userInfo,
             loading,
             login,
+            setAuthData,
             register,
             logout,
          }}

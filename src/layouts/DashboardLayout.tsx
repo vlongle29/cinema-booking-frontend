@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 import profileImg from "@/assets/images/profile-icon.png";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "@/features/auth/hooks/useAuth";
 
 const sidebarItems = [
    { label: "Dashboard", path: "/dashboard" },

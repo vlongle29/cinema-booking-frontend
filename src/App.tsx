@@ -13,6 +13,7 @@ import "./App.css";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { PaymentSuccess } from "./pages/PaymentSuccessPage";
 import MainLayout from "./layouts/MainLayout";
+import GoogleOAuth2Callback from "./features/auth/components/GoogleCallback";
 
 function App() {
    return (
@@ -31,6 +32,10 @@ function App() {
                <Route
                   path="movies/status/:status"
                   element={<ListMoviePage />}
+               />
+               <Route
+                  path="/oauth2/google/callback"
+                  element={<GoogleOAuth2Callback />}
                />
                {/* Protected Routes */}
                <Route element={<PrivateRoute />}>

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import MyCustomRating from "../ui/MyCustomRating";
 import profileIcon from "@/assets/images/profile-icon.png";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../features/auth/hooks/useAuth";
 import { reviewService } from "../../services/reviewService";
 
 interface Review {

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { movieService } from "@/services/movieService";
 import type { Movie } from "@/features/movies/types";
-import useAuth from "@/hooks/useAuth"; // Import từ cổng feature auth
+import useAuth from "@/features/auth/hooks/useAuth"; // Import từ cổng feature auth
 
 export const useNowShowingMovies = () => {
    const [movies, setMovies] = useState<Movie[]>([]);

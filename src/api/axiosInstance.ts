@@ -26,6 +26,7 @@ let refreshSubscribers: ((token: string) => void)[] = [];
 
 export const setAccessToken = (token: string | null) => {
    accessToken = token;
+   console.trace(">>> [setAccessToken called] accessToken is now:", accessToken);
 };
 
 const onRefreshed = (token: string) => {
@@ -61,7 +62,7 @@ axiosInstance.interceptors.response.use(
          return Promise.reject(error);
       }
 
-      if (error.response?.status === 401 && !originalRequest._retry) {
+      if (error.response?.status === 401 && !originalRequest._retry) {  
          if (isRefreshing) {
             return new Promise((resolve) => {
                addRefreshSubscriber((token) => {
@@ -75,27 +76,22 @@ axiosInstance.interceptors.response.use(
          isRefreshing = true;
 
          try {
-            console.log("[Auth] Attempting to refresh token...");
-            console.log("[Auth] Request: POST /auth/refresh-token (withCredentials: true)");
             // Note: httpOnly cookies are sent automatically by the browser and are NOT accessible via JavaScript console.
-
             const response = await axios.post(
                `${API_URL}/auth/refresh-token`,
                undefined,
                { withCredentials: true },
             );
+
+            const payload = response.data?.data || response.data;
+            const newAccessToken = payload.accessToken;
             
-            console.log("[Auth] Token refreshed successfully!");
-            console.log("[Auth] Response Data:", response.data);
-            
-            const newAccessToken = response.data.data.accessToken;
             setAccessToken(newAccessToken);
             onRefreshed(newAccessToken);
 
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return axiosInstance(originalRequest);
          } catch (refreshError: any) {
-            console.error("[Auth] Refresh token failed:", refreshError.response?.data || refreshError.message);
             isRefreshing = false;
             setAccessToken(null);
             window.dispatchEvent(new Event("auth:logout"));

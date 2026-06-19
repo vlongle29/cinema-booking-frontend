@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AlertCircle, Film } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
-import LoginModal from "@/components/common/LoginModal";
+import useAuth from "../../auth/hooks/useAuth";
+import { LoginModal } from "@/features/auth/components";
 import { EmptyState } from "@/components/common/EmptyState";
 import { SkeletonLoader } from "@/components/common/SkeletonLoader";
 import type { Showtime, Theater } from "../types/showtime.types";
