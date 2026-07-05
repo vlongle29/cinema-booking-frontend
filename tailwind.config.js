@@ -11,6 +11,10 @@ export default {
             "nav-pill": "#d4d4d4",
             "border-custom": "rgba(183, 183, 183, 0.15)",
             border: "hsl(var(--border))",
+            ring: "hsl(var(--ring))",
+            input: "hsl(var(--input))",
+            background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
          },
          textColor: {
             primary: "#ffffff",
@@ -62,5 +66,5 @@ export default {
          },
       },
    },
-   plugins: [],
+   plugins: [require("tailwindcss-animate")],
 };
