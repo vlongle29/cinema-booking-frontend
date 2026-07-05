@@ -11,6 +11,7 @@ const sidebarItems = [
    { label: "Quản lý bản mẫu ghế", path: "/dashboard/seat-template-manage" },
    { label: "Quản lý người dùng", path: "/dashboard/user-manage" },
    { label: "Quản lý chi nhánh", path: "/dashboard/branch-manage" },
+   { label: "Quản lý phòng chiếu", path: "/dashboard/room-manage" },
 ];
 
 const DashboardLayout: React.FC = () => {

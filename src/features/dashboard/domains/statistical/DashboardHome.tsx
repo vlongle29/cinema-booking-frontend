@@ -47,7 +47,9 @@ export default function DashboardHome() {
    useEffect(() => {
       const fetchData = async () => {
          try {
-            const response = await showtimeService.searchShowtimes();
+            const response = await showtimeService.searchShowtimes({
+               status: "OPEN",
+            });
             setShowtimes(response.data.content);
          } catch (error) {
             console.error("Error fetching dashboard stats:", error);
@@ -132,8 +134,8 @@ export default function DashboardHome() {
                         {/* Tăng chiều cao (h-64 hoặc h-72) để tỷ lệ ảnh dọc giống hình */}
                         <div className="relative w-full h-64 overflow-hidden rounded-t-[8px]">
                            <img
-                              src={`${API_BASE_URL}${showtime.movie.posterUrl}`}
-                              alt={showtime.movie.title}
+                              src={`${API_BASE_URL}${showtime.movie?.posterUrl}`}
+                              alt={showtime.movie?.title}
                               className="w-full h-full object-cover"
                            />
                         </div>
@@ -142,7 +144,7 @@ export default function DashboardHome() {
                         <div className="p-4 flex flex-col">
                            {/* Title */}
                            <h3 className="text-sm text-white font-bold text-base mb-3 line-clamp-1">
-                              {showtime.movie.title}
+                              {showtime.movie?.title}
                            </h3>
 
                            {/* Price and Rating */}
@@ -159,7 +161,7 @@ export default function DashboardHome() {
                                     className="text-[#f84565] fill-[#f84565] flex-shrink-0"
                                  />
                                  <span className="text-[#9ca3af] text-sm font-medium">
-                                    {showtime.movie.rated || "N/A"}
+                                    {showtime.movie?.rated || "N/A"}
                                  </span>
                               </div>
                            </div>

@@ -6,7 +6,8 @@ import { getBranchColumns } from "./BranchTableConfig";
 import { useDashboardBranch } from "../../hooks/useDashboardBranch";
 import { getBranchFilters } from "./config/branchFilters";
 import { cityService } from "@/services/cityService";
-import { employeeService } from "@/services/employeeService";
+import { userService } from "@/services/userService";
+
 
 export default function BranchManagementPage() {
    const navigate = useNavigate();
@@ -25,24 +26,25 @@ export default function BranchManagementPage() {
    useEffect(() => {
       const fetchData = async () => {
          try {
-            const [cityRes] = await Promise.all([
+            const [cityRes, empRes] = await Promise.all([
                cityService.getAll(),
-              
+               userService.searchUser({ roleIds: ["35c94067-b1a9-4eb4-a1bd-34bee68be5fa"]})
             ]);
 
-            console.log("city data", cityRes);
-            
+            console.log("cityRes", cityRes);
+            console.log("empRes", empRes);
 
-            const cOptions = cityRes.data.map((city: any) => ({
+
+            const cOptions = cityRes?.data?.map((city: any) => ({
                value: city.id,
                label: city.name,
             }));
             setCityOptions(cOptions);
 
-            const mOptions = empRes.data.data.content.map((emp: any) => ({
-               value: emp.userId,
+            const mOptions = empRes?.data?.content?.map((emp: any) => ({
+               value: emp.id,
                label: `${emp.name} (${emp.employeeCode})`,
-            }));
+            })) || [];
             setManagerOptions(mOptions);
          } catch (error) {
             console.error("Failed to fetch options data:", error);

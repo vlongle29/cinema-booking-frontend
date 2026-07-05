@@ -14,6 +14,7 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import { PaymentSuccess } from "./pages/PaymentSuccessPage";
 import MainLayout from "./layouts/MainLayout";
 import GoogleOAuth2Callback from "./features/auth/components/GoogleCallback";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
    return (
@@ -39,13 +40,13 @@ function App() {
                />
                {/* Protected Routes */}
                <Route element={<PrivateRoute />}>
-                  <Route path="profile" element={<div>User Profile</div>} />
-                  <Route path="bookings" element={<div>My Bookings</div>} />
+                  {/* {/* <Route path="profile" element={<div>User Profile</div>} /> */}
                   <Route path="/order-snacks" element={<OrderSnacksPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/seat-select/:id" element={<SeatSelectPage />} />
                   <Route path="/booking/success" element={<PaymentSuccess />} />
                   <Route path="/my-bookings" element={<MyBookingPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
                </Route>
             </Route>
             <Route element={<PrivateRoute />}>

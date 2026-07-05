@@ -95,7 +95,7 @@ const Header = () => {
                      })}
 
                      {userInfo?.roles?.some((role) =>
-                        ["ADMIN", "SUPER_ADMIN", "EMPLOYEE"].includes(
+                        ["ADMIN", "SUPER_ADMIN", "STAFF", "MANAGER"].includes(
                            role.code,
                         ),
                      ) && <NavLink to="/dashboard">Dashboard</NavLink>}
@@ -103,9 +103,7 @@ const Header = () => {
                </div>
 
                <div className="flex items-center gap-3 sm:gap-5">
-                  <button className="flex cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white transition-all duration-300 hover:scale-110 hover:text-[#f84565]">
-                     <Search size={20} />
-                  </button>
+                 
                   {userInfo ? (
                      <DropdownMenu>
                         <DropdownMenuTrigger asChild>

@@ -7,6 +7,7 @@ import BookingManagementPage from "./domains/booking/BookingManagementPage";
 import SeatTemplateManagementPage from "./domains/seat-template/SeatTemplateManagementPage";
 import UserManagementPage from "./domains/user/UserManagementPage";
 import BranchManagementPage from "./domains/branch/BranchManagementPage";
+import RoomManagementPage from "./domains/room/RoomManagementPage";
 
 export default function Dashboard() {
    return (
@@ -23,6 +24,7 @@ export default function Dashboard() {
             />
             <Route path="user-manage" element={<UserManagementPage />} />
             <Route path="branch-manage" element={<BranchManagementPage />} />
+            <Route path="room-manage" element={<RoomManagementPage />} />
          </Route>
       </Routes>
    );

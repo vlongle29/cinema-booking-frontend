@@ -40,7 +40,7 @@ export const showtimeService = {
    updateShowtime: (id: string, data: any) => {
       return apiService.put<ApiResponse<any>>(
          `${SHOWTIME_API_PATH}/${id}`,
-         data,
+         data
       );
    },
 

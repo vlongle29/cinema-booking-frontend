@@ -11,10 +11,10 @@ export default function BranchDetail() {
 
    useEffect(() => {
       if (id) {
-         branchService.getById(id).then((res) => setBranch(response.data));
+         branchService.getById(id).then((res) => setBranch(res.data));
          branchService
             .getRoomsByBranch(id)
-            .then((res) => setRooms(response.data));
+            .then((res) => setRooms(res.data));
       }
    }, [id]);
 

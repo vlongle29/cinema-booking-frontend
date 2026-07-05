@@ -33,14 +33,11 @@ const CreateSeatTemplate: React.FC<CreateSeatTemplateProps> = ({
    };
 
    return (
-      <div className="w-full bg-[#1a1a1e] p-8 rounded-xl border border-[#393939] shadow-2xl">
-         <h2 className="text-2xl font-bold mb-6 text-white border-b border-[#393939] pb-4">
-            Create New Template
-         </h2>
+      <div className="">
          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
                <label className="block text-sm font-medium text-[#797b7d] mb-1.5">
-                  Template Name
+                  Tên khu ghế
                </label>
                <input
                   required

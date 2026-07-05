@@ -16,6 +16,7 @@ export interface Movie {
    duration: string;
    status: string;
    posterUrl: string;
+   trailerUrl?: string;
    durationMinutes: number;
    cast: string;
    language: string;
@@ -30,7 +31,7 @@ export interface FormData {
    durationMinutes: number;
    releaseDate: string;
    posterUrl: string;
-   trailerUrl: string;
+   trailerUrl?: string;
    language: string;
    rated: string;
    status: string;

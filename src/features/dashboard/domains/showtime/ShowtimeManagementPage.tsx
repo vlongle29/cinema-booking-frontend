@@ -4,9 +4,13 @@ import DashboardEntityList from "../../shared/DashboardEntityList";
 import { useShowtimeList } from "../../../../hooks/useShowtimeList";
 import { getShowtimeColumns, getShowtimeFilters } from "./ShowtimeTableConfig";
 import CreateShowtimeForm from "./CreateShowtimeForm";
+import EditShowtimeForm from "./EditShowtimeForm";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import type { Showtime } from "@/features/showtime/types/showtime.types";
 
 export default function ListShows() {
    const [isCreating, setIsCreating] = useState(false);
+   const [editingShowtime, setEditingShowtime] = useState<Showtime | null>(null);
 
    // Hook xử lý form tạo mới
    const { formData, updateField, toggleSlot, submitForm, options, status } =
@@ -20,7 +24,7 @@ export default function ListShows() {
       setSearchParams,
       pagination,
       handleDelete,
-      // handleUpdate,
+      fetchShowtimes,
    } = useShowtimeList(isCreating);
 
    // Xử lý thay đổi filter (có kết hợp updateField của hook CreateShowtime)
@@ -70,8 +74,7 @@ export default function ListShows() {
       () =>
          getShowtimeColumns({
             onEdit: (show) => {
-               console.log("Edit showtime:", show);
-               // Logic mở form edit ở đây
+               setEditingShowtime(show);
             },
             onDelete: handleDelete,
          }),
@@ -84,36 +87,52 @@ export default function ListShows() {
    );
 
    return (
-      <DashboardEntityList
-         title="Showtime"
-         entityName="showtime"
-         isCreating={isCreating}
-         onToggleCreating={() => setIsCreating((prev) => !prev)}
-         filters={filters}
-         searchParams={searchParams}
-         onSearchChange={handleSearchChange}
-         onResetFilters={resetFilters}
-         data={showtimes}
-         columns={columns}
-         isLoading={isLoadingList}
-         pagination={{
-            totalPages: pagination.totalPages,
-            totalElements: pagination.totalElements,
-            currentPage: searchParams.page || 1,
-            pageSize: searchParams.size || 10,
-         }}
-         onPageChange={(page) => setSearchParams((prev) => ({ ...prev, page }))}
-         renderCreateForm={() => (
-            <CreateShowtimeForm
-               formData={formData}
-               options={options}
-               status={status}
-               updateField={updateField}
-               toggleSlot={toggleSlot}
-               onSubmit={handleSubmitForm}
-               onCancel={() => setIsCreating(false)}
-            />
-         )}
-      />
+      <>
+         <DashboardEntityList
+            title="Showtime"
+            entityName="showtime"
+            isCreating={isCreating}
+            onToggleCreating={() => setIsCreating((prev) => !prev)}
+            filters={filters}
+            searchParams={searchParams}
+            onSearchChange={handleSearchChange}
+            onResetFilters={resetFilters}
+            data={showtimes}
+            columns={columns}
+            isLoading={isLoadingList}
+            isEditing={!!editingShowtime}
+            onToggleEditing={() => setEditingShowtime(null)}
+            pagination={{
+               totalPages: pagination.totalPages,
+               totalElements: pagination.totalElements,
+               currentPage: searchParams.page || 1,
+               pageSize: searchParams.size || 10,
+            }}
+            onPageChange={(page) => setSearchParams((prev) => ({ ...prev, page }))}
+            renderCreateForm={() => (
+               <CreateShowtimeForm
+                  formData={formData}
+                  options={options}
+                  status={status}
+                  updateField={updateField}
+                  toggleSlot={toggleSlot}
+                  onSubmit={handleSubmitForm}
+                  onCancel={() => setIsCreating(false)}
+               />
+            )}
+            renderEditForm={() => (
+               <EditShowtimeForm
+                  showtime={editingShowtime}
+                  onCancel={() => setEditingShowtime(null)}
+                  onSuccess={() => {
+                     setEditingShowtime(null);
+                     fetchShowtimes(searchParams);
+                  }}
+               />
+            )}
+         />
+      </>
    );
 }
+
+     

@@ -31,7 +31,7 @@ export const getBookingColumns = (handlers: {
          <div className="flex items-center gap-2">
             <Ticket size={14} className="text-[#f84565]" />
             <span className="font-mono font-bold text-white text-sm">
-               {booking.id.substring(0, 8).toUpperCase()}
+               {booking.bookingCode}
             </span>
          </div>
       ),
@@ -44,8 +44,14 @@ export const getBookingColumns = (handlers: {
             <div className="text-white text-sm font-medium flex items-center gap-1.5">
                <User size={14} className="text-[#797b7d]" />
                {booking.customerId
-                  ? `User: ${booking.customerId.substring(0, 5)}...`
+                  ? `${booking.customerName}`
                   : "Khách vãng lai"}
+            </div>
+            <div className="text-[#797b7d] text-[11px] mt-1 flex items-center gap-1">
+               {booking.email}
+            </div>
+            <div className="text-[#797b7d] text-[11px] mt-1 flex items-center gap-1">
+               {booking.phoneNumber}
             </div>
          </div>
       ),
@@ -139,7 +145,7 @@ export const getBookingColumns = (handlers: {
 
 export const getBookingFilters = (): FilterField[] => [
    {
-      name: "search",
+      name: "keyword",
       label: "Tìm kiếm",
       type: "text",
       placeholder: "Mã vé, tên khách...",

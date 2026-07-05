@@ -1,9 +1,10 @@
 import { useState, useMemo } from "react";
 import DashboardEntityList from "@/features/dashboard/shared/DashboardEntityList";
-import MovieForm from "./MovieForm";
+import MovieForm from "./CreateMovieForm";
 import { useMovieList } from "@/hooks/useMovieList";
 import { getMovieColumns, getMovieFilters } from "./MovieTableConfig";
 import type { Movie } from "@/types/movie";
+import EditMovieForm from "./EditMovieForm";
 
 export default function ListMovies() {
    const [isCreating, setIsCreating] = useState(false);
@@ -15,6 +16,7 @@ export default function ListMovies() {
       searchParams,
       setSearchParams,
       pagination,
+      fetchMovies,
       handleDelete,
    } = useMovieList(isCreating);
 
@@ -40,6 +42,7 @@ export default function ListMovies() {
    const handleSuccess = () => {
       setIsCreating(false);
       setEditingMovie(null);
+      fetchMovies(searchParams);
    };
 
    // Khởi tạo columns với handlers tương tự bên User
@@ -48,7 +51,6 @@ export default function ListMovies() {
          getMovieColumns({
             onEdit: (movie) => {
                setEditingMovie(movie);
-               setIsCreating(true); // Giả định dùng chung form create để edit
             },
             onDelete: handleDelete,
          }),
@@ -59,10 +61,12 @@ export default function ListMovies() {
 
    return (
       <DashboardEntityList
-         title="Movie"
+         title="phim"
          entityName="movie"
          isCreating={isCreating}
          onToggleCreating={() => setIsCreating((prev) => !prev)}
+         isEditing={!!editingMovie}
+         onToggleEditing={() => setEditingMovie(null)}
          filters={filters}
          searchParams={searchParams}
          onSearchChange={handleSearchChange}
@@ -81,6 +85,13 @@ export default function ListMovies() {
          renderCreateForm={() => (
             <MovieForm
                onCancel={() => setIsCreating(false)}
+               onSuccess={handleSuccess}
+            />
+         )}
+         renderEditForm={() => (
+            <EditMovieForm
+               movie={editingMovie as Movie}
+               onCancel={() => setEditingMovie(null)}
                onSuccess={handleSuccess}
             />
          )}

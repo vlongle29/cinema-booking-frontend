@@ -91,18 +91,8 @@ export const getBranchColumns = (handlers: {
                align="end"
                className="bg-[#1a1a1e] border-white/10 text-gray-300"
             >
-               <DropdownMenuItem
-                  onClick={() => handlers.onViewDetail(branch.id)}
-               >
-                  <Eye size={14} className="mr-2 text-green-400" /> Chi tiết
-               </DropdownMenuItem>
-               <DropdownMenuItem
-                  onClick={() => handlers.onViewRooms(branch.id)}
-               >
-                  <Layers size={14} className="mr-2 text-rose-400" /> Xem phòng
-               </DropdownMenuItem>
                {handlers.permissions.canUpdate && (
-                  <DropdownMenuItem onClick={() => handlers.onEdit(branch)}>
+                  <DropdownMenuItem onClick={() => handlers.onEdit(branch)} className="cursor-pointer">
                      <Edit2 size={14} className="mr-2 text-blue-400" /> Chỉnh
                      sửa
                   </DropdownMenuItem>
@@ -110,7 +100,7 @@ export const getBranchColumns = (handlers: {
                {handlers.permissions.canDelete && (
                   <DropdownMenuItem
                      onClick={() => handlers.onDelete(branch.id)}
-                     className="text-red-400"
+                     className="text-red-400 cursor-pointer"
                   >
                      <Trash2 size={14} className="mr-2" /> Xóa
                   </DropdownMenuItem>

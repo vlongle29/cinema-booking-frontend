@@ -1,13 +1,7 @@
 import axios from "axios";
-import type {
-   ApiResponse,
-   PageResponse,
-   UserInfoResponse,
-   SysUserSearchDTO,
-   UserCreateRequest,
-   UserUpdateRequest,
-   UserIdRequest,
-} from "../types/user";
+import type { UserInfoResponse, SysUserSearchDTO, UserCreateRequest, UserUpdateRequest, UserIdRequest } from "../types/user";
+import type { ApiResponse, PageResponse } from "@/services/apiService";
+
 
 const API_URL = "http://localhost:8080/api";
 
@@ -17,8 +11,8 @@ const getAuthHeader = () => ({
 });
 
 export const userApi = {
-   search: (params: SysUserSearchDTO) =>
-      axios.post<ApiResponse<PageResponse<UserInfoResponse>>>(
+   searchUsers: (params: SysUserSearchDTO) =>
+      axios.post(
          `${API_URL}/users/search`,
          params,
          getAuthHeader(),
@@ -65,9 +59,15 @@ export const userApi = {
       ),
 
    resetPassword: (email: string) =>
-      axios.post<ApiResponse<void>>(
+      axios.post<any>(
          `${API_URL}/users/reset-password-user`,
          { email },
          getAuthHeader(),
+      ),
+
+   searchGet: (ids: string) =>
+      axios.get<any>(
+         `${API_URL}/users/search`,
+         { params: { ids }, ...getAuthHeader() }
       ),
 };

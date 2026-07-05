@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 import DashboardEntityList from "@/features/dashboard/shared/DashboardEntityList";
 import ConfirmDialog from "@/components/common/ConfirmDiaglog";
-import { getUserColumns, getUserFilters } from "./UserTableConfig";
+import { getUserColumns, getUserFilters } from "./config/UserTableConfig";
 import UserModal from "./UserModal";
 import type { UserInfoResponse } from "@/types/user";
 import { UserBulkActions, useUserManagement } from "./index";

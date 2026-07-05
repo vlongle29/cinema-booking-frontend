@@ -31,7 +31,7 @@ export const getShowtimeColumns = (handlers: {
          <div className="flex items-center gap-4">
             <div className="w-12 h-16 rounded-[4px] bg-[#252529] flex-shrink-0 overflow-hidden border border-[#393939]">
                <img
-                  src={`${API_BASE_URL}${show.movie.posterUrl}`}
+                  src={`${API_BASE_URL}${show.movie?.posterUrl}`}
                   alt={show.movie?.title || "Unknown Movie"}
                   className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
                />

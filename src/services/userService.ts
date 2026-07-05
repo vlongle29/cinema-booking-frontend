@@ -103,4 +103,23 @@ export const userService = {
          { email },
       );
    },
+
+   searchUser: (params: any) => {
+      const searchParams = new URLSearchParams();
+      if (params) {
+         Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== "") {
+               if (Array.isArray(value)) {
+                  value.forEach((v) => searchParams.append(key, String(v)));
+               } else {
+                  searchParams.append(key, String(value));
+               }
+            }
+         });
+      }
+      const queryString = searchParams.toString();
+      const url = `${USER_API_PATH}/search${queryString ? `?${queryString}` : ""}`;
+
+      return apiService.get<ApiResponse<PageResponse<UserInfoResponse>>>(url);
+   },
 };

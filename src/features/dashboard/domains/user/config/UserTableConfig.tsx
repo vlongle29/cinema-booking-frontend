@@ -9,8 +9,8 @@ import {
    RotateCcw,
 } from "lucide-react";
 import type { UserInfoResponse } from "@/types/user";
-import RoleBadge from "./RoleBadge";
-import StatusBadge from "./StatusBadge";
+import RoleBadge from "../RoleBadge";
+import StatusBadge from "../StatusBadge";
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -75,7 +75,7 @@ export const getUserColumns = (handlers: {
       label: "Vai trò",
       render: (user) => (
          <div className="flex flex-wrap gap-1">
-            {user.roles.map((role) => (
+            {user.roles?.map((role) => (
                <RoleBadge key={role.id} name={role.name} code={role.code} />
             ))}
          </div>

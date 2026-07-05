@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { bookingService, BookingListItem } from "../services/bookingService";
+import { bookingService } from "../services/bookingService";
+import type { BookingListItem } from "@/types/booking";
 
 export const useBookingList = () => {
    const [bookings, setBookings] = useState<BookingListItem[]>([]);
@@ -8,7 +9,7 @@ export const useBookingList = () => {
       page: 1,
       size: 10,
       status: "",
-      search: "",
+      keyword: "",
    });
    const [pagination, setPagination] = useState({
       totalPages: 0,
@@ -20,8 +21,8 @@ export const useBookingList = () => {
       try {
          const requestParams = {
             ...params,
-            status: params.status === "ALL" ? undefined : params.status,
-            search: params.search || undefined,
+            status: params.status || "",
+            keyword: params.keyword || "",
          };
 
          const response = await bookingService.searchBookings(requestParams);

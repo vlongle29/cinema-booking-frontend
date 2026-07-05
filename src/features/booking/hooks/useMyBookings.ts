@@ -12,7 +12,6 @@ export const useMyBookings = () => {
             setIsLoading(true);
             const response = await bookingService.getMyBookings();
 
-            // Lọc luôn vé "PAID" ở đây, UI chỉ việc render
             const paidBookings = (response.data.content || []).filter(
                (b: BookingListItem) => b.status === "PAID",
             );

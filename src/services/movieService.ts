@@ -61,8 +61,12 @@ export const movieService = {
    /**
     * Cập nhật thông tin phim
     */
-   updateMovie: (id: string, data: any) => {
-      return apiService.put<ApiResponse<any>>(`${MOVIE_API_PATH}/${id}`, data);
+   updateMovie: (id: string, data: FormData) => {
+      return apiService.put<ApiResponse<any>>(`${MOVIE_API_PATH}/${id}`, data, {
+         headers: {
+            "Content-Type": "multipart/form-data",
+         }
+      });
    },
 
    /**

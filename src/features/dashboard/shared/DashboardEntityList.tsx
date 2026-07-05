@@ -36,6 +36,10 @@ import {
    PaginationNext,
    PaginationPrevious,
 } from "@/components/common/pagination";
+import {
+   Dialog,
+   DialogContent,
+} from "@/components/ui/dialog";
 
 export interface Column<T> {
    id: string;
@@ -59,6 +63,8 @@ interface DashboardEntityListProps<T> {
    entityName: string;
    isCreating: boolean;
    onToggleCreating: () => void;
+   isEditing: boolean;
+   onToggleEditing: () => void;
 
    // Filters
    filters: FilterField[];
@@ -82,6 +88,7 @@ interface DashboardEntityListProps<T> {
 
    // Form
    renderCreateForm: () => ReactNode;
+   renderEditForm: () => ReactNode;
    renderCustomList?: (data: T[]) => ReactNode; // Giữ lại để dự phòng
    renderTopContent?: (data: T[]) => ReactNode; // Thêm slot mới
 
@@ -106,6 +113,8 @@ export default function DashboardEntityList<T>({
    entityName,
    isCreating,
    onToggleCreating,
+   isEditing,
+   onToggleEditing,
    filters,
    searchParams,
    onSearchChange,
@@ -116,6 +125,7 @@ export default function DashboardEntityList<T>({
    pagination,
    onPageChange,
    renderCreateForm,
+   renderEditForm,
    emptyMessage = "No matching items found.",
    loadingMessage = "Searching items...",
    renderCustomList,
@@ -168,7 +178,7 @@ export default function DashboardEntityList<T>({
                component="h1"
                sx={{ fontWeight: 600, color: "white" }}
             >
-               {isCreating ? "Create " : "List "}
+               {isCreating ? "" : "Danh sách "}
                <Box
                   component="span"
                   sx={{
@@ -181,7 +191,6 @@ export default function DashboardEntityList<T>({
                </Box>
             </Typography>
 
-            {!isCreating ? (
                <Button
                   variant="contained"
                   startIcon={<Plus size={16} />}
@@ -195,38 +204,93 @@ export default function DashboardEntityList<T>({
                      px: 3,
                   }}
                >
-                  Add {title}
+                   Thêm {title}
                </Button>
-            ) : (
-               <Button
-                  variant="text"
-                  startIcon={<X size={16} />}
-                  onClick={onToggleCreating}
-                  sx={{
-                     color: DASHBOARD_TEXT_MUTED,
-                     "&:hover": { color: "white" },
-                     textTransform: "none",
-                  }}
-               >
-                  Cancel
-               </Button>
-            )}
          </Box>
 
-         {isCreating ? (
-            <Box
-               sx={{
-                  bgcolor: "rgba(248, 69, 101, 0.05)",
-                  border: `1px solid rgba(248, 69, 101, 0.2)`,
-                  borderRadius: 2,
-                  p: 4,
-                  width: "100%",
-               }}
+         <Dialog open={isCreating} onOpenChange={(open) => { if (!open && isCreating) onToggleCreating(); }}>
+            <DialogContent 
+               showCloseButton={false}
+               className="max-w-3xl w-[95vw] bg-[#131316] border border-[#2a2a2e] text-white p-0 overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.6)] gap-0"
             >
-               {renderCreateForm()}
-            </Box>
-         ) : (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+               {/* Header */}
+               <div className="relative flex items-center justify-between px-6 py-5 border-b border-[#2a2a2e] bg-gradient-to-r from-[#1a1a1e] to-[#131316]">
+                  <div className="flex items-center gap-3">
+                     <div className="text-left">
+                        <h2 className="text-white font-semibold text-base leading-none">Thêm mới {title}</h2>
+                        <p className="text-[#797b7d] text-xs mt-1">
+                            Điền thông tin dưới đây</p>  
+                     </div>   
+                  </div>
+                  <button
+                        onClick={() => onToggleCreating()}
+                     className="
+                  w-8 h-8
+                  flex items-center justify-center
+                  bg-transparent
+                  text-white
+                  border-0
+                  outline-none
+                  focus:outline-none
+                  focus:ring-0
+                  ring-0
+                  hover:bg-transparent
+                  active:bg-transparent
+                  "
+                  title="Đóng"
+               >
+                  X
+               </button>
+               </div>
+               {/* Body */}
+               <div className="px-6 py-6 max-h-[75vh] overflow-y-auto">
+                  {renderCreateForm()}
+               </div>
+            </DialogContent>
+         </Dialog>
+
+         <Dialog open={isEditing} onOpenChange={(open) => { if (!open && isEditing) onToggleEditing(); }}>
+            <DialogContent 
+               showCloseButton={false}
+               className="max-w-3xl w-[95vw] bg-[#131316] border border-[#2a2a2e] text-white p-0 overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.6)] gap-0"
+            >
+               {/* Header */}
+               <div className="relative flex items-center justify-between px-6 py-5 border-b border-[#2a2a2e] bg-gradient-to-r from-[#1a1a1e] to-[#131316]">
+                  <div className="flex items-center gap-3">
+                     <div className="text-left">
+                        <h2 className="text-white font-semibold text-base leading-none">Chỉnh sửa {title}</h2>
+                        <p className="text-[#797b7d] text-xs mt-1">
+                            Sửa đổi thông tin dưới đây</p>  
+                     </div>   
+                  </div>
+                  <button
+                        onClick={() => onToggleEditing()}
+                     className="
+                  w-8 h-8
+                  flex items-center justify-center
+                  bg-transparent
+                  text-white
+                  border-0
+                  outline-none
+                  focus:outline-none
+                  focus:ring-0
+                  ring-0
+                  hover:bg-transparent
+                  active:bg-transparent
+                  "
+                  title="Đóng"
+               >
+                  X
+               </button>
+               </div>
+               {/* Body */}
+               <div className="px-6 py-6 max-h-[75vh] overflow-y-auto">
+                  {renderEditForm?.()}
+               </div>
+            </DialogContent>
+         </Dialog>
+
+         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                {/* --- Filters --- */}
                <Paper
                   elevation={0}
@@ -668,8 +732,7 @@ export default function DashboardEntityList<T>({
                      </Button>
                   </Paper>
                )}
-            </Box>
-         )}
+         </Box>
       </Box>
    );
 }

@@ -28,8 +28,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
       trailerUrl: "",
       language: "",
       rated: "",
-      status: "COMING_SOON", // Default status, ensure it matches backend enum string
-      genreIds: [] as string[], // Array of UUID strings
+      status: "COMING_SOON",
+      genreIds: [] as string[],
    });
    const [posterFile, setPosterFile] = useState<File | null>(null);
    const [genres, setGenres] = useState<Genre[]>([]);
@@ -47,7 +47,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
             durationMinutes: initialData.durationMinutes,
             releaseDate: new Date(initialData.releaseDate).toISOString().split('T')[0],
             posterUrl: initialData.posterUrl,
-            trailerUrl: initialData.trailerUrl,
+            trailerUrl: initialData.trailerUrl || "",
             language: initialData.language,
             rated: initialData.rated,
             status: initialData.status,
@@ -153,15 +153,6 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
    };
 
    return (
-      <div className="bg-[rgba(248,69,101,0.1)] border border-[rgba(248,69,101,0.2)] rounded-[8px] p-8 min-h-[500px]">
-         <h2 className="text-xl font-semibold text-white mb-6">
-            {initialData ? "Edit Movie" : "Create New Movie"}
-         </h2>
-         {error && (
-            <div className="bg-red-500/20 text-red-400 p-3 rounded-md mb-4">
-               {error}
-            </div>
-         )}
          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                {/* Title */}
@@ -170,7 +161,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="title"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Title
+                     Tên phim
                   </label>
                   <input
                      type="text"
@@ -188,7 +179,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="director"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Director
+                     Đạo diễn
                   </label>
                   <input
                      type="text"
@@ -205,7 +196,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="cast"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Cast
+                     Diễn viên
                   </label>
                   <input
                      type="text"
@@ -222,7 +213,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="durationMinutes"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Duration (minutes)
+                     Thời lượng (phút)
                   </label>
                   <input
                      type="number"
@@ -241,7 +232,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="releaseDate"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Release Date
+                     Ngày phát hành
                   </label>
                   <input
                      type="date"
@@ -258,7 +249,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="trailerUrl"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Trailer URL
+                     Trailer
                   </label>
                   <input
                      type="url"
@@ -275,7 +266,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="language"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Language
+                     Ngôn ngữ
                   </label>
                   <input
                      type="text"
@@ -292,7 +283,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="rated"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Rated (Phân loại phim)
+                     Phân loại
                   </label>
                   <select
                      id="rated"
@@ -319,7 +310,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="status"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Status
+                     Trạng thái
                   </label>
                   <select
                      id="status"
@@ -339,7 +330,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="posterUrl"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Poster URL (Optional)
+                     Ảnh (URL)
                   </label>
                   <input
                      type="url"
@@ -357,7 +348,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                      htmlFor="posterFile"
                      className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                     Poster File (Optional)
+                     Ảnh
                   </label>
                   <input
                      type="file"
@@ -382,7 +373,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                   htmlFor="description"
                   className="block text-sm font-medium text-gray-300 mb-1"
                >
-                  Description
+                  Mô tả
                </label>
                <textarea
                   id="description"
@@ -397,7 +388,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
             {/* Genres */}
             <div>
                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Genres
+                  Thể loại
                </label>
                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                   {genres.length === 0 && !error ? (
@@ -425,7 +416,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                </div>
                {formData.genreIds.length === 0 && (
                   <p className="text-red-400 text-xs mt-2">
-                     Please select at least one genre.
+                     Vui lòng chọn ít nhất một thể loại.
                   </p>
                )}
             </div>
@@ -436,7 +427,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                   onClick={onCancel}
                   className="flex items-center gap-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-md transition-colors text-sm"
                >
-                  <X className="w-4 h-4" /> Cancel
+                  <X className="w-4 h-4" /> Hủy
                </button>
                <button
                   type="submit"
@@ -451,11 +442,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ onCancel, onSuccess, initialData 
                   ) : (
                      <Plus className="w-4 h-4" />
                   )}
-                  {loading ? "Saving..." : initialData ? "Update Movie" : "Create Movie"}
+                  {loading ? "Đang lưu..." : initialData ? "Cập nhật phim" : "Thêm phim"}
                </button>
             </div>
          </form>
-      </div>
+     
    );
 };
 

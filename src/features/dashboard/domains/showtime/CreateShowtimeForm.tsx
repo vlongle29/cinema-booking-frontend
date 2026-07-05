@@ -1,7 +1,36 @@
 import React from "react";
-import { Film, MapPin, Monitor, Calendar, Clock, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
-import type { Movie, Branch, Room, ShowtimeFormat, City } from "../../../types/showtime";
-import type { ShowtimeFormData, BatchCreateShowtimeResponse } from "../../../hooks/useCreateShowtime";
+import {
+   Film,
+   MapPin,
+   Monitor,
+   Calendar,
+   Clock,
+   Loader2,
+   CheckCircle,
+   AlertTriangle,
+} from "lucide-react";
+import type {
+   Movie,
+   Branch,
+   Room,
+   ShowtimeFormat,
+   City,
+} from "@/features/showtime/types/showtime.types";
+import type {
+   ShowtimeFormData,
+   BatchCreateShowtimeResponse,
+} from "@/hooks/useCreateShowtime";
+import {
+   AlertDialog,
+   AlertDialogAction,
+   AlertDialogCancel,
+   AlertDialogContent,
+   AlertDialogDescription,
+   AlertDialogFooter,
+   AlertDialogHeader,
+   AlertDialogTitle,
+   AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface CreateShowtimeFormProps {
    formData: ShowtimeFormData;

@@ -1,4 +1,3 @@
-// 👉 Đặt tại: src/features/checkout/hooks/usePayment.ts
 import { useState } from "react";
 import { paymentService } from "@/services/paymentService";
 import { bookingService } from "@/services/bookingService";

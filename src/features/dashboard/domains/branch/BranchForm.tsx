@@ -11,8 +11,8 @@ import toast from "react-hot-toast";
 const branchSchema = z.object({
    name: z.string().min(1, "Tên chi nhánh là bắt buộc"),
    address: z.string().min(1, "Địa chỉ là bắt buộc"),
-   cityId: z.string().uuid("Vui lòng chọn thành phố"),
-   managerId: z.string().uuid("Vui lòng chọn quản lý").optional(),
+   cityId: z.string().min(1, "Vui lòng chọn thành phố").uuid("Thành phố không hợp lệ"),
+   managerId: z.string().uuid("Người quản lý không hợp lệ").optional().or(z.literal("")),
 });
 
 interface BranchFormProps {
@@ -31,6 +31,9 @@ const BranchForm: React.FC<BranchFormProps> = ({
    onSuccess,
 }) => {
    const [loading, setLoading] = useState(false);
+
+   console.log("managerOptions", managerOptions);
+   console.log("cityOptions", cityOptions);
 
    const {
       register,
@@ -111,7 +114,11 @@ const BranchForm: React.FC<BranchFormProps> = ({
                   className="w-full bg-[#1a1a1d] border border-gray-700 rounded-md p-2 text-white focus:border-rose-500 outline-none"
                >
                   <option value="">Chọn thành phố</option>
-                  {/* Map cities here */}
+                  {cityOptions.map((opt) => (
+                     <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                     </option>
+                  ))}
                </select>
                {errors.cityId && (
                   <p className="text-rose-500 text-xs">
@@ -129,8 +136,17 @@ const BranchForm: React.FC<BranchFormProps> = ({
                   className="w-full bg-[#1a1a1d] border border-gray-700 rounded-md p-2 text-white focus:border-rose-500 outline-none"
                >
                   <option value="">Chọn quản lý</option>
-                  {/* Map managers here */}
+                  {managerOptions.map((opt) => (
+                     <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                     </option>
+                  ))}
                </select>
+               {errors.managerId && (
+                  <p className="text-rose-500 text-xs mt-1">
+                     {errors.managerId.message as string}
+                  </p>
+               )}
             </div>
          </div>
 
