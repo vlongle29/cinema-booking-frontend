@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Film, Search } from "lucide-react";
 import { LoginModal } from "@/features/auth/components";
 import useAuth from "../../features/auth/hooks/useAuth";
 import {
@@ -47,6 +47,9 @@ const Header = () => {
                   to="/"
                   className="flex cursor-pointer items-center gap-1.5 text-[20px] font-semibold tracking-[-0.5px] sm:gap-2 sm:text-[28px]"
                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-rose-700 shadow-lg shadow-rose-500/20">
+                     <Film className="text-white" size={24} />
+                  </div>
                   <span>CineBook</span>
                </Link>
 

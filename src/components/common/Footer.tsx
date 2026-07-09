@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
                         <Film className="text-white" size={24} />
                      </div>
                      <span className="text-2xl font-bold tracking-tight text-white">
-                        QuickShow
+                        CineBook
                      </span>
                   </div>
                   <p className="text-sm leading-relaxed text-gray-400">
