@@ -39,7 +39,7 @@ export function useDashboardBranch() {
 
    // --- CÁC HÀM XỬ LÝ ACTIONS ---
 
-   const handleDelete = async (id: string | number) => {
+   const handleDelete = async (id: string) => {
       if (window.confirm("Bạn có chắc chắn muốn xóa chi nhánh này?")) {
          await branchService.delete(id);
          fetchBranches();
