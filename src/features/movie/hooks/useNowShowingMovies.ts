@@ -1,7 +1,7 @@
 // 👉 Đặt tại: src/features/movies/hooks/useNowShowingMovies.ts
 import { useState, useEffect } from "react";
 import { movieService } from "@/services/movieService";
-import type { Movie } from "@/features/movies/types";
+import type { Movie } from "@/types/movie";
 import useAuth from "@/features/auth/hooks/useAuth"; // Import từ cổng feature auth
 
 export const useNowShowingMovies = () => {

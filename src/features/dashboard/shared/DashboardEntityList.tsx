@@ -61,6 +61,7 @@ export interface FilterField {
 interface DashboardEntityListProps<T> {
    title: string;
    entityName: string;
+   canCreate?: boolean;
    isCreating: boolean;
    onToggleCreating: () => void;
    isEditing: boolean;
@@ -111,6 +112,7 @@ const DASHBOARD_TEXT_MUTED = "#797b7d";
 export default function DashboardEntityList<T>({
    title,
    entityName,
+   canCreate = true,
    isCreating,
    onToggleCreating,
    isEditing,
@@ -191,6 +193,7 @@ export default function DashboardEntityList<T>({
                </Box>
             </Typography>
 
+            {canCreate && (
                <Button
                   variant="contained"
                   startIcon={<Plus size={16} />}
@@ -204,8 +207,9 @@ export default function DashboardEntityList<T>({
                      px: 3,
                   }}
                >
-                   Thêm {title}
+                  Thêm {title}
                </Button>
+            )}
          </Box>
 
          <Dialog open={isCreating} onOpenChange={(open) => { if (!open && isCreating) onToggleCreating(); }}>

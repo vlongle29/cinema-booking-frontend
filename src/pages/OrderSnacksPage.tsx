@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Minus, Plus, ShoppingBag } from "lucide-react";
 import { cn } from "../utils/utils";
-import BookingHeader, { BookingInfo } from "./BookingHeader";
+import BookingHeader from "./BookingHeader";
+import type { BookingInfo } from "./BookingHeader";
 
 interface Product {
    id: number;

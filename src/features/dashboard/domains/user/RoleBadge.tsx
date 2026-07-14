@@ -14,6 +14,10 @@ const RoleBadge: React.FC<RoleBadgeProps> = ({ name, code }) => {
          case "STAFF":
          case "EMPLOYEE":
             return "bg-blue-50 text-blue-600 border-blue-100";
+         case "MANAGER":
+            return "bg-purple-50 text-purple-600 border-purple-100";
+         case "CUSTOMER":
+            return "bg-emerald-50 text-emerald-600 border-emerald-100";
          default:
             return "bg-slate-50 text-slate-600 border-slate-100";
       }

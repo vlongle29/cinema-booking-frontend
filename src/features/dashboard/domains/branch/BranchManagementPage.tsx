@@ -6,7 +6,7 @@ import { getBranchColumns } from "./BranchTableConfig";
 import { useDashboardBranch } from "../../hooks/useDashboardBranch";
 import { getBranchFilters } from "./config/branchFilters";
 import { cityService } from "@/services/cityService";
-import { userService } from "@/services/userService";
+import { employeeService } from "@/services/employeeService";
 
 
 export default function BranchManagementPage() {
@@ -28,7 +28,7 @@ export default function BranchManagementPage() {
          try {
             const [cityRes, empRes] = await Promise.all([
                cityService.getAll(),
-               userService.searchUser({ roleIds: ["35c94067-b1a9-4eb4-a1bd-34bee68be5fa"]})
+               employeeService.search({ page: 1, size: 100 })
             ]);
 
             console.log("cityRes", cityRes);
@@ -42,7 +42,7 @@ export default function BranchManagementPage() {
             setCityOptions(cOptions);
 
             const mOptions = empRes?.data?.content?.map((emp: any) => ({
-               value: emp.id,
+               value: emp.userId,
                label: `${emp.name} (${emp.employeeCode})`,
             })) || [];
             setManagerOptions(mOptions);

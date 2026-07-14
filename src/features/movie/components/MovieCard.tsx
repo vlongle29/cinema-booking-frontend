@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
-import type { Movie } from "../types";
+import type { Movie } from "@/types/movie";
 import { API_BASE_URL } from "../../../constants/api";
 import { formatDuration } from "@/utils/formatters";
 

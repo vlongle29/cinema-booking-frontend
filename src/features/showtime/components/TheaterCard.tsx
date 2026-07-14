@@ -8,7 +8,7 @@ const TheaterCard: React.FC<{
 }> = ({ theater, onShowtimeSelect }) => {
    // Nhóm suất chiếu theo tên phòng
    const groupedShowtimes = theater.showtimes.reduce(
-      (acc, showtime) => {
+      (acc: Record<string, Showtime[]>, showtime: Showtime) => {
          const roomName = (showtime as any).roomName || "Phòng chiếu";
          if (!acc[roomName]) acc[roomName] = [];
          acc[roomName].push(showtime);
