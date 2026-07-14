@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { roomService } from "@/features/dashboard/services/dashboard.room.service";
 import type { Room, RoomSearchDTO } from "@/types/room";
 import toast from "react-hot-toast";
@@ -17,10 +18,12 @@ export function useDashboardRoom() {
    const [totalElements, setTotalElements] = useState(0);
    const [totalPages, setTotalPages] = useState(0);
 
+   const debouncedSearchParams = useDebounce(searchParams, 500);
+
    const fetchRooms = useCallback(async () => {
       setIsLoading(true);
       try {
-         const response = await roomService.search(searchParams);
+         const response = await roomService.search(debouncedSearchParams);
          setRooms(response.data.content);
          setTotalElements(response.data.totalElements);
          setTotalPages(response.data.totalPages);
@@ -29,7 +32,7 @@ export function useDashboardRoom() {
       } finally {
          setIsLoading(false);
       }
-   }, [searchParams]);
+   }, [debouncedSearchParams]);
 
    useEffect(() => {
       fetchRooms();

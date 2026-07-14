@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "react-hot-toast";
 import { employeeService } from "@/services/employeeService";
 import type { Employee, EmployeeSearchDTO } from "@/types/employee";
@@ -20,10 +21,12 @@ export function useStaffManagement() {
    const [totalElements, setTotalElements] = useState(0);
    const [totalPages, setTotalPages] = useState(0);
 
+   const debouncedSearchParams = useDebounce(searchParams, 500);
+
    const fetchEmployees = useCallback(async () => {
       setIsLoading(true);
       try {
-         const response = await employeeService.search(searchParams);
+         const response = await employeeService.search(debouncedSearchParams);
          if (response.success) {
             const rows = response.data.content;
             setEmployees(rows);
@@ -35,7 +38,7 @@ export function useStaffManagement() {
       } finally {
          setIsLoading(false);
       }
-   }, [searchParams]);
+   }, [debouncedSearchParams]);
 
    useEffect(() => {
       fetchEmployees();

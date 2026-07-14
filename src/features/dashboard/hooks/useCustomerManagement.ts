@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "react-hot-toast";
 import { userService } from "@/services/userService";
 import type { Customer, CustomerSearchDTO } from "@/types/customer";
@@ -20,10 +21,12 @@ export function useCustomerManagement() {
    const [totalElements, setTotalElements] = useState(0);
    const [totalPages, setTotalPages] = useState(0);
 
+   const debouncedSearchParams = useDebounce(searchParams, 500);
+
    const fetchCustomers = useCallback(async () => {
       setIsLoading(true);
       try {
-         const response = await customerService.search(searchParams);
+         const response = await customerService.search(debouncedSearchParams);
          if (response.success) {
             const rows = response.data.content;
             setCustomers(rows);
@@ -35,7 +38,7 @@ export function useCustomerManagement() {
       } finally {
          setIsLoading(false);
       }
-   }, [searchParams]);
+   }, [debouncedSearchParams]);
 
    useEffect(() => {
       fetchCustomers();

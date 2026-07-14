@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { branchService } from "@/features/dashboard/services/dashboard.branch.service";
 import type { Branch, BranchSearchDTO } from "@/types/branch";
 
@@ -15,11 +16,13 @@ export function useDashboardBranch() {
    const [totalElements, setTotalElements] = useState(0);
    const [totalPages, setTotalPages] = useState(0);
 
+   const debouncedSearchParams = useDebounce(searchParams, 500);
+
    // Dùng useCallback để tránh hàm bị tạo lại liên tục gây re-render
    const fetchBranches = useCallback(async () => {
       setIsLoading(true);
       try {
-         const response = await branchService.search(searchParams);
+         const response = await branchService.search(debouncedSearchParams);
          setBranches(response.data.content);
          setTotalElements(response.data.totalElements);
          setTotalPages(response.data.totalPages);
@@ -28,7 +31,7 @@ export function useDashboardBranch() {
       } finally {
          setIsLoading(false);
       }
-   }, [searchParams]);
+   }, [debouncedSearchParams]);
 
    useEffect(() => {
       fetchBranches();

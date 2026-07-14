@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { sysRoleService, sysPermissionService } from "@/features/dashboard/services/dashboard.rbac.service";
 import type {
   SysRole,
@@ -39,11 +40,14 @@ export function useDashboardRbac() {
   const [allPermissions, setAllPermissions] = useState<SysPermission[]>([]);
   const [isLoadingAssign, setIsLoadingAssign] = useState(false);
 
+  const debouncedRoleSearchParams = useDebounce(roleSearchParams, 500);
+  const debouncedPermissionSearchParams = useDebounce(permissionSearchParams, 500);
+
   // ────────────────────────── FETCH ROLES ─────────────────────────────────
   const fetchRoles = useCallback(async () => {
     setIsLoadingRoles(true);
     try {
-      const res = await sysRoleService.search(roleSearchParams);
+      const res = await sysRoleService.search(debouncedRoleSearchParams);
       setRoles(res.data?.content ?? []);
       setRoleTotalElements(res.data?.totalElements ?? 0);
       setRoleTotalPages(res.data?.totalPages ?? 0);
@@ -52,7 +56,7 @@ export function useDashboardRbac() {
     } finally {
       setIsLoadingRoles(false);
     }
-  }, [roleSearchParams]);
+  }, [debouncedRoleSearchParams]);
 
   useEffect(() => {
     fetchRoles();
@@ -62,7 +66,7 @@ export function useDashboardRbac() {
   const fetchPermissions = useCallback(async () => {
     setIsLoadingPermissions(true);
     try {
-      const res = await sysPermissionService.search(permissionSearchParams);
+      const res = await sysPermissionService.search(debouncedPermissionSearchParams);
       setPermissions(res.data?.content ?? []);
       setPermissionTotalElements(res.data?.totalElements ?? 0);
       setPermissionTotalPages(res.data?.totalPages ?? 0);
@@ -71,7 +75,7 @@ export function useDashboardRbac() {
     } finally {
       setIsLoadingPermissions(false);
     }
-  }, [permissionSearchParams]);
+  }, [debouncedPermissionSearchParams]);
 
   useEffect(() => {
     fetchPermissions();

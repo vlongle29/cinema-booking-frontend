@@ -1,5 +1,6 @@
 // 👉 Đặt tại: src/features/dashboard/domains/user/hooks/useUserManagement.ts
 import { useState, useEffect, useCallback } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "react-hot-toast";
 import { userService } from "@/services/userService";
 import { roleService } from "@/services/roleService";
@@ -43,11 +44,13 @@ export const useUserManagement = () => {
       user: UserInfoResponse | null;
    }>({ open: false, type: null, user: null });
 
+   const debouncedSearchParams = useDebounce(searchParams, 500);
+
    // 2. Fetch Data
    const fetchUsers = useCallback(async () => {
       setLoading(true);
       try {
-         const response = await userService.getAllUsers(searchParams);
+         const response = await userService.getAllUsers(debouncedSearchParams);
          if (response.success) {
             setData(response.data);
             setSelectedIds([]);
@@ -57,7 +60,7 @@ export const useUserManagement = () => {
       } finally {
          setLoading(false);
       }
-   }, [searchParams]);
+   }, [debouncedSearchParams]);
 
    const fetchRoles = useCallback(async () => {
       try {
