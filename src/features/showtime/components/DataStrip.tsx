@@ -30,15 +30,15 @@ const DateStrip: React.FC<DateStripProps> = ({
 
    return (
       <div className="mb-6">
-         <h3 className="text-base font-semibold text-white mb-3">Chọn Ngày</h3>
+         <h3 className="text-base font-semibold text-slate-900 mb-3">Chọn Ngày</h3>
 
          <div className="flex items-center gap-4">
             {/* Left Scroll Button */}
             <button
                onClick={() => scroll("left")}
-               className="p-2 hover:bg-[#1a1a1e] rounded-lg transition-colors flex-shrink-0"
+               className="p-2 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
             >
-               <ChevronLeft className="w-5 h-5 text-[#d1d5dc]" />
+               <ChevronLeft className="w-5 h-5 text-slate-500" />
             </button>
 
             {/* Dates Container */}
@@ -52,7 +52,7 @@ const DateStrip: React.FC<DateStripProps> = ({
                        .map((_, i) => (
                           <div
                              key={i}
-                             className="h-[56px] w-[56px] bg-[#252529] rounded-lg animate-pulse flex-shrink-0"
+                             className="h-[56px] w-[56px] bg-slate-200 rounded-lg animate-pulse flex-shrink-0"
                           />
                        ))
                   : dates.map((d) => (
@@ -61,8 +61,8 @@ const DateStrip: React.FC<DateStripProps> = ({
                           onClick={() => onSelectDate(d.date)}
                           className={`flex flex-col items-center justify-center w-[56px] h-[56px] rounded-lg font-medium transition-all flex-shrink-0 ${
                              selectedDate === d.date
-                                ? "bg-[#f84565] text-white border-2 border-[#f84565]"
-                                : "border-2 border-[#393939] text-[#d1d5dc] hover:border-[#f84565]"
+                                ? "bg-amber-500 text-white border-2 border-amber-500 shadow-sm"
+                                : "border-2 border-slate-200 bg-white text-slate-600 hover:border-amber-500 hover:text-amber-600 shadow-sm"
                           }`}
                        >
                           <span className="text-[10px] sm:text-xs">
@@ -78,9 +78,9 @@ const DateStrip: React.FC<DateStripProps> = ({
             {/* Right Scroll Button */}
             <button
                onClick={() => scroll("right")}
-               className="p-2 hover:bg-[#1a1a1e] rounded-lg transition-colors flex-shrink-0"
+               className="p-2 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
             >
-               <ChevronRight className="w-5 h-5 text-[#d1d5dc]" />
+               <ChevronRight className="w-5 h-5 text-slate-500" />
             </button>
          </div>
       </div>

@@ -7,11 +7,14 @@ import { useDashboardRoom } from "../../hooks/useDashboardRoom";
 import { getRoomFilters } from "./config/roomFilters";
 import { branchService } from "@/features/dashboard/services/dashboard.branch.service";
 import useAuth from "@/features/auth/hooks/useAuth";
+import { useAuthz } from "@/hooks/useAuthz";
 import type { Room } from "@/types/room";
 
 export default function RoomManagementPage() {
    const { state, actions } = useDashboardRoom();
    const { userInfo } = useAuth();
+   const { hasRole } = useAuthz();
+   const isManager = hasRole("MANAGER") && !hasRole("SUPER_ADMIN");
 
    const [branchOptions, setBranchOptions] = useState<
       { value: string; label: string }[]
@@ -23,7 +26,7 @@ export default function RoomManagementPage() {
       const fetchBranches = async () => {
          try {
             const res = await branchService.search({
-               managerId: userInfo?.id,
+               ...(isManager && userInfo?.id ? { managerId: userInfo.id } : {}),
                page: 1,
                size: 100,
             });
@@ -71,7 +74,7 @@ export default function RoomManagementPage() {
             isEditing={state.isEditing}
             onToggleEditing={actions.toggleEditing}
             // Filters & Search
-            filters={getRoomFilters(branchOptions)}
+            filters={getRoomFilters(branchOptions, isManager)}
             searchParams={state.searchParams}
             onSearchChange={actions.handleSearchChange}
             onResetFilters={actions.handleResetFilters}

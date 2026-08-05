@@ -114,8 +114,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
    // CHẶN RENDER KHI CHƯA LẤY TOKEN XONG
    if (loading) {
       return (
-         <div className="bg-[#09090b] min-h-screen flex items-center justify-center text-white">
-            <div className="animate-pulse">Đang khởi tạo ứng dụng...</div>
+         <div className="min-h-screen flex items-center justify-center text-slate-900">
+            <div className="animate-pulse text-amber-600 font-medium">
+               Đang tải thông tin...
+            </div>
          </div>
       );
    }

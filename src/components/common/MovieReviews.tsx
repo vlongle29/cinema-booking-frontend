@@ -165,14 +165,14 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
    };
 
    return (
-      <div className="bg-[#09090B] text-white p-6 md:p-10 font-sans">
+      <div className="text-slate-900 p-6 md:p-10 font-sans">
          <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold mb-8">Đánh giá & Xếp hạng</h2>
 
             {/* Rating Summary Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-               <div className="bg-[#12161C] p-8 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center">
-                  <div className="text-6xl font-bold text-white mb-2">
+               <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center text-center">
+                  <div className="text-6xl font-bold text-slate-900 mb-2">
                      {summary?.averageRating?.toFixed(1) || "0.0"}
                   </div>
                   <div className="flex items-center gap-1 mb-2">
@@ -183,21 +183,21 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                         size="medium"
                      />
                   </div>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-slate-500 text-sm">
                      Dựa trên {summary?.totalReviews || 0} xếp hạng
                   </p>
                </div>
 
-               <div className="bg-[#12161C] p-8 rounded-2xl border border-white/5 lg:col-span-2">
+               <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2">
                   <div className="flex flex-col gap-3">
                      {[5, 4, 3, 2, 1].map((rating) => (
                         <div key={rating} className="flex items-center gap-4">
                            <span className="text-sm font-medium w-4">
                               {rating}
                            </span>
-                           <div className="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                           <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
                               <div
-                                 className="h-full bg-yellow-400 rounded-full"
+                                 className="h-full bg-amber-400 rounded-full"
                                  style={{
                                     width: `${
                                        summary && summary.totalReviews > 0
@@ -211,7 +211,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                                  }}
                               />
                            </div>
-                           <span className="text-sm text-gray-500 w-10">
+                           <span className="text-sm text-slate-500 w-10">
                               {summary?.distribution.find(
                                  (d) => d.stars === rating,
                               )?.count || 0}
@@ -229,7 +229,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                </h3>
                <button
                   onClick={() => setShowReviewForm(!showReviewForm)}
-                  className="bg-[#3b82f6] hover:bg-[#2563eb] text-white px-6 py-2.5 rounded-full font-medium transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20"
+                  className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-full font-medium transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-amber-500/20"
                >
                   Đánh giá
                </button>
@@ -237,10 +237,10 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
 
             {/* Review Submission Form */}
             {showReviewForm && (
-               <div className="bg-[#12161C] p-6 rounded-2xl border border-blue-500/30 mb-10 animate-in slide-in-from-top duration-300">
+               <div className="bg-white p-6 rounded-2xl border border-amber-500/30 shadow-sm mb-10 animate-in slide-in-from-top duration-300">
                   <div className="flex flex-col gap-6">
                      <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-2">
+                        <label className="block text-sm font-medium text-slate-500 mb-2">
                            Hãy để lại đánh giá của bạn
                         </label>
 
@@ -259,7 +259,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                            placeholder="Chia sẻ cảm nhận của bạn về bộ phim..."
                            value={comment}
                            onChange={(e) => setComment(e.target.value)}
-                           className="w-full bg-[#0b0c10] border border-white/10 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 min-h-[120px]"
+                           className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 min-h-[120px]"
                         />
                      </div>
 
@@ -269,16 +269,16 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                               type="checkbox"
                               checked={isSpoiler}
                               onChange={(e) => setIsSpoiler(e.target.checked)}
-                              className="w-5 h-5 rounded border-gray-700 bg-gray-900 text-blue-500 focus:ring-blue-500/50"
+                              className="w-5 h-5 rounded border-slate-300 bg-white text-amber-500 focus:ring-amber-500/50"
                            />
-                           <span className="text-sm text-gray-400 group-hover:text-gray-200 transition-colors">
+                           <span className="text-sm text-slate-500 group-hover:text-slate-700 transition-colors">
                               Đánh giá có tiết lộ nội dung phim
                            </span>
                         </label>
                         <button
                            onClick={handleSubmitReview}
                            disabled={isSubmitting}
-                           className="bg-[#f84565] hover:bg-[#e03d5a] text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-pink-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                           className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                            {isSubmitting ? "Đang gửi..." : "Bình luận"}
                         </button>
@@ -290,11 +290,11 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
             {/* Reviews List */}
             <div className="space-y-6">
                {isLoading ? (
-                  <div className="text-center py-10 text-gray-400">
+                  <div className="text-center py-10 text-slate-500">
                      Đang tải đánh giá...
                   </div>
                ) : reviewsData.length === 0 ? (
-                  <div className="text-center py-10 text-gray-400">
+                  <div className="text-center py-10 text-slate-500">
                      Chưa có đánh giá nào cho phim này. Hãy là người đầu tiên
                      đánh giá!
                   </div>
@@ -302,18 +302,18 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                   reviewsData.map((review) => (
                      <div
                         key={review.id}
-                        className="bg-[#12161C] p-6 rounded-2xl border border-white/5 shadow-sm"
+                        className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
                      >
                         <div className="flex justify-between items-start mb-4">
                            <div className="flex gap-4">
                               <img
                                  src={review.userAvatar || profileIcon}
                                  alt={review.username}
-                                 className="w-12 h-12 rounded-full object-cover border-2 border-white/10"
+                                 className="w-12 h-12 rounded-full object-cover border-2 border-slate-200"
                               />
                               <div>
                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-semibold text-white">
+                                    <span className="font-semibold text-slate-900">
                                        {review.username}
                                     </span>
                                     {review.isVerified && (
@@ -330,7 +330,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                                        size="small"
                                     />
 
-                                    <span className="text-xs text-gray-500">
+                                    <span className="text-xs text-slate-500">
                                        {new Date(
                                           review.createdAt,
                                        ).toLocaleDateString("vi-VN")}
@@ -347,29 +347,29 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                                  onClick={() => toggleSpoiler(review.id)}
                                  className="relative cursor-pointer group rounded-lg overflow-hidden"
                               >
-                                 <p className="text-gray-300 leading-relaxed blur-md select-none">
+                                 <p className="text-slate-700 leading-relaxed blur-md select-none">
                                     {review.content}
                                  </p>
-                                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex flex-col items-center justify-center transition-all group-hover:bg-black/60">
+                                 <div className="absolute inset-0 bg-white/40 backdrop-blur-sm flex flex-col items-center justify-center transition-all group-hover:bg-white/60">
                                     <EyeOff
-                                       className="text-white mb-2 group-hover:scale-110 transition-transform"
+                                       className="text-slate-900 mb-2 group-hover:scale-110 transition-transform"
                                        size={24}
                                     />
-                                    <span className="text-sm font-bold text-white uppercase tracking-wider">
+                                    <span className="text-sm font-bold text-slate-900 uppercase tracking-wider">
                                        Spoiler Alert
                                     </span>
-                                    <span className="text-xs text-gray-300">
+                                    <span className="text-xs text-slate-700">
                                        Click to reveal
                                     </span>
                                  </div>
                               </div>
                            ) : (
-                              <p className="text-gray-300 leading-relaxed">
+                              <p className="text-slate-700 leading-relaxed">
                                  {review.content}
                                  {review.isSpoiler && (
                                     <button
                                        onClick={() => toggleSpoiler(review.id)}
-                                       className="ml-2 text-xs text-blue-400 hover:underline"
+                                       className="ml-2 text-xs text-amber-600 hover:underline"
                                     >
                                        Hide
                                     </button>
@@ -390,8 +390,8 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
                               focus:outline-none
                               active:bg-transparent ${
                                  review.isLikedByCurrentUser
-                                    ? "text-blue-400"
-                                    : "text-gray-500 hover:text-blue-400"
+                                    ? "text-amber-600"
+                                    : "text-slate-500 hover:text-amber-600"
                               }`}
                            >
                               <ThumbsUp size={18} />
@@ -409,7 +409,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movieId }) => {
 
             {/* Show More */}
             <div className="mt-10 text-center">
-               <button className="text-gray-400 hover:text-white transition-colors text-sm font-semibold flex items-center gap-2 mx-auto">
+               <button className="text-slate-500 hover:text-amber-600 transition-colors text-sm font-semibold flex items-center gap-2 mx-auto">
                   View All 124 Reviews
                   <Star size={14} className="animate-pulse" />
                </button>

@@ -117,7 +117,9 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
          onSuccess();
       } catch (error: any) {
          toast.error(
-            error.response?.data?.message || "Có lỗi xảy ra khi lưu thông tin",
+            error.response?.data?.message ||
+               error.message ||
+               "Có lỗi xảy ra khi lưu thông tin",
          );
       } finally {
          setLoading(false);

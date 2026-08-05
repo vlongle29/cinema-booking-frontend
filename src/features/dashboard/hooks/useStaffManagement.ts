@@ -3,9 +3,13 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "react-hot-toast";
 import { employeeService } from "@/services/employeeService";
 import type { Employee, EmployeeSearchDTO } from "@/types/employee";
-import { userService } from "@/services/userService";
+import useAuth from "@/features/auth/hooks/useAuth";
+import { useAuthz } from "@/hooks/useAuthz";
 
 export function useStaffManagement() {
+   const { userInfo } = useAuth();
+   const { hasRole } = useAuthz();
+   const isManager = hasRole("MANAGER") && !hasRole("SUPER_ADMIN");
    const [isCreating, setIsCreating] = useState(false);
    const [editingEmployee, setEditingEmployee] = useState<Employee | null>(
       null,
@@ -14,9 +18,12 @@ export function useStaffManagement() {
    const [isLoading, setIsLoading] = useState(false);
    const [transferTarget, setTransferTarget] = useState<Employee | null>(null);
 
-   const [searchParams, setSearchParams] = useState<EmployeeSearchDTO>({
-      page: 1,
-      size: 10,
+   const [searchParams, setSearchParams] = useState<EmployeeSearchDTO>(() => {
+      const initialParams: EmployeeSearchDTO = { page: 1, size: 10 };
+      if (isManager && userInfo?.id) {
+         initialParams.manageId = userInfo.id;
+      }
+      return initialParams;
    });
    const [totalElements, setTotalElements] = useState(0);
    const [totalPages, setTotalPages] = useState(0);
@@ -53,7 +60,12 @@ export function useStaffManagement() {
    };
 
    const handleResetFilters = () => {
-      setSearchParams((prev) => ({ page: 1, size: 10, roleId: prev.roleId }));
+      setSearchParams((prev) => ({ 
+         page: 1, 
+         size: 10, 
+         roleId: prev.roleId,
+         manageId: isManager && userInfo?.id ? userInfo.id : undefined
+      }));
    };
 
    const handlePageChange = (page: number) => {
@@ -88,7 +100,28 @@ export function useStaffManagement() {
          }
       } catch (error: any) {
          toast.error(
-            error.response?.data?.message || "Không thể chuyển chi nhánh",
+            error.response?.data?.message ||
+               error.message ||
+               "Không thể chuyển chi nhánh",
+         );
+      }
+   };
+
+   const handleDelete = async (employeeId: string, employeeName: string) => {
+      const confirmed = window.confirm(
+         `Bạn có chắc chắn muốn xoá nhân sự "${employeeName}" không?\nHành động này sẽ vô hiệu hoá tài khoản và không thể đăng nhập.`,
+      );
+      if (!confirmed) return;
+
+      try {
+         await employeeService.deactivate(employeeId);
+         toast.success(`Đã xoá nhân sự "${employeeName}" thành công`);
+         fetchEmployees();
+      } catch (error: any) {
+         toast.error(
+            error.response?.data?.message ||
+               error.message ||
+               "Không thể xoá nhân sự",
          );
       }
    };
@@ -114,6 +147,7 @@ export function useStaffManagement() {
          setIsCreating,
          setTransferTarget,
          handleTransfer,
+         handleDelete,
       },
    };
 }

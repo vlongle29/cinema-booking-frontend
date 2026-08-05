@@ -16,11 +16,50 @@ const ACTION_COLOR: Record<string, string> = {
   delete: "bg-rose-500/10 text-rose-400 border-rose-500/20",
   manage: "bg-violet-500/10 text-violet-400 border-violet-500/20",
   export: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+  refund: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 const ACTION_DEFAULT = "bg-[#252529] text-[#d1d5dc] border-[#393939]";
 
+const GROUP_TRANSLATION: Record<string, string> = {
+  city: "Thành phố",
+  genre: "Thể loại",
+  customer: "Khách hàng",
+  employee: "Nhân viên",
+  payment: "Thanh toán",
+  movie: "Phim",
+  room: "Phòng",
+  showtime: "Suất chiếu",
+  ticket: "Vé",
+  promotion: "Khuyến mãi",
+  review: "Đánh giá",
+  branch: "Chi nhánh",
+  position: "Chức vụ",
+  permission: "Quyền hạn",
+  role: "Vai trò",
+  dashboard: "Bảng điều khiển",
+  other: "Khác",
+};
+
+const ACTION_TRANSLATION: Record<string, string> = {
+  view: "Xem",
+  create: "Tạo mới",
+  update: "Cập nhật",
+  delete: "Xóa",
+  manage: "Quản lý",
+  export: "Xuất file",
+  refund: "Hoàn tiền",
+};
+
 function getActionColor(action: string) {
   return ACTION_COLOR[action.toLowerCase()] ?? ACTION_DEFAULT;
+}
+
+function translateGroup(group: string) {
+  return GROUP_TRANSLATION[group.toLowerCase()] || group;
+}
+
+function translateAction(action: string) {
+  return ACTION_TRANSLATION[action.toLowerCase()] || action;
 }
 
 function groupPermissions(perms: SysPermission[]) {
@@ -74,7 +113,7 @@ function GroupCard({
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <ShieldCheck size={14} className="text-[#f84565] flex-shrink-0" />
           <span className="font-semibold text-white text-sm uppercase tracking-wide truncate">
-            {group}
+            {translateGroup(group)}
           </span>
           <span className="text-[11px] text-[#555] bg-[#252529] px-1.5 py-0.5 rounded-md">
             {perms.length}
@@ -105,7 +144,7 @@ function GroupCard({
                 onClick={() => onToggleSelect(perm.id)}
                 title={perm.description ?? perm.permission}
               >
-                <span className="text-xs font-mono font-medium">{action}</span>
+                <span className="text-xs font-mono font-medium">{translateAction(action)}</span>
 
                 {/* Hover actions */}
                 <div

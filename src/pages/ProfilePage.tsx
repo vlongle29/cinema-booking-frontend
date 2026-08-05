@@ -14,7 +14,9 @@ export default function ProfilePage() {
          try {
             const response = await authService.getCurrentUser();
             if (response.success && response.data) {
-               setProfile(response.data);
+               // API có thể trả về thông tin user nằm trong `response.data.userInfo` 
+               // hoặc trực tiếp trên `response.data`
+               setProfile(response.data.userInfo || response.data);
             } else {
                setError("Không tìm thấy thông tin người dùng.");
             }
@@ -33,8 +35,8 @@ export default function ProfilePage() {
       return (
          <div className="flex justify-center items-center h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-900">
             <div className="relative w-16 h-16">
-               <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-200 dark:border-indigo-900 rounded-full"></div>
-               <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+               <div className="absolute top-0 left-0 w-full h-full border-4 border-amber-200 dark:border-amber-900 rounded-full"></div>
+               <div className="absolute top-0 left-0 w-full h-full border-4 border-amber-500 rounded-full border-t-transparent animate-spin"></div>
             </div>
          </div>
       );
@@ -62,16 +64,16 @@ export default function ProfilePage() {
             
             {/* Header Section */}
             <div className="flex flex-col md:flex-row items-center md:items-start gap-8 bg-white dark:bg-slate-800 p-8 sm:p-10 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 relative overflow-hidden group">
-               <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-90 transition-transform duration-700 group-hover:scale-105"></div>
+               <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 opacity-90 transition-transform duration-700 group-hover:scale-105"></div>
                
                <div className="relative z-10 pt-16 flex flex-col items-center md:items-start w-full">
                   <div className="flex flex-col md:flex-row items-center gap-8 w-full">
-                     <div className="w-36 h-36 rounded-full border-4 border-white dark:border-slate-800 shadow-xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center shrink-0 relative group-hover:shadow-indigo-500/20 transition-all duration-500">
+                     <div className="w-36 h-36 rounded-full border-4 border-white dark:border-slate-800 shadow-xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center shrink-0 relative group-hover:shadow-amber-500/30 transition-all duration-500">
                         {profile.avatar ? (
                            <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                         ) : (
-                           <span className="text-6xl font-bold text-indigo-300 dark:text-indigo-400">
-                              {profile.name.charAt(0).toUpperCase()}
+                           <span className="text-6xl font-bold text-amber-400 dark:text-amber-500">
+                              {profile.name?.charAt(0)?.toUpperCase() || "?"}
                            </span>
                         )}
                      </div>
@@ -83,14 +85,12 @@ export default function ProfilePage() {
                            </h1>
                            <p className="text-lg text-slate-500 dark:text-slate-400 font-medium flex items-center justify-center md:justify-start gap-2">
                               <span>@{profile.username}</span>
-                              <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600"></span>
-                              <span className="text-sm">ID: {profile.id.split("-")[0]}...</span>
                            </p>
                         </div>
                         
                         <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-3">
-                           {profile.roles.map((role) => (
-                              <div key={role.id} className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300 ring-1 ring-inset ring-indigo-700/10 dark:ring-indigo-500/20 shadow-sm">
+                           {profile.roles?.map((role) => (
+                              <div key={role.id} className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300 ring-1 ring-inset ring-amber-500/20 shadow-sm">
                                  <Shield className="w-4 h-4" />
                                  {role.name}
                               </div>
@@ -117,9 +117,9 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                
                {/* Column 1 */}
-               <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-500 group">
+               <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-500 group">
                   <div className="flex items-center gap-4 mb-8">
-                     <div className="p-3 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                     <div className="p-3 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-2xl group-hover:scale-110 transition-transform duration-300">
                         <User className="w-6 h-6" />
                      </div>
                      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Thông tin cá nhân</h2>
@@ -127,30 +127,21 @@ export default function ProfilePage() {
                   
                   <div className="space-y-6">
                      <div className="group/item">
-                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5 group-hover/item:text-indigo-500 transition-colors">Họ và tên</p>
+                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5 group-hover/item:text-amber-600 transition-colors">Họ và tên</p>
                         <p className="text-lg font-semibold text-slate-900 dark:text-slate-200">{profile.name}</p>
                      </div>
                      <div className="h-px w-full bg-slate-100 dark:bg-slate-700/50"></div>
                      <div className="group/item">
-                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5 group-hover/item:text-indigo-500 transition-colors">Tên đăng nhập</p>
+                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5 group-hover/item:text-amber-600 transition-colors">Tên đăng nhập</p>
                         <p className="text-lg font-semibold text-slate-900 dark:text-slate-200">{profile.username}</p>
-                     </div>
-                     <div className="h-px w-full bg-slate-100 dark:bg-slate-700/50"></div>
-                     <div className="group/item">
-                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2 group-hover/item:text-indigo-500 transition-colors">ID hệ thống</p>
-                        <div className="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
-                           <p className="text-sm font-mono text-slate-600 dark:text-slate-400 break-all select-all">
-                              {profile.id}
-                           </p>
-                        </div>
                      </div>
                   </div>
                </div>
 
                {/* Column 2 */}
-               <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-500 group">
+               <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-500 group">
                   <div className="flex items-center gap-4 mb-8">
-                     <div className="p-3 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                     <div className="p-3 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-2xl group-hover:scale-110 transition-transform duration-300">
                         <Fingerprint className="w-6 h-6" />
                      </div>
                      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Liên hệ & Phân quyền</h2>
@@ -174,7 +165,7 @@ export default function ProfilePage() {
                         <div>
                            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Số điện thoại</p>
                            <p className="text-lg font-semibold text-slate-900 dark:text-slate-200">
-                              {profile.phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3')}
+                              {profile.phone?.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3') || "Chưa cập nhật"}
                            </p>
                         </div>
                      </div>
@@ -199,6 +190,29 @@ export default function ProfilePage() {
                   </div>
                </div>
 
+            </div>
+
+            {/* Security Section */}
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-500 group">
+               <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                     <Lock className="w-6 h-6" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Bảo mật tài khoản</h2>
+               </div>
+               
+               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700">
+                  <div>
+                     <p className="text-base font-semibold text-slate-900 dark:text-slate-200 mb-1">Mật khẩu đăng nhập</p>
+                     <p className="text-sm text-slate-500 dark:text-slate-400">Đổi mật khẩu thường xuyên giúp bảo vệ tài khoản của bạn tốt hơn.</p>
+                  </div>
+                  <button 
+                     onClick={() => alert("Tính năng đổi mật khẩu đang được phát triển!")}
+                     className="whitespace-nowrap px-6 py-2.5 bg-amber-500 text-white rounded-xl text-sm font-bold hover:bg-amber-600 transition-all shadow-[0_4px_14px_0_rgba(245,158,11,0.39)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.23)] hover:-translate-y-0.5"
+                  >
+                     Đổi mật khẩu
+                  </button>
+               </div>
             </div>
          </div>
       </div>

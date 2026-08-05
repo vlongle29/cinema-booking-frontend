@@ -18,60 +18,60 @@ export const getSeatTemplateColumns = (
 ): Column<SeatTemplate>[] => [
    {
       id: "name",
-      label: "Template Name",
+      label: "Tên sơ đồ",
       render: (template) => (
          <div className="flex flex-col">
             <p className="text-white text-sm font-semibold hover:text-[#f84565] transition-colors">
                {template.name}
             </p>
             <p className="text-[#797b7d] text-[11px] mt-1 line-clamp-2">
-               {template.description || "No description"}
+               {template.description || "Không có mô tả"}
             </p>
          </div>
       ),
    },
    {
       id: "layout",
-      label: "Layout",
+      label: "Bố cục",
       render: (template) => (
          <div className="text-white text-sm font-medium">
-            {template.rows} R x {template.columns} C
+            {template.rows} Hàng x {template.columns} Cột
          </div>
       ),
    },
    {
       id: "capacity",
-      label: "Capacity",
+      label: "Sức chứa",
       render: (template) => (
          <div className="text-white text-sm font-medium">
-            {template.totalSeats} Seats
+            {template.totalSeats} Ghế
          </div>
       ),
    },
    {
       id: "actions",
-      label: "Actions",
+      label: "Thao tác",
       align: "right",
       render: (template) => (
          <div className="flex justify-end gap-2">
             <button
                onClick={() => onApply(template)}
                className="p-2 text-[#797b7d] hover:text-[#f84565] hover:bg-[#f84565]/10 rounded-lg transition-all"
-               title="Apply template to room"
+               title="Áp dụng sơ đồ vào phòng"
             >
                <FiCheckSquare size={16} />
             </button>
             <button
                onClick={() => onEdit(template)}
                className="p-2 text-[#797b7d] hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all"
-               title="Edit template layout"
+               title="Chỉnh sửa sơ đồ"
             >
                <FiEdit2 size={16} />
             </button>
             <button
                onClick={() => onDelete(template.id)}
                className="p-2 text-[#797b7d] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-               title="Delete template"
+               title="Xóa sơ đồ"
             >
                <FiTrash2 size={16} />
             </button>
@@ -83,8 +83,8 @@ export const getSeatTemplateColumns = (
 export const getSeatTemplateFilters = (): FilterField[] => [
    {
       name: "keyword",
-      label: "Keyword",
+      label: "Từ khóa",
       type: "text",
-      placeholder: "Template name or description...",
+      placeholder: "Tìm tên hoặc mô tả sơ đồ...",
    },
 ];

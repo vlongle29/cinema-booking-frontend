@@ -5,7 +5,7 @@ import Footer from "@/components/common/Footer";
 
 const MainLayout: React.FC = () => {
    return (
-      <div className="flex flex-col min-h-screen bg-[#09090b]">
+      <div className="flex flex-col min-h-screen bg-[#fefce8]">
          {/* Header dùng chung cho toàn bộ website khách hàng */}
          <Header />
 

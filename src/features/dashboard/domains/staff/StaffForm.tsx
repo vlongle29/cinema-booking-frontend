@@ -15,7 +15,6 @@ const staffSchema = z.object({
    email: z.string().email("Email không hợp lệ"),
    phone: z.string().min(1, "Số điện thoại là bắt buộc"),
    branchId: z.string().uuid("Vui lòng chọn chi nhánh"),
-   employeeCode: z.string().optional(),
    positionId: z.string().uuid("Vui lòng chọn chức vụ"),
    salary: z.coerce.number().optional(),
    hireDate: z.string().optional(),
@@ -55,7 +54,6 @@ const StaffForm: React.FC<StaffFormProps> = ({
          email: "",
          phone: "",
          branchId: "",
-         employeeCode: "",
          positionId: "",
          salary: undefined,
          hireDate: "",
@@ -86,10 +84,6 @@ const StaffForm: React.FC<StaffFormProps> = ({
             toast.error("Mật khẩu là bắt buộc");
             return;
          }
-         if (!data.employeeCode?.trim()) {
-            toast.error("Mã nhân viên là bắt buộc");
-            return;
-         }
       }
 
       setLoading(true);
@@ -113,7 +107,6 @@ const StaffForm: React.FC<StaffFormProps> = ({
                email: data.email,
                phone: data.phone,
                branchId: data.branchId,
-               employeeCode: data.employeeCode!,
                positionId: data.positionId,
                salary: data.salary,
                hireDate: data.hireDate || undefined,
@@ -123,7 +116,9 @@ const StaffForm: React.FC<StaffFormProps> = ({
          onSuccess();
       } catch (error: any) {
          toast.error(
-            error.response?.data?.message || "Có lỗi xảy ra khi lưu thông tin",
+            error.response?.data?.message ||
+               error.message ||
+               "Có lỗi xảy ra khi lưu thông tin",
          );
       } finally {
          setLoading(false);
@@ -208,22 +203,8 @@ const StaffForm: React.FC<StaffFormProps> = ({
                )}
             </div>
 
-            {!isEdit && (
-               <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
-                     Mã nhân viên *
-                  </label>
-                  <input
-                     {...register("employeeCode")}
-                     className="w-full bg-[#1a1a1d] border border-gray-700 rounded-md p-2 text-white focus:border-rose-500 outline-none"
-                  />
-                  {errors.employeeCode && (
-                     <p className="text-rose-500 text-xs">
-                        {errors.employeeCode.message}
-                     </p>
-                  )}
-               </div>
-            )}
+
+
 
             <div className="space-y-2">
                <label className="text-sm font-medium text-gray-300">

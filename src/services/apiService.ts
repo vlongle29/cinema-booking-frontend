@@ -23,6 +23,31 @@ export interface PageResponse<T> {
    empty: boolean;
 }
 
+export class ApiError extends Error {
+   status?: number;
+   code?: string;
+   response?: {
+      status?: number;
+      data?: any;
+   };
+
+   constructor(
+      message: string,
+      status?: number,
+      code?: string,
+      data?: any,
+   ) {
+      super(message);
+      this.name = "ApiError";
+      this.status = status;
+      this.code = code;
+      this.response = {
+         status,
+         data: data || { message, code, status },
+      };
+   }
+}
+
 /**
  * Helper function to handle API errors
  */
@@ -31,25 +56,28 @@ export const handleApiError = (error: unknown): never => {
       // Backend returned an error response
       if (error.response) {
          const { status, data } = error.response;
+         const message =
+            data?.message ||
+            error.message ||
+            "Có lỗi xảy ra từ máy chủ, vui lòng thử lại sau.";
          console.error(
             `[API Error] Status: ${status}, Message:`,
-            data?.message || error.message,
+            message,
          );
-         // You can throw a custom error or just pass the data message
-         throw new Error(
-            data?.message || "Có lỗi xảy ra từ máy chủ, vui lòng thử lại sau.",
-         );
+         throw new ApiError(message, status, data?.code, data);
       } else if (error.request) {
          // The request was made but no response was received
          console.error("[API Error] No response received:", error.request);
-         throw new Error(
+         throw new ApiError(
             "Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng.",
          );
       }
    }
    // Something happened in setting up the request
-   console.error("[API Error] Setting up request:", (error as Error).message);
-   throw new Error("Đã xảy ra lỗi không xác định.");
+   const fallbackMsg =
+      error instanceof Error ? error.message : "Đã xảy ra lỗi không xác định.";
+   console.error("[API Error] Setting up request:", fallbackMsg);
+   throw new ApiError(fallbackMsg);
 };
 
 /**

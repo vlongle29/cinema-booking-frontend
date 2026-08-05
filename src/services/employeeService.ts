@@ -56,4 +56,10 @@ export const employeeService = {
    getAllEmployees: () => {
       return employeeService.search({ page: 1, size: 100 });
    },
+
+   deactivate: (employeeId: string) => {
+      return apiService.delete<ApiResponse<void>>(
+         `${EMPLOYEE_API_PATH}/${employeeId}`,
+      );
+   },
 };

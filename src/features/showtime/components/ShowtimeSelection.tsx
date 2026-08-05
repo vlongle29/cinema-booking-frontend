@@ -63,20 +63,20 @@ export default function ShowtimeSelection() {
    };
 
    return (
-      <div className="min-h-screen bg-[#09090b]">
+      <div className="min-h-screen text-slate-900">
          <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8">
             {/* Page Header */}
             <div className="mb-6 md:mb-8 relative">
                <div className="flex items-center gap-2 mb-2">
                   <BlurredCircle className="left-0 top-10" />
                   <BlurredCircle className="right-0 top-10" />
-                  <Film className="w-5 h-5 text-[#f84565]" />
-                  <h1 className="text-2xl md:text-3xl font-bold text-white">
+                  <Film className="w-5 h-5 text-amber-500" />
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
                      Chọn
-                     <span className="text-[#f84565]"> Suất Chiếu</span>
+                     <span className="text-amber-600"> Suất Chiếu</span>
                   </h1>
                </div>
-               <p className="text-sm text-[#797b7d]">
+               <p className="text-sm text-slate-500">
                   Hãy chọn ngày, địa điểm, định dạng và thời gian bạn muốn
                </p>
             </div>
@@ -91,10 +91,10 @@ export default function ShowtimeSelection() {
 
             {/* Selected Date Info */}
             {selectedDateObj && !datesApi.loading && (
-               <div className="mb-4 p-3 bg-[#f84565]/10 border border-[#f84565]/30 rounded-lg">
-                  <p className="text-sm text-[#d1d5dc]">
+               <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                  <p className="text-sm text-slate-600">
                      Chọn ngày:{" "}
-                     <span className="text-[#f84565] font-semibold">
+                     <span className="text-amber-600 font-semibold">
                         {selectedDateObj.fullDate}
                      </span>
                   </p>
@@ -131,7 +131,7 @@ export default function ShowtimeSelection() {
             {/* Step 4: Theater & Showtime Selection */}
             {!formatsApi.loading && selectedFormat && (
                <div>
-                  <h3 className="text-base font-semibold text-white mb-4">
+                  <h3 className="text-base font-semibold text-slate-900 mb-4">
                      Rạp & Suất chiếu có sẵn
                   </h3>
 

@@ -63,8 +63,8 @@ const SeatTemplateList = () => {
    return (
       <>
          <DashboardEntityList
-            title="Seat Template"
-            entityName="seat template"
+            title="Sơ đồ mẫu"
+            entityName="sơ đồ mẫu"
             isCreating={isModalOpen} // Use isModalOpen for the create form
             onToggleCreating={() => setIsModalOpen((prev) => !prev)}
             filters={filters}

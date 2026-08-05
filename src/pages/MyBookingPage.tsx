@@ -5,9 +5,9 @@ const MyBookingPage: React.FC = () => {
    const { bookings, isLoading } = useMyBookings();
 
    return (
-      <div className="mt-16 bg-[#09090b] min-h-screen text-gray-200">
+      <div className="mt-16 min-h-screen text-slate-900">
          <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-gray-300 mb-8">
+            <h1 className="text-3xl font-bold text-slate-900 mb-8">
                Lịch sử đặt vé
             </h1>
 

@@ -41,13 +41,13 @@ const Header = () => {
 
    return (
       <div>
-         <nav className="fixed top-0 z-[1000] h-[64px] w-full border-b border-white/15 bg-transparent px-3 md:h-[72px] md:px-10 md:backdrop-blur-[5px] max-[480px]:px-3">
+         <nav className="fixed top-0 z-[1000] h-[64px] w-full border-b border-slate-200/50 bg-white/60 px-3 md:h-[72px] md:px-10 md:backdrop-blur-md max-[480px]:px-3 transition-all duration-300 shadow-sm">
             <div className="mx-auto flex h-full max-w-[1440px] flex-wrap items-center justify-between">
                <Link
                   to="/"
-                  className="flex cursor-pointer items-center gap-1.5 text-[20px] font-semibold tracking-[-0.5px] sm:gap-2 sm:text-[28px]"
+                  className="flex cursor-pointer items-center gap-1.5 text-[20px] font-bold text-slate-900 tracking-[-0.5px] sm:gap-2 sm:text-[28px]"
                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-rose-700 shadow-lg shadow-rose-500/20">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/30">
                      <Film className="text-white" size={24} />
                   </div>
                   <span>CineBook</span>
@@ -55,10 +55,10 @@ const Header = () => {
 
                {/* ĐÃ FIX: Dùng flex mặc định và chỉ hidden khi màn hình < 480px */}
                <div className="flex items-center max-[480px]:hidden">
-                  <div className="flex items-center gap-5 rounded-[68px] border border-white/15 bg-white/10 px-5 py-2.5 backdrop-blur-[2.5px] md:gap-8 md:px-6 md:py-3">
+                  <div className="flex items-center gap-5 rounded-[68px] border border-slate-200 bg-white/80 text-slate-700 font-medium px-5 py-2.5 shadow-sm backdrop-blur-md md:gap-8 md:px-6 md:py-3">
                      {navItems.map(({ to, label, end, children }) => {
                         const linkElement = (
-                           <NavLink to={to} end={end}>
+                           <NavLink key={to} to={to} end={end}>
                               {label}
                            </NavLink>
                         );
@@ -78,13 +78,13 @@ const Header = () => {
                                  </HoverCardTrigger>
                                  <HoverCardContent
                                     sideOffset={12}
-                                    className="z-[2000] flex w-48 flex-col gap-1 border-[rgba(148,163,184,0.12)] bg-[rgba(30,41,59,0.95)] p-2 shadow-2xl backdrop-blur-lg"
+                                    className="z-[2000] flex w-48 flex-col gap-1 border-slate-200 bg-white/95 p-2 shadow-xl backdrop-blur-lg rounded-xl"
                                  >
                                     {children.map((item) => (
                                        <NavLink
                                           key={item.to}
                                           to={item.to}
-                                          className="rounded-md px-4 py-2 text-sm text-gray-300 no-underline transition-colors hover:bg-white/10 hover:text-white"
+                                          className="rounded-md px-4 py-2 text-sm text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-amber-600 font-medium"
                                        >
                                           {item.label}
                                        </NavLink>
@@ -122,14 +122,14 @@ const Header = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                            align="end"
-                           className="mt-4 w-56 border-[rgba(148,163,184,0.12)] bg-[rgba(30,41,59,0.95)] text-white shadow-2xl backdrop-blur-lg"
+                           className="mt-4 w-56 border-slate-200 bg-white text-slate-900 shadow-xl rounded-xl backdrop-blur-lg"
                         >
                            <DropdownMenuLabel className="font-normal">
                               <div className="flex flex-col space-y-2">
-                                 <p className="text-sm font-semibold leading-none text-white">
+                                 <p className="text-sm font-semibold leading-none text-slate-900">
                                     {userInfo.name}
                                  </p>
-                                 <p className="text-xs leading-none text-gray-400">
+                                 <p className="text-xs leading-none text-slate-500">
                                     {userInfo.email}
                                  </p>
                               </div>
@@ -137,20 +137,20 @@ const Header = () => {
                            <DropdownMenuSeparator />
                            <DropdownMenuItem
                               asChild
-                              className="cursor-pointer py-2 focus:bg-white/10 focus:text-white"
+                              className="cursor-pointer py-2 focus:bg-slate-100 focus:text-amber-600 font-medium"
                            >
                               <Link to="/my-bookings">Lịch sử đặt vé</Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem
                               asChild
-                              className="cursor-pointer focus:bg-white/10 focus:text-white"
+                              className="cursor-pointer focus:bg-slate-100 focus:text-amber-600 font-medium"
                            >
                               <Link to="/profile">Quản lý tài khoản</Link>
                            </DropdownMenuItem>
                            <DropdownMenuSeparator />
                            <DropdownMenuItem
                               onClick={() => logout()}
-                              className="cursor-pointer text-red-400 focus:bg-red-500/10 focus:text-red-400"
+                              className="cursor-pointer font-medium text-red-500 focus:bg-red-50 focus:text-red-600"
                            >
                               Đăng xuất
                            </DropdownMenuItem>
@@ -158,7 +158,7 @@ const Header = () => {
                      </DropdownMenu>
                   ) : (
                      <button
-                        className="flex h-[45px] w-[116px] items-center justify-center rounded-[32px] bg-[#f84565] px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-[2px] hover:bg-[#ff5580] hover:shadow-[0_8px_16px_rgba(248,69,101,0.3)]"
+                        className="flex h-[45px] w-[116px] items-center justify-center rounded-[32px] bg-amber-500 px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-[2px] hover:bg-amber-600 hover:shadow-[0_8px_16px_rgba(245,158,11,0.3)] shadow-sm"
                         onClick={() => setIsModalOpen(true)}
                      >
                         Đăng nhập

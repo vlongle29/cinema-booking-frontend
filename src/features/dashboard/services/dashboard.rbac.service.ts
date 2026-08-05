@@ -60,7 +60,7 @@ export const sysRoleService = {
 export const sysPermissionService = {
   /** Tìm kiếm phân trang */
   search: (params: SysPermissionSearchDTO) =>
-    apiService.post<ApiResponse<any>>(`${PERMISSION_API}/search`, params),
+    apiService.get<ApiResponse<any>>(`${PERMISSION_API}/search`, { params }),
 
   /** Chi tiết permission theo id */
   getById: (id: string) =>

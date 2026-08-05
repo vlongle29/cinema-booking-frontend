@@ -29,7 +29,7 @@ function ListMoviesPage() {
    return (
       <section className="max-w-7xl mx-auto py-10 sm:py-14 md:py-28 px-4 sm:px-6 lg:px-10">
          <div className="flex items-center justify-between mb-6 sm:mb-8 md:mb-10">
-            <h2 className="text-lg sm:text-xl font-bold text-secondary">
+            <h2 className="text-lg sm:text-xl text-slate-700 font-bold text-secondary">
                {status === "SHOWING"
                   ? "Phim đang chiếu"
                   : status === "COMING_SOON"
@@ -38,10 +38,9 @@ function ListMoviesPage() {
             </h2>
             <a
                href="#view-all"
-               className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-[#99a1af] no-underline transition-all duration-300 hover:text-primary hover:gap-3"
+               className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-black no-underline transition-all duration-300 hover:text-primary hover:gap-3"
             >
-               View All{" "}
-               <ArrowRight size={16} className="w-3 h-3 sm:w-4 sm:h-4" />
+               Xem tất cả <ArrowRight size={16} className="w-3 h-3 sm:w-4 sm:h-4" />
             </a>
          </div>
 

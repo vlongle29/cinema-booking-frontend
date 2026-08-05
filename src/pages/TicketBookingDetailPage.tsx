@@ -30,8 +30,8 @@ export default function TicketBookingDetailPage() {
    // Bọc trong container chung để tránh màn hình đen hoàn toàn khi loading
    if (isLoading) {
       return (
-         <div className="bg-[#09090b] min-h-screen text-white flex items-center justify-center">
-            <div className="animate-pulse text-rose-500 font-medium">
+         <div className="min-h-screen text-slate-900 flex items-center justify-center">
+            <div className="animate-pulse text-amber-600 font-medium">
                Đang tải thông tin phim...
             </div>
          </div>
@@ -40,14 +40,14 @@ export default function TicketBookingDetailPage() {
 
    if (!movieDetail) {
       return (
-         <div className="bg-[#09090b] min-h-screen text-white flex items-center justify-center">
-            <div className="text-gray-400">Không tìm thấy phim yêu cầu.</div>
+         <div className="min-h-screen text-slate-900 flex items-center justify-center">
+            <div className="text-slate-600">Không tìm thấy phim yêu cầu.</div>
          </div>
       );
    }
 
    return (
-      <div className="bg-[#09090b] min-h-screen text-white animate-in fade-in duration-500">
+      <div className="min-h-screen text-slate-900 animate-in fade-in duration-500">
          {/* 1. Phần thông tin phim */}
          <MovieHero
             movie={movieDetail}

@@ -31,7 +31,7 @@ const FilterChips: React.FC<FilterChipsProps> = ({
 
    return (
       <div className="mb-4">
-         <h3 className="text-xs font-semibold text-[#d1d5dc] mb-2 uppercase tracking-wider">
+         <h3 className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wider">
             {label}
          </h3>
 
@@ -64,14 +64,14 @@ const FilterChips: React.FC<FilterChipsProps> = ({
                         onClick={() => onSelect(item.id)}
                         className={`px-3 py-1.5 rounded-full font-medium text-sm transition-all ${
                            isSelected
-                              ? "bg-[#f84565] text-white"
-                              : "bg-[#1a1a1e] text-[#d1d5dc] border border-[#393939] hover:border-[#f84565]"
+                              ? "bg-amber-500 text-white shadow-sm"
+                              : "bg-white text-slate-600 border border-slate-200 hover:border-amber-500 hover:text-amber-600 shadow-sm"
                         }`}
                      >
                         <div className="flex items-center gap-2">
                            <span>{displayedItemName}</span>
                            {badge && (
-                              <span className="text-xs bg-[#f84565]/30 px-2 py-0.5 rounded">
+                              <span className="text-xs bg-amber-500/20 text-amber-700 px-2 py-0.5 rounded">
                                  {badge}
                               </span>
                            )}

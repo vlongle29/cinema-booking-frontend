@@ -7,7 +7,7 @@ import {
 
 const HomePage: React.FC = () => {
    return (
-      <div className="w-full bg-dark-bg overflow-x-hidden">
+      <div className="w-full bg-[#fefce8] overflow-x-hidden">
          {/* 1. Phần Hero tĩnh */}
          <HeroBanner />
 

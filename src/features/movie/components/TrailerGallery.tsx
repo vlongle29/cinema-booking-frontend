@@ -12,9 +12,9 @@ export const TrailerGallery: React.FC = () => {
    const [shouldAutoplay, setShouldAutoplay] = useState(false);
 
    return (
-      <section className="w-full py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-10 bg-dark-bg">
+      <section className="w-full py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-10 bg-[#fefce8]">
          <div className="max-w-5xl mx-auto">
-            <div className="text-lg sm:text-xl font-bold text-secondary mb-4 sm:mb-5">
+            <div className="text-lg sm:text-xl text-[#1a1c21] font-bold text-secondary mb-4 sm:mb-5">
                Trailers
             </div>
             <div className="w-full mx-auto flex flex-col gap-4 sm:gap-5 text-white">

@@ -38,7 +38,7 @@ const images = {
 
 export const MovieHero = ({ movie, onBuyTicketClick }: MovieHeroProps) => {
    return (
-      <section className="mt-36 max-w-7xl px-8 py-12 flex gap-12 inset-0 mx-auto">
+      <section className="pt-36 max-w-7xl px-8 py-12 flex gap-12 inset-0 mx-auto">
          {/* Movie Poster */}
          <div className="flex-shrink-0">
             <img
@@ -53,25 +53,25 @@ export const MovieHero = ({ movie, onBuyTicketClick }: MovieHeroProps) => {
          {/* Movie Info */}
          <div className="flex-1 relative">
             <BlurredCircle className="z-50 -top-24 -left-24" />
-            <span className="text-[#f84565] text-sm font-semibold tracking-wider">
+            <span className="text-amber-600 text-sm font-semibold tracking-wider uppercase">
                {movie?.language || "LOADING..."}
             </span>
-            <h1 className="text-5xl font-bold mt-3 mb-6">
+            <h1 className="text-5xl font-bold mt-3 mb-6 text-slate-900">
                {movie?.title || "Movie Title"}
             </h1>
 
             <div className="flex items-center gap-4 mb-6">
-               <FaStar size={24} className="text-[#f84565]" />
-               <span className="text-sm text-[#d1d5dc]">
+               <FaStar size={24} className="text-amber-500" />
+               <span className="text-sm text-slate-600 font-medium">
                   Độ tuổi: {movie?.rated || "T16"}
                </span>
             </div>
 
-            <p className="text-[#99a1af] text-sm leading-relaxed mb-4 max-w-2xl">
+            <p className="text-slate-600 text-sm leading-relaxed mb-4 max-w-2xl">
                {movie?.description || "Loading description..."}
             </p>
 
-            <p className="text-[#d1d5dc] text-sm mb-6">
+            <p className="text-slate-700 text-sm mb-6 font-medium">
                {movie?.durationMinutes}m •{" "}
                {movie?.genres?.map((g) => g.name).join(" | ")} •{" "}
                {movie?.releaseDate}
@@ -79,13 +79,13 @@ export const MovieHero = ({ movie, onBuyTicketClick }: MovieHeroProps) => {
 
             {/* Action Buttons */}
             <div className="flex gap-4">
-               <button className="flex items-center gap-2 border border-[rgba(248,69,101,0.3)] px-6 py-3 rounded-lg text-white font-semibold">
+               <button className="flex items-center gap-2 border-2 border-amber-500 text-amber-600 hover:bg-amber-50 transition-colors px-6 py-3 rounded-lg font-semibold">
                   <IoPlayCircle size={20} />
                   Xem Trailer
                </button>
                <button
                   onClick={onBuyTicketClick}
-                  className="bg-[#f84565] px-6 py-3 rounded-lg text-white font-semibold"
+                  className="bg-amber-500 hover:bg-amber-600 transition-colors px-6 py-3 rounded-lg text-white font-semibold shadow-md shadow-amber-500/30"
                >
                   Mua vé
                </button>

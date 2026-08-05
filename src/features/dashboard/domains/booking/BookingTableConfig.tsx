@@ -159,5 +159,6 @@ export const getBookingFilters = (): FilterField[] => [
          { value: "CANCELLED", label: "Đã hủy" },
          { value: "PENDING", label: "Chờ thanh toán" },
       ],
+      placeholder: "Tất cả trạng thái",
    },
 ];

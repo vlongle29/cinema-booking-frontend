@@ -158,16 +158,16 @@ export default function AssignPermissionsDialog({
                     {/* Group header */}
                     <button
                       onClick={() => toggleGroup(perms)}
-                      className="w-full flex items-center justify-between px-4 py-3 bg-[#1a1a1e] hover:bg-[#252529] transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-3 bg-gray-800 hover:bg-gray-700 transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <div
-                          className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                          className={`w-4 h-4 rounded border-white flex items-center justify-center transition-colors ${
                             allGroupSelected
                               ? "bg-[#f84565] border-[#f84565]"
                               : someGroupSelected
-                                ? "bg-[#f84565]/30 border-[#f84565]/50"
-                                : "bg-transparent border-[#393939]"
+                                ? "bg-white border-white"
+                                : "bg-transparent border-white"
                           }`}
                         >
                           {(allGroupSelected || someGroupSelected) && (
@@ -177,9 +177,9 @@ export default function AssignPermissionsDialog({
                         <span className="text-xs font-bold text-[#f84565] uppercase tracking-wider">
                           {group}
                         </span>
-                        <span className="text-xs text-[#555]">({perms.length})</span>
+                        <span className="text-xs text-white">({perms.length})</span>
                       </div>
-                      <span className="text-xs text-[#555]">
+                      <span className="text-xs text-white">
                         {perms.filter((p) => selected.has(p.id)).length}/{perms.length}
                       </span>
                     </button>
@@ -189,13 +189,13 @@ export default function AssignPermissionsDialog({
                         <button
                           key={perm.id}
                           onClick={() => toggle(perm.id)}
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors text-left"
+                          className="w-full flex items-center gap-3 px-4 py-3 bg-[#1a1a1e] hover:bg-[#252529] transition-colors text-left"
                         >
                           <div
                             className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
                               selected.has(perm.id)
                                 ? "bg-[#f84565] border-[#f84565]"
-                                : "bg-transparent border-[#393939]"
+                                : "bg-transparent border-white"
                             }`}
                           >
                             {selected.has(perm.id) && (

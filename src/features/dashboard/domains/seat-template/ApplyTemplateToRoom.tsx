@@ -92,7 +92,7 @@ const ApplyTemplateToRoom: React.FC<ApplyTemplateProps> = ({
       <div className="w-full bg-[#1a1a1e] p-8 rounded-xl border border-[#393939] shadow-2xl space-y-6">
          <div className="flex justify-between items-center border-b border-[#393939] pb-4">
             <h2 className="text-2xl font-bold text-white">
-               Apply Template To Room
+               Áp dụng sơ đồ vào phòng
             </h2>
             {onClose && (
                <button
@@ -118,14 +118,14 @@ const ApplyTemplateToRoom: React.FC<ApplyTemplateProps> = ({
         </div> */}
             <div>
                <label className="block text-sm font-bold text-[#797b7d] mb-2">
-                  1. Choose Room
+                  1. Chọn phòng
                </label>
                <select
                   className="w-full p-2.5 bg-[#252529] border border-[#393939] text-white rounded-lg outline-none focus:ring-1 focus:ring-[#f84565] focus:border-[#f84565]"
                   value={selectedRoomId}
                   onChange={(e) => setSelectedRoomId(e.target.value)}
                >
-                  <option value="">-- Choose room --</option>
+                  <option value="">-- Chọn phòng --</option>
                   {rooms.map((r) => (
                      <option key={r.id} value={r.id}>
                         {r.name}
@@ -138,7 +138,7 @@ const ApplyTemplateToRoom: React.FC<ApplyTemplateProps> = ({
          {previewTemplate && (
             <div className="bg-[#252529] p-6 rounded-xl border border-[#393939]">
                <h3 className="text-lg font-bold mb-4 text-center text-white">
-                  Preview: {previewTemplate.name}
+                  Xem trước: {previewTemplate.name}
                </h3>
                <SeatGrid
                   seats={previewTemplate.seats}
@@ -152,14 +152,14 @@ const ApplyTemplateToRoom: React.FC<ApplyTemplateProps> = ({
                         onClick={onClose}
                         className="px-8 py-3 rounded-xl font-bold text-white border border-[#393939] hover:bg-[#1a1a1e] transition-all"
                      >
-                        Cancel
+                        Hủy
                      </button>
                   )}
                   <button
                      onClick={handleApply}
                      className="bg-[#f84565] text-white px-10 py-3 rounded-xl font-bold text-lg hover:bg-[#f84565]/90 transition-all shadow-[0_0_15px_rgba(248,69,101,0.2)] active:scale-95"
                   >
-                     Confirm Apply
+                     Xác nhận áp dụng
                   </button>
                </div>
             </div>

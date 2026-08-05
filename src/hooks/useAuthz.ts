@@ -49,6 +49,7 @@ export function useAuthz() {
          canView: hasAnyRole([ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.STAFF]),
          canCreate: hasAnyRole([ROLES.SUPER_ADMIN, ROLES.ADMIN]),
          canUpdate: hasAnyRole([ROLES.SUPER_ADMIN, ROLES.ADMIN]),
+         canDelete: hasAnyRole([ROLES.SUPER_ADMIN, ROLES.ADMIN]),
          canTransfer: hasAnyRole([ROLES.SUPER_ADMIN, ROLES.ADMIN]),
       }),
       [hasAnyRole],

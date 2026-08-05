@@ -31,17 +31,11 @@ export default function RbacManagementPage() {
     <div className="w-full space-y-6">
       {/* Page Header */}
       <div className="mt-2 mb-2 flex items-start gap-4">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-violet-500/20 border border-rose-500/20 flex items-center justify-center flex-shrink-0">
-          <Shield size={22} className="text-[#f84565]" />
-        </div>
         <div>
           <h1 className="text-xl font-semibold text-white">
             Quản lý Vai trò &amp;{" "}
             <span className="text-[#f84565] underline decoration-[#f84565]">Phân quyền</span>
           </h1>
-          <p className="text-sm text-[#797b7d] mt-0.5">
-            Quản lý các vai trò hệ thống và gán quyền hạn tương ứng
-          </p>
         </div>
       </div>
 
@@ -55,7 +49,7 @@ export default function RbacManagementPage() {
               : "text-[#797b7d] hover:text-white hover:bg-white/5"
           }`}
         >
-          <Shield size={15} /> Vai trò
+          Vai trò
         </button>
         <button
           onClick={() => setActiveTab("permissions")}
@@ -65,7 +59,7 @@ export default function RbacManagementPage() {
               : "text-[#797b7d] hover:text-white hover:bg-white/5"
           }`}
         >
-          <Key size={15} /> Quyền hạn
+          Quyền hạn
         </button>
       </div>
 

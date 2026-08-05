@@ -92,7 +92,16 @@ export default function RoomDetailDialog({
    }, [open, room]);
 
    // Build seat grid
-   const rows = Array.from(new Set(seats.map((s) => s.rowChar))).sort();
+   const existingRowChars = Array.from(new Set(seats.map((s) => s.rowChar))).sort();
+   const rows: string[] = [];
+   if (existingRowChars.length > 0) {
+      const startCharCode = "A".charCodeAt(0);
+      const endCharCode = existingRowChars[existingRowChars.length - 1].toUpperCase().charCodeAt(0);
+      for (let i = startCharCode; i <= endCharCode; i++) {
+         rows.push(String.fromCharCode(i));
+      }
+   }
+   
    const maxCols =
       seats.length > 0 ? Math.max(...seats.map((s) => s.columnIndex)) : 0;
 

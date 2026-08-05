@@ -22,6 +22,7 @@ export interface RoomSearchDTO {
    name?: string;
    branchId?: string;
    isDeleted?: boolean | string;
+   manageId?: string;
    page: number;
    size: number;
    sortBy?: string;

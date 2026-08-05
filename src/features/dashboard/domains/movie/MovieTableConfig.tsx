@@ -20,13 +20,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+const MOVIE_STATUS_TRANSLATION: Record<string, string> = {
+   SHOWING: "ĐANG CHIẾU",
+   COMING_SOON: "SẮP CHIẾU",
+   ENDED: "ĐÃ KẾT THÚC",
+   END: "ĐÃ KẾT THÚC",
+};
+
 export const getMovieColumns = (handlers: {
    onEdit: (movie: Movie) => void;
    onDelete: (id: string) => void;
 }): Column<Movie>[] => [
    {
       id: "movie",
-      label: "Movie",
+      label: "Phim",
       render: (movie) => (
          <div className="flex items-center gap-4">
             <div className="w-16 h-24 rounded-[4px] bg-[#252529] flex-shrink-0 overflow-hidden border border-[#393939]">
@@ -49,7 +56,7 @@ export const getMovieColumns = (handlers: {
    },
    {
       id: "director",
-      label: "Director & Cast",
+      label: "Đạo diễn & Diễn viên",
       render: (movie) => (
          <div>
             <div className="text-white text-sm font-medium">
@@ -66,7 +73,7 @@ export const getMovieColumns = (handlers: {
    },
    {
       id: "details",
-      label: "Details",
+      label: "Chi tiết",
       render: (movie) => (
          <div className="flex flex-col gap-1">
             <div className="text-[#d1d5dc] text-xs flex items-center gap-1.5">
@@ -81,24 +88,28 @@ export const getMovieColumns = (handlers: {
    },
    {
       id: "status",
-      label: "Status",
-      render: (movie) => (
-         <span
-            className={`px-2 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-wider ${
-               movie.status === "SHOWING"
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                  : movie.status === "COMING_SOON"
-                    ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                    : "bg-gray-500/10 text-gray-400 border border-gray-500/20"
-            }`}
-         >
-            {movie.status.replace("_", " ")}
-         </span>
-      ),
+      label: "Trạng thái",
+      render: (movie) => {
+         const status = movie.status || "";
+         const label = MOVIE_STATUS_TRANSLATION[status] || status.replace("_", " ");
+         return (
+            <span
+               className={`px-2 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-wider ${
+                  status === "SHOWING"
+                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                     : status === "COMING_SOON"
+                       ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                       : "bg-gray-500/10 text-gray-400 border border-gray-500/20"
+               }`}
+            >
+               {label}
+            </span>
+         );
+      },
    },
    {
       id: "actions",
-      label: "Actions",
+      label: "Thao tác",
       align: "right",
       render: (movie) => (
          <DropdownMenu>
@@ -138,29 +149,30 @@ export const getMovieColumns = (handlers: {
 export const getMovieFilters = (): FilterField[] => [
    {
       name: "keyword",
-      label: "Keyword",
+      label: "Từ khóa",
       type: "text",
-      placeholder: "Title, director...",
+      placeholder: "Tên phim, đạo diễn...",
    },
    {
       name: "status",
-      label: "Status",
+      label: "Trạng thái",
       type: "select",
       options: [
-         { value: "SHOWING", label: "Now Showing" },
-         { value: "COMING_SOON", label: "Coming Soon" },
-         { value: "ENDED", label: "Ended" },
+         { value: "SHOWING", label: "Đang chiếu" },
+         { value: "COMING_SOON", label: "Sắp chiếu" },
+         { value: "ENDED", label: "Đã kết thúc (ENDED)" },
+         { value: "END", label: "Đã kết thúc (END)" },
       ],
-      placeholder: "All Statuses",
+      placeholder: "Tất cả trạng thái",
    },
    {
       name: "releaseDateFrom",
-      label: "From Date",
+      label: "Từ ngày",
       type: "date",
    },
    {
       name: "releaseDateTo",
-      label: "To Date",
+      label: "Đến ngày",
       type: "date",
    },
 ];

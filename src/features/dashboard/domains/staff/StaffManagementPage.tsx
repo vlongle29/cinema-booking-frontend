@@ -15,7 +15,8 @@ import { roleService } from "@/services/roleService";
 
 export default function StaffManagementPage() {
    const { state, actions } = useStaffManagement();
-   const { staffPermissions } = useAuthz();
+   const { staffPermissions, hasRole } = useAuthz();
+   const isManager = hasRole("MANAGER") && !hasRole("SUPER_ADMIN");
 
    const [branchOptions, setBranchOptions] = useState<
       { value: string; label: string }[]
@@ -73,6 +74,7 @@ export default function StaffManagementPage() {
    const permissions = useMemo(
       () => ({
          canUpdate: staffPermissions.canUpdate,
+         canDelete: staffPermissions.canDelete,
          canTransfer: staffPermissions.canTransfer,
       }),
       [staffPermissions],
@@ -83,14 +85,15 @@ export default function StaffManagementPage() {
          getStaffColumns({
             onEdit: actions.startEditing,
             onTransfer: actions.setTransferTarget,
+            onDelete: actions.handleDelete,
             permissions,
          }),
       [actions, permissions],
    );
 
    const filters = useMemo(
-      () => getStaffFilters(branchOptions, roleOptions),
-      [branchOptions, roleOptions],
+      () => getStaffFilters(branchOptions, roleOptions, isManager),
+      [branchOptions, roleOptions, isManager],
    );
 
    return (

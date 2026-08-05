@@ -12,26 +12,27 @@ interface SidebarItem {
 }
 
 const sidebarItems: SidebarItem[] = [
-   { label: "Dashboard", path: "/dashboard" },
-   { label: "Quản lý phim", path: "/dashboard/movie-manage" },
-   { label: "Quản lý suất chiếu", path: "/dashboard/showtime-manage" },
-   { label: "Quản lý đặt chỗ", path: "/dashboard/booking-manage" },
+   { label: "Dashboard", path: "/dashboard", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN] },
+   { label: "Quản lý phim", path: "/dashboard/movie-manage", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN] },
+   { label: "Quản lý suất chiếu", path: "/dashboard/showtime-manage", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER] },
+   { label: "Quản lý đặt chỗ", path: "/dashboard/booking-manage", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF] },
    {
       label: "Quản lý bản mẫu ghế",
       path: "/dashboard/seat-template-manage",
+      roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER],
    },
    {
       label: "Quản lý khách hàng",
       path: "/dashboard/customer-manage",
-      roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.STAFF],
+      roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF],
    },
    {
       label: "Quản lý nhân sự",
       path: "/dashboard/staff-manage",
-      roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.STAFF],
+      roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF],
    },
-   { label: "Quản lý chi nhánh", path: "/dashboard/branch-manage" },
-   { label: "Quản lý phòng chiếu", path: "/dashboard/room-manage" },
+   { label: "Quản lý chi nhánh", path: "/dashboard/branch-manage", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN] },
+   { label: "Quản lý phòng chiếu", path: "/dashboard/room-manage", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER] },
    {
       label: "Vai trò & Phân quyền",
       path: "/dashboard/rbac-manage",

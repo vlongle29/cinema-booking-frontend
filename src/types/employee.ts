@@ -11,7 +11,7 @@ export interface EmployeeResponse {
    positionName?: string;
    salary?: number;
    hireDate?: string;
-   roles?: Role[];
+   role?: string;
 }
 
 export interface EmployeeCreateRequest {
@@ -21,7 +21,6 @@ export interface EmployeeCreateRequest {
    email: string;
    phone: string;
    branchId: string;
-   employeeCode: string;
    positionId: string;
    salary?: number;
    hireDate?: string;
@@ -42,6 +41,7 @@ export interface EmployeeSearchDTO {
    employeeCode?: string;
    branchId?: string;
    roleId?: string;
+   manageId?: string;
    page?: number;
    size?: number;
    sortBy?: string;

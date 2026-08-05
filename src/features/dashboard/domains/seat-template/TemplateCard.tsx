@@ -16,12 +16,12 @@ const TemplateCard = ({ template, onEdit, onDelete, onApply }: { template: any, 
 
         <div className="grid grid-cols-2 gap-4 mb-6 text-sm bg-black/30 p-4 rounded-lg border border-[#393939]">
           <div>
-            <span className="text-[#797b7d] block text-[10px] uppercase font-bold tracking-widest mb-1.5">Layout</span>
-            <span className="text-[#d1d5dc] font-medium">{template.rows} R × {template.columns} C</span>
+            <span className="text-[#797b7d] block text-[10px] uppercase font-bold tracking-widest mb-1.5">Bố cục</span>
+            <span className="text-[#d1d5dc] font-medium">{template.rows} Hàng × {template.columns} Cột</span>
           </div>
           <div>
-            <span className="text-[#797b7d] block text-[10px] uppercase font-bold tracking-widest mb-1.5">Capacity</span>
-            <span className="text-[#d1d5dc] font-medium">{template.totalSeats} Seats</span>
+            <span className="text-[#797b7d] block text-[10px] uppercase font-bold tracking-widest mb-1.5">Sức chứa</span>
+            <span className="text-[#d1d5dc] font-medium">{template.totalSeats} Ghế</span>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@ const TemplateCard = ({ template, onEdit, onDelete, onApply }: { template: any, 
           className="flex-1 bg-[#f84565] hover:bg-[#f84565]/90 text-white px-4 py-2.5 rounded-[6px] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(248,69,101,0.1)] active:scale-95"
         >
           <FiCheckSquare size={14} />
-          Apply
+          Áp dụng
         </button>
         <button
           onClick={onEdit}
@@ -44,7 +44,7 @@ const TemplateCard = ({ template, onEdit, onDelete, onApply }: { template: any, 
         <button
           onClick={() => onDelete(template.id)}
           className="p-2.5 text-[#797b7d] hover:text-red-500 hover:bg-red-500/10 rounded-[6px] transition-all border border-[#393939] bg-[#1a1a1e]"
-          title="Xóa template"
+          title="Xóa sơ đồ mẫu"
         >
           <FiTrash2 size={16} />
         </button>

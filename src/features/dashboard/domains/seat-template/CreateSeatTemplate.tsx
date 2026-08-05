@@ -51,7 +51,7 @@ const CreateSeatTemplate: React.FC<CreateSeatTemplateProps> = ({
             </div>
             <div>
                <label className="block text-sm font-medium text-[#797b7d] mb-1.5">
-                  Description
+                  Mô tả
                </label>
                <textarea
                   className="w-full p-2.5 bg-[#252529] border border-[#393939] text-white rounded-lg outline-none focus:ring-1 focus:ring-[#f84565] focus:border-[#f84565]"
@@ -65,7 +65,7 @@ const CreateSeatTemplate: React.FC<CreateSeatTemplateProps> = ({
             <div className="grid grid-cols-2 gap-5">
                <div>
                   <label className="block text-sm font-medium text-[#797b7d] mb-1.5">
-                     Rows (Max 20)
+                     Số hàng (Tối đa 20)
                   </label>
                   <input
                      type="number"
@@ -83,7 +83,7 @@ const CreateSeatTemplate: React.FC<CreateSeatTemplateProps> = ({
                </div>
                <div>
                   <label className="block text-sm font-medium text-[#797b7d] mb-1.5">
-                     Columns (Max 20)
+                     Số cột (Tối đa 20)
                   </label>
                   <input
                      type="number"
@@ -106,13 +106,13 @@ const CreateSeatTemplate: React.FC<CreateSeatTemplateProps> = ({
                   onClick={() => onClose?.()}
                   className="flex-1 py-3 border border-[#393939] text-white rounded-lg hover:bg-[#252529] transition-colors"
                >
-                  Cancel
+                  Hủy
                </button>
                <button
                   type="submit"
                   className="flex-1 py-3 bg-[#f84565] text-white rounded-lg hover:bg-[#f84565]/90 transition-colors font-semibold shadow-[0_0_15px_rgba(248,69,101,0.2)]"
                >
-                  Create Template →
+                  Tạo sơ đồ →
                </button>
             </div>
          </form>

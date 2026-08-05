@@ -128,8 +128,8 @@ export default function DashboardEntityList<T>({
    onPageChange,
    renderCreateForm,
    renderEditForm,
-   emptyMessage = "No matching items found.",
-   loadingMessage = "Searching items...",
+   emptyMessage = "Không tìm thấy dữ liệu nào.",
+   loadingMessage = "Đang tìm kiếm...",
    renderCustomList,
    renderTopContent,
    selection,
@@ -321,7 +321,7 @@ export default function DashboardEntityList<T>({
                            fontSize: "0.875rem",
                         }}
                      >
-                        Search Filters
+                        Bộ lọc tìm kiếm
                      </Typography>
                   </Box>
 
@@ -373,7 +373,7 @@ export default function DashboardEntityList<T>({
                               >
                                  <MenuItem value="">
                                     {filter.placeholder ||
-                                       `All ${filter.label}s`}
+                                       `Tất cả ${filter.label.toLowerCase()}`}
                                  </MenuItem>
                                  {filter.options?.map((opt) => (
                                     <MenuItem key={opt.value} value={opt.value}>
@@ -444,7 +444,7 @@ export default function DashboardEntityList<T>({
                            borderRadius: 1.5,
                         }}
                      >
-                        Reset Filters
+                        Xóa bộ lọc
                      </Button>
                   </Box>
                </Paper>
@@ -590,14 +590,14 @@ export default function DashboardEntityList<T>({
                            variant="caption"
                            sx={{ color: DASHBOARD_TEXT_MUTED }}
                         >
-                           Found{" "}
+                           Tìm thấy{" "}
                            <Box
                               component="span"
                               sx={{ color: "white", fontWeight: 700 }}
                            >
                               {pagination.totalElements}
                            </Box>{" "}
-                           {entityName}s
+                           {entityName.toLowerCase()}
                         </Typography>
 
                         <Pagination>
@@ -721,7 +721,7 @@ export default function DashboardEntityList<T>({
                         variant="body2"
                         sx={{ color: DASHBOARD_TEXT_MUTED, mb: 3 }}
                      >
-                        Try adjusting your filters or search criteria.
+                        Thử thay đổi bộ lọc hoặc tiêu chí tìm kiếm.
                      </Typography>
                      <Button
                         variant="contained"
@@ -732,7 +732,7 @@ export default function DashboardEntityList<T>({
                            textTransform: "none",
                         }}
                      >
-                        Clear All Filters
+                        Xóa tất cả bộ lọc
                      </Button>
                   </Paper>
                )}

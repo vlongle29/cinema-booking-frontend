@@ -58,12 +58,12 @@ export const RecommendedMovies = () => {
    return (
       <section className="max-w-7xl mx-auto px-8">
          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-bold text-[#d1d5dc]">
+            <h2 className="text-xl font-bold text-slate-900">
                Có thể bạn cũng thích
             </h2>
             <a
                href=""
-               className="text-sm text-[#99a1af] flex items-center gap-2"
+               className="text-sm text-slate-500 flex items-center gap-2 hover:text-amber-600 transition-colors"
             >
                Xem tất cả
                <ArrowLeft size={16} className="rotate-180" />
@@ -74,7 +74,7 @@ export const RecommendedMovies = () => {
             {recommendedMovies.map((movie, idx) => (
                <div
                   key={idx}
-                  className="bg-[#12161c] rounded-xl overflow-hidden"
+                  className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden hover:shadow-md transition-shadow"
                >
                   <img
                      src={guardiansImg}
@@ -82,19 +82,19 @@ export const RecommendedMovies = () => {
                      className="w-max h-max object-cover"
                   />
                   <div className="p-4">
-                     <h3 className="font-bold text-white text-sm mb-2">
+                     <h3 className="font-bold text-slate-900 text-sm mb-2 line-clamp-1">
                         {movie.title}
                      </h3>
-                     <p className="text-xs text-[#797b7d] mb-4">
+                     <p className="text-xs text-slate-500 mb-4">
                         {movie.year} - {movie.genres} - {movie.duration}
                      </p>
                      <div className="flex items-center justify-between">
-                        <button className="bg-[#f84565] px-4 py-2 rounded-full text-white text-xs font-semibold">
+                        <button className="bg-amber-500 hover:bg-amber-600 transition-colors px-4 py-2 rounded-full text-white text-xs font-semibold">
                            Mua vé
                         </button>
                         <div className="flex items-center gap-1">
-                           <FaStar size={16} className="text-[#f84565]" />
-                           <span className="text-xs text-[#797b7d]">
+                           <FaStar size={16} className="text-amber-500" />
+                           <span className="text-xs text-slate-500 font-medium">
                               {movie.rating}
                            </span>
                         </div>
@@ -104,8 +104,8 @@ export const RecommendedMovies = () => {
             ))}
          </div>
 
-         <div className="text-center mt-8">
-            <button className="bg-[#f84565] px-6 py-2 rounded-lg text-white text-sm font-semibold">
+         <div className="text-center mt-8 pb-12">
+            <button className="bg-amber-500 hover:bg-amber-600 transition-colors px-6 py-2 rounded-lg text-white text-sm font-semibold shadow-sm">
                Xem thêm
             </button>
          </div>

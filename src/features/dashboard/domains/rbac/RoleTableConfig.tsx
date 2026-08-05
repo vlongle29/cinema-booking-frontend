@@ -10,6 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+const ROLE_CODE_TRANSLATION: Record<string, string> = {
+  MANAGER: "QUAN_LY",
+  CUSTOMER: "KHACH_HANG",
+  STAFF: "NHAN_VIEN",
+  SUPER_ADMIN: "QUAN_TRI_CAP_CAO",
+};
+
+function translateRoleCode(code: string) {
+  return ROLE_CODE_TRANSLATION[code] ?? code;
+}
+
 export const getRoleColumns = (handlers: {
   onEdit: (role: SysRole) => void;
   onDelete: (id: string) => void;
@@ -20,7 +31,7 @@ export const getRoleColumns = (handlers: {
     label: "Mã vai trò",
     render: (role) => (
       <span className="font-mono text-xs bg-[#252529] text-[#f84565] px-2 py-0.5 rounded">
-        {role.code}
+        {translateRoleCode(role.code)}
       </span>
     ),
   },

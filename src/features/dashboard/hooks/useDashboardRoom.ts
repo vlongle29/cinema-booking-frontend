@@ -3,17 +3,25 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { roomService } from "@/features/dashboard/services/dashboard.room.service";
 import type { Room, RoomSearchDTO } from "@/types/room";
 import toast from "react-hot-toast";
+import useAuth from "@/features/auth/hooks/useAuth";
+import { useAuthz } from "@/hooks/useAuthz";
 
 export function useDashboardRoom() {
+   const { userInfo } = useAuth();
+   const { hasRole } = useAuthz();
+   const isManager = hasRole("MANAGER") && !hasRole("SUPER_ADMIN");
    const [isCreating, setIsCreating] = useState(false);
    const [isEditing, setIsEditing] = useState(false);
    const [editingRoom, setEditingRoom] = useState<Room | null>(null);
    const [rooms, setRooms] = useState<Room[]>([]);
    const [isLoading, setIsLoading] = useState(false);
 
-   const [searchParams, setSearchParams] = useState<RoomSearchDTO>({
-      page: 1,
-      size: 10,
+   const [searchParams, setSearchParams] = useState<RoomSearchDTO>(() => {
+      const initialParams: RoomSearchDTO = { page: 1, size: 10 };
+      if (isManager && userInfo?.id) {
+         initialParams.manageId = userInfo.id;
+      }
+      return initialParams;
    });
    const [totalElements, setTotalElements] = useState(0);
    const [totalPages, setTotalPages] = useState(0);
@@ -57,7 +65,11 @@ export function useDashboardRoom() {
    };
 
    const handleResetFilters = () => {
-      setSearchParams({ page: 1, size: 10 });
+      setSearchParams({ 
+         page: 1, 
+         size: 10,
+         manageId: isManager && userInfo?.id ? userInfo.id : undefined
+      });
    };
 
    const handlePageChange = (page: number) => {

@@ -18,13 +18,13 @@ const TheaterCard: React.FC<{
    );
 
    return (
-      <div className="bg-[#1a1a1e] border border-[#393939] rounded-lg p-4 hover:border-[#f84565]/50 transition-colors">
+      <div className="bg-white border border-slate-200 rounded-lg p-4 hover:border-amber-500/50 transition-colors shadow-sm">
          {/* Theater Header */}
-         <div className="mb-5 border-b border-[#393939] pb-3">
-            <h3 className="text-white font-bold text-lg mb-1">
+         <div className="mb-5 border-b border-slate-200 pb-3">
+            <h3 className="text-slate-900 font-bold text-lg mb-1">
                {theater.name}
             </h3>
-            <div className="flex items-center gap-1.5 text-[#797b7d] text-xs">
+            <div className="flex items-center gap-1.5 text-slate-500 text-xs">
                <MapPin className="w-3.5 h-3.5" />
                <span>{theater.location}</span>
             </div>
@@ -34,7 +34,7 @@ const TheaterCard: React.FC<{
          <div className="space-y-6">
             {Object.entries(groupedShowtimes).map(([roomName, showtimes]) => (
                <div key={roomName}>
-                  <div className="flex items-center gap-2 mb-3 text-[#f84565]">
+                  <div className="flex items-center gap-2 mb-3 text-amber-600">
                      <Layout className="w-4 h-4" />
                      <span className="text-sm font-medium uppercase tracking-wider">
                         {roomName}
@@ -49,10 +49,10 @@ const TheaterCard: React.FC<{
                            disabled={showtime.isSoldOut}
                            className={`py-2 px-1 rounded-md font-semibold text-xs transition-all border ${
                               showtime.isSoldOut
-                                 ? "bg-[#252529] text-[#555] border-transparent cursor-not-allowed"
+                                 ? "bg-slate-100 text-slate-400 border-transparent cursor-not-allowed"
                                  : showtime.isPeak
-                                   ? "bg-[#f84565] text-white border-[#f84565] hover:bg-[#d63a56]"
-                                   : "bg-[#252529] text-[#d1d5dc] border-[#393939] hover:border-[#f84565]"
+                                   ? "bg-amber-500 text-white border-amber-500 hover:bg-amber-600"
+                                   : "bg-white text-slate-700 border-slate-200 hover:border-amber-500 hover:text-amber-600 shadow-sm"
                            }`}
                         >
                            <div className="flex flex-col items-center gap-1">
@@ -73,13 +73,13 @@ const TheaterCard: React.FC<{
          </div>
 
          {/* Peak Hours Note */}
-         <div className="mt-6 pt-4 border-t border-[#393939]/50 flex items-center gap-4">
-            <p className="text-[11px] text-[#797b7d] flex items-center">
-               <span className="inline-block w-2.5 h-2.5 bg-[#f84565] rounded-full mr-2" />
+         <div className="mt-6 pt-4 border-t border-slate-200 flex items-center gap-4">
+            <p className="text-[11px] text-slate-500 flex items-center">
+               <span className="inline-block w-2.5 h-2.5 bg-amber-500 rounded-full mr-2" />
                Suất chiếu cao điểm
             </p>
-            <p className="text-[11px] text-[#797b7d] flex items-center">
-               <span className="inline-block w-2.5 h-2.5 bg-[#252529] border border-[#393939] rounded-full mr-2" />
+            <p className="text-[11px] text-slate-500 flex items-center">
+               <span className="inline-block w-2.5 h-2.5 bg-white border border-slate-300 rounded-full mr-2" />
                Suất chiếu thường
             </p>
          </div>

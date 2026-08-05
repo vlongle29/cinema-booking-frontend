@@ -154,13 +154,13 @@ export const getUserFilters = (roles: SysRoleResponse[]): FilterField[] => [
       name: "username",
       label: "Tên đăng nhập",
       type: "text",
-      placeholder: "Search username...",
+      placeholder: "Nhập tên đăng nhập...",
    },
    {
       name: "email",
       label: "Email",
       type: "text",
-      placeholder: "Search email...",
+      placeholder: "Nhập email...",
    },
    {
       name: "roleIds",

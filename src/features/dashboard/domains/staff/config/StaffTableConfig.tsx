@@ -1,9 +1,8 @@
 import {
    Edit2,
    EllipsisVertical,
-   Building2,
-   Briefcase,
    ArrowRightLeft,
+   Trash2,
 } from "lucide-react";
 import type { Employee } from "@/types/employee";
 import type {
@@ -30,7 +29,8 @@ const formatSalary = (salary?: number) => {
 export const getStaffColumns = (handlers: {
    onEdit: (employee: Employee) => void;
    onTransfer: (employee: Employee) => void;
-   permissions: { canUpdate: boolean; canTransfer: boolean };
+   onDelete: (id: string, name: string) => void;
+   permissions: { canUpdate: boolean; canTransfer: boolean; canDelete: boolean };
 }): Column<Employee>[] => [
    {
       id: "employee",
@@ -78,9 +78,9 @@ export const getStaffColumns = (handlers: {
       id: "role",
       label: "Vai trò",
       render: (employee) =>
-         employee.roles ? (
+         employee.role ? (
             // <RoleBadge name={employee.roles?.[0].name} code={employee.roles?.[0].code} />
-            <span className="text-sm text-[#d1d5dc]">{employee.roles?.[0].name}</span>
+            <span className="text-sm text-[#d1d5dc]">{employee.role}</span>
          ) : (
             <span className="text-xs text-[#797b7d]">STAFF</span>
          ),
@@ -125,6 +125,17 @@ export const getStaffColumns = (handlers: {
                      <span>Chuyển chi nhánh</span>
                   </DropdownMenuItem>
                )}
+               {handlers.permissions.canDelete && (
+                  <DropdownMenuItem
+                     onClick={() =>
+                        handlers.onDelete(employee.userId, employee.name)
+                     }
+                     className="cursor-pointer hover:bg-white/5 text-rose-400 focus:text-rose-400"
+                  >
+                     <Trash2 size={14} className="mr-2" />
+                     <span>Xóa nhân sự</span>
+                  </DropdownMenuItem>
+               )}
             </DropdownMenuContent>
          </DropdownMenu>
       ),
@@ -134,31 +145,40 @@ export const getStaffColumns = (handlers: {
 export const getStaffFilters = (
    branchOptions: { value: string; label: string }[] = [],
    roleOptions: { value: string; label: string }[] = [],
-): FilterField[] => [
-   {
-      name: "name",
-      label: "Họ tên",
-      type: "text",
-      placeholder: "Tìm theo tên...",
-   },
-   {
-      name: "employeeCode",
-      label: "Mã nhân viên",
-      type: "text",
-      placeholder: "Mã NV...",
-   },
-   {
-      name: "branchId",
-      label: "Chi nhánh",
-      type: "select",
-      options: branchOptions,
-      placeholder: "Tất cả chi nhánh",
-   },
-   {
+   isManager: boolean = false
+): FilterField[] => {
+   const filters: FilterField[] = [
+      {
+         name: "name",
+         label: "Họ tên",
+         type: "text",
+         placeholder: "Tìm theo tên...",
+      },
+      {
+         name: "employeeCode",
+         label: "Mã nhân viên",
+         type: "text",
+         placeholder: "Mã NV...",
+      },
+   ];
+
+   if (!isManager) {
+      filters.push({
+         name: "branchId",
+         label: "Chi nhánh",
+         type: "select",
+         options: branchOptions,
+         placeholder: "Tất cả chi nhánh",
+      });
+   }
+
+   filters.push({
       name: "roleId",
       label: "Vai trò",
       type: "select",
       options: roleOptions,
       placeholder: "Tất cả vai trò",
-   },
-];
+   });
+
+   return filters;
+};
