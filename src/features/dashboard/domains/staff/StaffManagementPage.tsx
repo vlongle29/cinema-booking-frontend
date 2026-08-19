@@ -22,7 +22,7 @@ export default function StaffManagementPage() {
       { value: string; label: string }[]
    >([]);
    const [positionOptions, setPositionOptions] = useState<
-      { value: string; label: string }[]
+      { value: string; label: string; code?: string }[]
    >([]);
    const [roleOptions, setRoleOptions] = useState<
       { value: string; label: string }[]
@@ -42,6 +42,7 @@ export default function StaffManagementPage() {
                branchList.map((b: any) => ({
                   value: b.id,
                   label: b.name,
+                  code: b.code
                }))
             );
 
@@ -49,7 +50,8 @@ export default function StaffManagementPage() {
             setPositionOptions(
                positionList.map((p: any) => ({
                   value: p.id,
-                  label: p.name,
+                  label: p.description,
+                  code: p.code,
                }))
             );
 

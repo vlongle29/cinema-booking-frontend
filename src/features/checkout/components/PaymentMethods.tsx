@@ -14,9 +14,9 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
    onSelect,
 }) => {
    return (
-      <div className="bg-[#1a1a1d] p-6 rounded-xl border border-white/10 shadow-lg">
+      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
          <div className="flex items-center gap-3 mb-4">
-            <Wallet className="w-6 h-6 text-rose-500" />
+            <Wallet className="w-6 h-6 text-amber-500" />
          </div>
          <div className="space-y-3">
             {paymentMethodsData.map((method) => (
@@ -25,8 +25,8 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
                   className={cn(
                      "flex items-center p-4 border rounded-lg cursor-pointer transition-all",
                      selectedMethod === method.id
-                        ? "border-rose-500 bg-rose-500/10 border-2"
-                        : "border-white/10 hover:border-white/20 hover:bg-white/5",
+                        ? "border-amber-500 bg-amber-500/10 border-2"
+                        : "border-slate-200 hover:border-amber-300 hover:bg-amber-50",
                   )}
                >
                   <input
@@ -35,7 +35,7 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
                      value={method.id}
                      checked={selectedMethod === method.id}
                      onChange={() => onSelect(method.id)}
-                     className="h-4 w-4 text-rose-600 border-gray-300 focus:ring-rose-500"
+                     className="h-4 w-4 text-amber-600 border-slate-300 focus:ring-amber-500"
                   />
                   <div className="ml-4 flex items-center gap-3 flex-grow">
                      <img
@@ -43,7 +43,7 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
                         alt={method.name}
                         className="w-8 h-8 object-contain"
                      />
-                     <span className="font-medium text-white">
+                     <span className="font-medium text-slate-700">
                         {method.name}
                      </span>
                   </div>

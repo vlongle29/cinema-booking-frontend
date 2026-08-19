@@ -61,8 +61,14 @@ button {
 }
 
 /* Scrollbar Styling */
+* {
+   scrollbar-width: thin;
+   scrollbar-color: #27272a #09090b;
+}
+
 ::-webkit-scrollbar {
-   width: 10px;
+   width: 8px;
+   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -70,10 +76,39 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-   background: #f84565;
-   border-radius: 5px;
+   background: #27272a;
+   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-   background: #ff5580;
+   background: #3f3f46;
+}
+
+/* Thin scrollbar for sidebar & custom areas */
+.sidebar-scroll,
+.custom-scrollbar {
+   scrollbar-width: thin;
+   scrollbar-color: #27272a transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar,
+.custom-scrollbar::-webkit-scrollbar {
+   width: 5px;
+   height: 5px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+   background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+   background: #27272a;
+   border-radius: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover,
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+   background: #3f3f46;
 }

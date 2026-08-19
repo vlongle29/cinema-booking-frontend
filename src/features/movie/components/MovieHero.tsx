@@ -79,7 +79,7 @@ export const MovieHero = ({ movie, onBuyTicketClick }: MovieHeroProps) => {
 
             {/* Action Buttons */}
             <div className="flex gap-4">
-               <button className="flex items-center gap-2 border-2 border-amber-500 text-amber-600 hover:bg-amber-50 transition-colors px-6 py-3 rounded-lg font-semibold">
+               <button className="flex items-center gap-2 border-2 border-amber-500 text hover:bg-amber-50 hover:text-slate-900 transition-colors px-6 py-3 rounded-lg font-semibold">
                   <IoPlayCircle size={20} />
                   Xem Trailer
                </button>

@@ -1,217 +1,409 @@
 import React, { useEffect, useState } from "react";
-import { User, Mail, Phone, Shield, Fingerprint, Lock, CheckCircle2, XCircle } from "lucide-react";
-import { userApi } from "../services/user";
+import {
+   User,
+   Mail,
+   Phone,
+   Shield,
+   Lock,
+   CheckCircle2,
+   ChevronRight,
+   Camera,
+   Ticket,
+   Settings,
+   LogOut,
+   Star,
+   Clock,
+} from "lucide-react";
 import type { UserInfoResponse } from "../types/user";
 import { authService } from "@/services/authService";
 
+// ── helpers ────────────────────────────────────────────────────────────────────
+
+function initials(name?: string) {
+   if (!name) return "?";
+   const parts = name.trim().split(" ");
+   return parts.length >= 2
+      ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+      : parts[0][0].toUpperCase();
+}
+
+function formatPhone(phone?: string) {
+   if (!phone) return "Chưa cập nhật";
+   return phone.replace(/(\d{4})(\d{3})(\d{3})/, "$1 $2 $3");
+}
+
+// ── sub-components ─────────────────────────────────────────────────────────────
+
+interface InfoRowProps {
+   label: string;
+   value: React.ReactNode;
+   icon: React.ReactNode;
+}
+
+const InfoRow: React.FC<InfoRowProps> = ({ label, value, icon }) => (
+   <div className="flex items-center gap-4 py-4 border-b border-slate-100 last:border-0">
+      <div
+         className="w-9 h-9 flex items-center justify-center flex-shrink-0"
+         style={{ background: "rgba(245,158,11,0.1)" }}
+      >
+         <span className="text-amber-500">{icon}</span>
+      </div>
+      <div className="flex-1 min-w-0">
+         <p className="text-xs text-slate-400 font-medium mb-0.5">{label}</p>
+         <p className="text-sm font-semibold text-slate-800 truncate">{value}</p>
+      </div>
+   </div>
+);
+
+interface NavItemProps {
+   icon: React.ReactNode;
+   label: string;
+   sublabel?: string;
+   accent?: boolean;
+   onClick?: () => void;
+}
+
+const NavItem: React.FC<NavItemProps> = ({ icon, label, sublabel, accent, onClick }) => (
+   <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3.5 px-4 py-3.5 text-left transition-all duration-200 bg-slate-50 group hover:bg-slate-100"
+   >
+      <div
+         className="w-10 h-10 flex items-center justify-center flex-shrink-0 transition-colors"
+         style={{
+            background: accent ? "rgba(245,158,11,0.12)" : "rgba(100,116,139,0.08)",
+         }}
+      >
+         <span className={accent ? "text-amber-500" : "text-slate-500"}>{icon}</span>
+      </div>
+      <div className="flex-1 min-w-0">
+         <p
+            className={`text-sm font-semibold ${accent ? "text-amber-600" : "text-slate-700"}`}
+         >
+            {label}
+         </p>
+         {sublabel && <p className="text-xs text-slate-400 mt-0.5">{sublabel}</p>}
+      </div>
+      <ChevronRight size={16} className="text-slate-300 group-hover:text-slate-400 transition-colors" />
+   </button>
+);
+
+// ── main component ─────────────────────────────────────────────────────────────
+
 export default function ProfilePage() {
    const [profile, setProfile] = useState<UserInfoResponse | null>(null);
-   const [loading, setLoading] = useState<boolean>(true);
+   const [loading, setLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
 
    useEffect(() => {
-      const fetchProfile = async () => {
-         try {
-            const response = await authService.getCurrentUser();
-            if (response.success && response.data) {
-               // API có thể trả về thông tin user nằm trong `response.data.userInfo` 
-               // hoặc trực tiếp trên `response.data`
-               setProfile(response.data.userInfo || response.data);
+      authService
+         .getCurrentUser()
+         .then((res) => {
+            if (res.success && res.data) {
+               setProfile(res.data.userInfo || res.data);
             } else {
                setError("Không tìm thấy thông tin người dùng.");
             }
-         } catch (err: any) {
-            console.error("Lỗi khi tải hồ sơ:", err);
-            setError("Đã xảy ra lỗi khi tải thông tin người dùng.");
-         } finally {
-            setLoading(false);
-         }
-      };
-      
-      fetchProfile();
+         })
+         .catch(() => setError("Không thể kết nối đến máy chủ."))
+         .finally(() => setLoading(false));
    }, []);
 
+   // ── loading ──
    if (loading) {
       return (
-         <div className="flex justify-center items-center h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-900">
-            <div className="relative w-16 h-16">
-               <div className="absolute top-0 left-0 w-full h-full border-4 border-amber-200 dark:border-amber-900 rounded-full"></div>
-               <div className="absolute top-0 left-0 w-full h-full border-4 border-amber-500 rounded-full border-t-transparent animate-spin"></div>
+         <div
+            className="flex justify-center items-center"
+            style={{ minHeight: "calc(100vh - 64px)", background: "#fafafa" }}
+         >
+            <div className="flex flex-col items-center gap-4">
+               <div className="relative w-12 h-12">
+                  <div className="absolute inset-0 border-[3px] border-amber-100 " />
+                  <div className="absolute inset-0 border-[3px] border-amber-500 border-t-transparent animate-spin" />
+               </div>
+               <p className="text-sm text-slate-400 font-medium">Đang tải hồ sơ…</p>
             </div>
          </div>
       );
    }
 
+   // ── error ──
    if (error || !profile) {
       return (
-         <div className="flex justify-center items-center h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-900 p-4">
-            <div className="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 p-8 rounded-3xl shadow-lg border border-red-100 dark:border-red-900/30 flex flex-col items-center gap-5 max-w-md w-full text-center">
-               <div className="p-4 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full">
-                  <XCircle className="w-12 h-12" />
+         <div
+            className="flex justify-center items-center p-6"
+            style={{ minHeight: "calc(100vh - 64px)", background: "#fafafa" }}
+         >
+            <div className="text-center max-w-xs">
+               <div className="w-16 h-16 bg-red-50 flex items-center justify-center mx-auto mb-4">
+                  <Lock size={24} className="text-red-400" />
                </div>
-               <div>
-                  <h3 className="text-xl font-bold mb-2">Không thể tải hồ sơ</h3>
-                  <p className="text-slate-500 dark:text-slate-400">{error}</p>
-               </div>
+               <h3 className="text-base font-bold text-slate-800 mb-1">Không thể tải hồ sơ</h3>
+               <p className="text-sm text-slate-400">{error}</p>
             </div>
          </div>
       );
    }
 
+   const isActive = profile.lockFlag === "0";
+   const isSystem = profile.systemFlag === "1";
+
+   // ── main render ──
    return (
-      <div className="min-h-[calc(100vh-64px)] mt-14 pt-4 px-4 sm:px-6 lg:px-8 transition-colors duration-300 font-sans">
-         <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-8 bg-white dark:bg-slate-800 p-8 sm:p-10 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 relative overflow-hidden group">
-               <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 opacity-90 transition-transform duration-700 group-hover:scale-105"></div>
-               
-               <div className="relative z-10 pt-16 flex flex-col items-center md:items-start w-full">
-                  <div className="flex flex-col md:flex-row items-center gap-8 w-full">
-                     <div className="w-36 h-36 rounded-full border-4 border-white dark:border-slate-800 shadow-xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center shrink-0 relative group-hover:shadow-amber-500/30 transition-all duration-500">
-                        {profile.avatar ? (
-                           <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                        ) : (
-                           <span className="text-6xl font-bold text-amber-400 dark:text-amber-500">
-                              {profile.name?.charAt(0)?.toUpperCase() || "?"}
-                           </span>
-                        )}
-                     </div>
-                     
-                     <div className="flex-1 text-center md:text-left space-y-3 mt-4 md:mt-0">
-                        <div className="space-y-1">
-                           <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                              {profile.name}
-                           </h1>
-                           <p className="text-lg text-slate-500 dark:text-slate-400 font-medium flex items-center justify-center md:justify-start gap-2">
-                              <span>@{profile.username}</span>
-                           </p>
-                        </div>
-                        
-                        <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-3">
-                           {profile.roles?.map((role) => (
-                              <div key={role.id} className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300 ring-1 ring-inset ring-amber-500/20 shadow-sm">
-                                 <Shield className="w-4 h-4" />
-                                 {role.name}
-                              </div>
-                           ))}
-                           
-                           {profile.lockFlag === "0" ? (
-                              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300 ring-1 ring-inset ring-emerald-600/10 dark:ring-emerald-500/20 shadow-sm">
-                                 <CheckCircle2 className="w-4 h-4" />
-                                 Đang hoạt động
-                              </div>
-                           ) : (
-                              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300 ring-1 ring-inset ring-red-600/10 dark:ring-red-500/20 shadow-sm">
-                                 <Lock className="w-4 h-4" />
-                                 Bị khóa
-                              </div>
-                           )}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
+      <div
+         className="min-h-screen pt-16 pb-12"
+         style={{ background: "#f5f5f7" }}
+      >
+         {/* ── Page header strip ── */}
+         <div
+            className="w-full py-10 px-4"
+            style={{
+               background: "linear-gradient(135deg, #1c1917 0%, #292524 60%, #1c1917 100%)",
+            }}
+         >
+            <p className="text-center text-xs font-bold text-amber-400 uppercase tracking-[0.2em] mb-1">
+               Tài khoản của tôi
+            </p>
+            <h1 className="text-center text-2xl font-extrabold text-white tracking-tight">
+               Hồ sơ cá nhân
+            </h1>
+         </div>
 
-            {/* Details Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-               
-               {/* Column 1 */}
-               <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-500 group">
-                  <div className="flex items-center gap-4 mb-8">
-                     <div className="p-3 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-                        <User className="w-6 h-6" />
-                     </div>
-                     <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Thông tin cá nhân</h2>
-                  </div>
-                  
-                  <div className="space-y-6">
-                     <div className="group/item">
-                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5 group-hover/item:text-amber-600 transition-colors">Họ và tên</p>
-                        <p className="text-lg font-semibold text-slate-900 dark:text-slate-200">{profile.name}</p>
-                     </div>
-                     <div className="h-px w-full bg-slate-100 dark:bg-slate-700/50"></div>
-                     <div className="group/item">
-                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5 group-hover/item:text-amber-600 transition-colors">Tên đăng nhập</p>
-                        <p className="text-lg font-semibold text-slate-900 dark:text-slate-200">{profile.username}</p>
-                     </div>
-                  </div>
-               </div>
+         {/* ── Layout wrapper ── */}
+         <div className="max-w-5xl mx-auto px-4 sm:px-6 -mt-6 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-5">
 
-               {/* Column 2 */}
-               <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-500 group">
-                  <div className="flex items-center gap-4 mb-8">
-                     <div className="p-3 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-                        <Fingerprint className="w-6 h-6" />
-                     </div>
-                     <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Liên hệ & Phân quyền</h2>
-                  </div>
-                  
-                  <div className="space-y-6">
-                     <div className="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 border border-transparent hover:border-slate-100 dark:hover:border-slate-700">
-                        <div className="mt-1 p-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-lg">
-                           <Mail className="w-5 h-5" />
-                        </div>
-                        <div>
-                           <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Địa chỉ Email</p>
-                           <p className="text-lg font-semibold text-slate-900 dark:text-slate-200">{profile.email}</p>
-                        </div>
-                     </div>
-                     
-                     <div className="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 border border-transparent hover:border-slate-100 dark:hover:border-slate-700">
-                        <div className="mt-1 p-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-lg">
-                           <Phone className="w-5 h-5" />
-                        </div>
-                        <div>
-                           <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Số điện thoại</p>
-                           <p className="text-lg font-semibold text-slate-900 dark:text-slate-200">
-                              {profile.phone?.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3') || "Chưa cập nhật"}
-                           </p>
-                        </div>
-                     </div>
+               {/* ════ LEFT SIDEBAR ════ */}
+               <div className="space-y-4">
 
-                     <div className="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 border border-transparent hover:border-slate-100 dark:hover:border-slate-700">
-                        <div className="mt-1 p-2 bg-amber-50 dark:bg-amber-500/10 text-amber-500 dark:text-amber-400 rounded-lg">
-                           <Shield className="w-5 h-5" />
-                        </div>
-                        <div>
-                           <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">Loại tài khoản</p>
-                           {profile.systemFlag === "1" ? (
-                              <div className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-bold bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 shadow-sm">
-                                 Tài khoản Hệ thống
-                              </div>
-                           ) : (
-                              <div className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 shadow-sm">
-                                 Tài khoản Thường
-                              </div>
-                           )}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-
-            </div>
-
-            {/* Security Section */}
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-500 group">
-               <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-                     <Lock className="w-6 h-6" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Bảo mật tài khoản</h2>
-               </div>
-               
-               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700">
-                  <div>
-                     <p className="text-base font-semibold text-slate-900 dark:text-slate-200 mb-1">Mật khẩu đăng nhập</p>
-                     <p className="text-sm text-slate-500 dark:text-slate-400">Đổi mật khẩu thường xuyên giúp bảo vệ tài khoản của bạn tốt hơn.</p>
-                  </div>
-                  <button 
-                     onClick={() => alert("Tính năng đổi mật khẩu đang được phát triển!")}
-                     className="whitespace-nowrap px-6 py-2.5 bg-amber-500 text-white rounded-xl text-sm font-bold hover:bg-amber-600 transition-all shadow-[0_4px_14px_0_rgba(245,158,11,0.39)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.23)] hover:-translate-y-0.5"
+                  {/* Avatar card */}
+                  <div
+                     className="overflow-hidden"
+                     style={{ background: "#fff", boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
                   >
-                     Đổi mật khẩu
-                  </button>
+                     {/* Amber strip */}
+                     <div
+                        className="h-20 w-full"
+                        style={{
+                           background: "linear-gradient(135deg, #fbbf24, #f59e0b, #d97706)",
+                        }}
+                     />
+
+                     {/* Avatar */}
+                     <div className="flex flex-col items-center -mt-12 pb-6 px-6">
+                        <div className="relative mb-3">
+                           <div
+                              className="w-24 h-24 border-4 border-white flex items-center justify-center overflow-hidden"
+                              style={{
+                                 boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+                                 background: "linear-gradient(135deg, #fef3c7, #fde68a)",
+                              }}
+                           >
+                              {profile.avatar ? (
+                                 <img
+                                    src={profile.avatar}
+                                    alt={profile.name}
+                                    className="w-full h-full object-cover"
+                                 />
+                              ) : (
+                                 <span className="text-3xl font-extrabold text-amber-500">
+                                    {initials(profile.name)}
+                                 </span>
+                              )}
+                           </div>
+                           {/* Camera button */}
+                           <button
+                              className="absolute bottom-0 right-0 w-7 h-7 bg-white flex items-center justify-center shadow-md hover:bg-amber-50 transition-colors"
+                              title="Đổi ảnh đại diện"
+                              onClick={() => alert("Tính năng đang phát triển")}
+                           >
+                              <Camera size={14} className="text-slate-500" />
+                           </button>
+                        </div>
+
+                        <h2 className="text-base font-bold text-slate-900 text-center leading-tight">
+                           {profile.name}
+                        </h2>
+                        <p className="text-xs text-slate-400 mt-0.5">@{profile.username}</p>
+
+                        {/* Status badge */}
+                        <div className="mt-3 flex items-center gap-1.5">
+                           {isActive ? (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 ">
+                                 <CheckCircle2 size={11} />
+                                 Đang hoạt động
+                              </span>
+                           ) : (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-500 bg-red-50 border border-red-100 px-2.5 py-1 ">
+                                 <Lock size={11} />
+                                 Bị khóa
+                              </span>
+                           )}
+                           {isSystem && (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-100 px-2.5 py-1 ">
+                                 <Shield size={11} />
+                                 Hệ thống
+                              </span>
+                           )}
+                        </div>
+                     </div>
+
+                     {/* Role list */}
+                     {profile.roles?.length > 0 && (
+                        <div className="border-t border-slate-100 px-5 py-4">
+                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                              Vai trò
+                           </p>
+                           <div className="flex flex-wrap gap-1.5">
+                              {profile.roles.map((role) => (
+                                 <span
+                                    key={role.id}
+                                    className="text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-100 px-2.5 py-1 "
+                                 >
+                                    {role.name}
+                                 </span>
+                              ))}
+                           </div>
+                        </div>
+                     )}
+                  </div>
+
+                  {/* Quick stats */}
+                  <div
+                     className=" p-4 grid grid-cols-3 gap-2"
+                     style={{ background: "#fff", boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
+                  >
+                     {[
+                        { label: "Vé đã đặt", value: "—", icon: <Ticket size={16} /> },
+                        { label: "Phim yêu thích", value: "—", icon: <Star size={16} /> },
+                        { label: "Tháng này", value: "—", icon: <Clock size={16} /> },
+                     ].map((stat) => (
+                        <div key={stat.label} className="flex flex-col items-center gap-1 py-2">
+                           <span className="text-amber-400">{stat.icon}</span>
+                           <span className="text-lg font-extrabold text-slate-800">{stat.value}</span>
+                           <span className="text-[10px] text-slate-400 text-center leading-tight">{stat.label}</span>
+                        </div>
+                     ))}
+                  </div>
+               </div>
+
+               {/* ════ RIGHT CONTENT ════ */}
+               <div className="space-y-4">
+
+                  {/* Personal info card */}
+                  <div
+                     className=" p-6"
+                     style={{ background: "#fff", boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
+                  >
+                     <div className="flex items-center justify-between mb-2">
+                        <h2 className="text-sm font-bold text-slate-800">Thông tin cá nhân</h2>
+                        <button className="text-xs font-semibold text-amber-500 hover:text-amber-600 transition-colors">
+                           Chỉnh sửa
+                        </button>
+                     </div>
+                     <p className="text-xs text-slate-400 mb-4">
+                        Thông tin hiển thị trên hồ sơ và vé điện tử của bạn.
+                     </p>
+
+                     <InfoRow
+                        label="Họ và tên"
+                        value={profile.name}
+                        icon={<User size={15} />}
+                     />
+                     <InfoRow
+                        label="Tên đăng nhập"
+                        value={`@${profile.username}`}
+                        icon={<User size={15} />}
+                     />
+                     <InfoRow
+                        label="Địa chỉ email"
+                        value={profile.email || "Chưa cập nhật"}
+                        icon={<Mail size={15} />}
+                     />
+                     <InfoRow
+                        label="Số điện thoại"
+                        value={formatPhone(profile.phone)}
+                        icon={<Phone size={15} />}
+                     />
+                  </div>
+
+                  {/* Account settings card */}
+                  <div
+                     className=" overflow-hidden"
+                     style={{ background: "#fff", boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
+                  >
+                     <div className="px-6 pt-5 pb-3">
+                        <h2 className="text-sm font-bold text-slate-800">Cài đặt tài khoản</h2>
+                        <p className="text-xs text-slate-400 mt-0.5">Quản lý bảo mật và tuỳ chọn tài khoản.</p>
+                     </div>
+
+                     <div className="px-3 pb-3 space-y-1">
+                        <NavItem
+                           icon={<Lock size={18} />}
+                           label="Đổi mật khẩu"
+                           sublabel="Cập nhật mật khẩu để bảo vệ tài khoản"
+                           accent
+                           onClick={() => alert("Tính năng đang được phát triển!")}
+                        />
+                        <NavItem
+                           icon={<Ticket size={18} />}
+                           label="Lịch sử đặt vé"
+                           sublabel="Xem toàn bộ vé bạn đã đặt"
+                           onClick={() => alert("Tính năng đang được phát triển!")}
+                        />
+                        <NavItem
+                           icon={<Settings size={18} />}
+                           label="Cài đặt thông báo"
+                           sublabel="Tuỳ chỉnh thông báo email và ứng dụng"
+                           onClick={() => alert("Tính năng đang được phát triển!")}
+                        />
+                     </div>
+
+                     {/* Divider */}
+                     <div className="mx-6 border-t border-slate-100 my-1" />
+
+                     <div className="px-3 pb-3">
+                        <NavItem
+                           icon={<LogOut size={18} />}
+                           label="Đăng xuất"
+                           onClick={() => alert("Tính năng đang được phát triển!")}
+                        />
+                     </div>
+                  </div>
+
+                  {/* Security status bar */}
+                  <div
+                     className=" p-5 flex flex-col sm:flex-row sm:items-center gap-4"
+                     style={{
+                        background: "linear-gradient(135deg, #1c1917, #292524)",
+                        boxShadow: "0 2px 16px rgba(0,0,0,0.12)",
+                     }}
+                  >
+                     <div className="flex items-center gap-3 flex-1">
+                        <div
+                           className="w-10 h-10 flex items-center justify-center flex-shrink-0"
+                           style={{ background: "rgba(245,158,11,0.15)" }}
+                        >
+                           <Shield size={20} className="text-amber-400" />
+                        </div>
+                        <div>
+                           <p className="text-sm font-bold text-white">Bảo mật tài khoản</p>
+                           <p className="text-xs text-slate-400 mt-0.5">
+                              Đổi mật khẩu thường xuyên để bảo vệ tài khoản tốt hơn.
+                           </p>
+                        </div>
+                     </div>
+                     <button
+                        onClick={() => alert("Tính năng đang được phát triển!")}
+                        className="flex-shrink-0 px-5 py-2.5 text-sm font-bold text-stone-900 transition-all duration-200 hover:brightness-110 active:scale-95"
+                        style={{
+                           background: "linear-gradient(135deg, #fbbf24, #f59e0b)",
+                           boxShadow: "0 4px 14px rgba(245,158,11,0.4)",
+                        }}
+                     >
+                        Đổi mật khẩu
+                     </button>
+                  </div>
                </div>
             </div>
          </div>

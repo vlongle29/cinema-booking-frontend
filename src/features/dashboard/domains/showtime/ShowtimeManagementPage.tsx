@@ -89,8 +89,8 @@ export default function ListShows() {
    return (
       <>
          <DashboardEntityList
-            title="Showtime"
-            entityName="showtime"
+            title="Suất chiếu"
+            entityName="suất chiếu"
             isCreating={isCreating}
             onToggleCreating={() => setIsCreating((prev) => !prev)}
             filters={filters}

@@ -61,21 +61,21 @@ const useShowtimeSelection = () => {
                const formattedDates: DateOption[] = data.map((dateStr) => {
                   const dateObj = new Date(dateStr);
                   const days = [
-                     "Sun",
-                     "Mon",
-                     "Tue",
-                     "Wed",
-                     "Thu",
-                     "Fri",
-                     "Sat",
+                     "CN",
+                     "T2",
+                     "T3",
+                     "T4",
+                     "T5",
+                     "T6",
+                     "T7",
                   ];
                   return {
                      date: dateStr,
                      day: days[dateObj.getDay()],
                      dateNum: dateObj.getDate(),
-                     fullDate: dateObj.toLocaleDateString("en-US", {
+                     fullDate: dateObj.toLocaleDateString("vi-VN", {
                         year: "numeric",
-                        month: "short",
+                        month: "long",
                         day: "numeric",
                      }),
                   };
@@ -199,10 +199,10 @@ const useShowtimeSelection = () => {
                   location: cityObj ? cityObj.name : "Địa điểm",
                   showtimes: (branch.showtimes || []).map((st: any) => {
                      const startTime = new Date(st.startTime);
-                     const timeStr = startTime.toLocaleTimeString("en-US", {
+                     const timeStr = startTime.toLocaleTimeString("vi-VN", {
                         hour: "2-digit",
                         minute: "2-digit",
-                        hour12: true,
+                        hour12: false,
                      });
                      const isPeakHour = startTime.getHours() >= 17;
 

@@ -90,8 +90,8 @@ export default function ListBookings() {
    return (
       <>
          <DashboardEntityList
-            title="Booking"
-            entityName="booking"
+            title="Đơn đặt vé"
+            entityName="đơn đặt vé"
             isCreating={isCreating}
             onToggleCreating={() => setIsCreating((prev) => !prev)}
             isEditing={isEditing}

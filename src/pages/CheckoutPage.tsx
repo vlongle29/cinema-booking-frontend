@@ -31,10 +31,10 @@ const CheckoutPage: React.FC = () => {
    const { isProcessing, handlePayment } = usePayment(bookingId, displayTotal);
 
    return (
-      <div className="min-h-screen text-white pb-40 pt-20 bg-[#0B0B0F] relative overflow-hidden">
-         {/* Background Ambience - Đồng bộ với SeatSelectPage */}
-         <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-rose-900/20 rounded-full blur-[120px] pointer-events-none" />
-         <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-rose-900/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="min-h-screen text-slate-900 pb-40 pt-20 bg-amber-50 relative overflow-hidden">
+         {/* Background Ambience */}
+         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-amber-400/10 rounded-full blur-[120px] pointer-events-none" />
+         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-amber-300/10 rounded-full blur-[100px] pointer-events-none" />
 
          {/* ... (Header giữ nguyên) ... */}
 

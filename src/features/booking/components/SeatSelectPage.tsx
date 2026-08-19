@@ -187,96 +187,104 @@ const SeatSelectPage: React.FC = () => {
    };
 
    return (
-      <div className="mt-16 min-h-screen bg-[#0B0B0F] text-white flex flex-col items-center relative overflow-hidden pb-32">
+      <div className="mt-16 min-h-screen bg-amber-50 text-slate-900 flex flex-col items-center relative overflow-hidden pb-32">
          {/* Background Ambience */}
-         <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-rose-900/20 rounded-full blur-[120px] pointer-events-none" />
-         <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-rose-900/10 rounded-full blur-[120px] pointer-events-none" />
+         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-amber-400/10 rounded-full blur-[120px] pointer-events-none" />
 
-         {/* --- Section 1: Screen --- */}
-         <div className="mt-12 mb-8 w-full flex flex-col items-center justify-center">
-            <h1 className="text-2xl md:text-3xl font-bold mb-8">Chọn ghế</h1>
-            <div className="relative w-full max-w-lg flex flex-col items-center">
-               <div className="w-3/4 h-16 border-t-4 border-rose-900/50 rounded-[50%] shadow-[0_-10px_20px_rgba(225,29,72,0.1)] relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-rose-600/20 to-transparent blur-sm"></div>
+         <div className="w-full max-w-6xl mx-auto px-4">
+            {/* --- Section 1: Header & Screen --- */}
+            <div className="mt-10 mb-8 flex flex-col items-center">
+               <div className="flex items-center gap-2 mb-1">
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+                     Chọn <span className="text-amber-500">Ghế ngồi</span>
+                  </h1>
                </div>
-               <span className="text-gray-600 text-xs font-bold tracking-[0.2em] uppercase mt-[-40px]">
-                  Màn hình
-               </span>
-            </div>
-         </div>
+               <p className="text-sm text-slate-500 mb-8">Bấm vào ghế để chọn hoặc bỏ chọn</p>
 
-         {/* --- Section 2: Seats Grid --- */}
-         {isLoading ? (
-            <div className="text-rose-500 animate-pulse py-20">
-               Loading seats...
-            </div>
-         ) : (
-            <div className="w-full max-w-6xl mx-auto overflow-x-auto px-4 py-8 custom-scrollbar">
-               <div
-                  className="grid gap-2 sm:gap-3 w-max mx-auto"
-                  style={{
-                     gridTemplateColumns: `repeat(${maxCols}, minmax(36px, 40px))`,
-                     gridTemplateRows: `repeat(${maxRows}, minmax(36px, 40px))`,
-                  }}
-               >
-                  {/* In lưới ghế (Sử dụng mergedSeats) */}
-                  {mergedSeats.map((seat: any) => (
-                     <div
-                        key={seat.id}
-                        className="flex items-center justify-center"
-                        style={{
-                           gridRow: seat.rowIndex + 1,
-                           gridColumn: (seat.columnIndex || 0) + 1,
-                        }}
-                     >
-                        {!seat.isAisle ? (
-                           <Seat
-                              id={seat.id}
-                              seatNumber={seat.seatNumber}
-                              label={seat.seatNumber}
-                              status={getSeatStatus(seat)}
-                              onClick={() => toggleSeat(seat)}
-                           />
-                        ) : (
-                           <div className="w-8 h-8 sm:w-10 sm:h-10 opacity-0 pointer-events-none" />
-                        )}
-                     </div>
-                  ))}
+               {/* Screen indicator */}
+               <div className="relative w-full max-w-lg flex flex-col items-center mb-2">
+                  <div className="w-3/4 h-14 border-t-4 border-amber-400/60 rounded-[50%] shadow-[0_-8px_24px_rgba(251,191,36,0.15)] relative overflow-hidden">
+                     <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-amber-400/30 to-transparent blur-sm" />
+                  </div>
+                  <span className="text-slate-400 text-xs font-bold tracking-[0.2em] uppercase mt-[-36px]">
+                     Màn hình
+                  </span>
                </div>
             </div>
-         )}
 
-         {/* --- Section 3: Legend --- */}
-         <div className="flex gap-6 mt-12 text-xs md:text-sm text-gray-400 font-medium">
-            <div className="flex items-center gap-2">
-               <div className="w-5 h-5 rounded-md bg-gray-800 border border-gray-700"></div>
-               <span>Đã đặt</span>
-            </div>
-            <div className="flex items-center gap-2">
-               <div className="w-5 h-5 rounded-md border-2 border-rose-500 bg-transparent"></div>
-               <span>Trống</span>
-            </div>
-            <div className="flex items-center gap-2">
-               <div className="w-5 h-5 rounded-md bg-rose-600 shadow-[0_0_12px_rgba(225,29,72,0.6)]"></div>
-               <span>Đang chọn</span>
+            {/* --- Section 2: Seats Grid --- */}
+            {isLoading ? (
+               <div className="flex flex-col items-center gap-3 py-20">
+                  <div className="w-8 h-8 border-4 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                  <span className="text-slate-400 text-sm">Đang tải sơ đồ ghế...</span>
+               </div>
+            ) : (
+               <div className="w-full overflow-x-auto py-6 sidebar-scroll">
+                  <div
+                     className="grid gap-2 sm:gap-2.5 w-max mx-auto"
+                     style={{
+                        gridTemplateColumns: `repeat(${maxCols}, minmax(36px, 40px))`,
+                        gridTemplateRows: `repeat(${maxRows}, minmax(36px, 40px))`,
+                     }}
+                  >
+                     {mergedSeats.map((seat: any) => (
+                        <div
+                           key={seat.id}
+                           className="flex items-center justify-center"
+                           style={{
+                              gridRow: seat.rowIndex + 1,
+                              gridColumn: (seat.columnIndex || 0) + 1,
+                           }}
+                        >
+                           {!seat.isAisle ? (
+                              <Seat
+                                 id={seat.id}
+                                 seatNumber={seat.seatNumber}
+                                 label={seat.seatNumber}
+                                 status={getSeatStatus(seat)}
+                                 onClick={() => toggleSeat(seat)}
+                              />
+                           ) : (
+                              <div className="w-8 h-8 sm:w-10 sm:h-10 opacity-0 pointer-events-none" />
+                           )}
+                        </div>
+                     ))}
+                  </div>
+               </div>
+            )}
+
+            {/* --- Section 3: Legend --- */}
+            <div className="flex flex-wrap justify-center gap-6 mt-8 text-xs md:text-sm text-slate-500 font-medium">
+               <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-md bg-slate-200 border border-slate-300" />
+                  <span>Đã đặt</span>
+               </div>
+               <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-md border-2 border-amber-400 bg-transparent" />
+                  <span>Trống</span>
+               </div>
+               <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-md bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+                  <span>Đang chọn</span>
+               </div>
             </div>
          </div>
 
          {/* --- Section 4: Checkout Bar --- */}
-         <div className="fixed bottom-0 left-0 w-full bg-[#0B0B0F]/90 backdrop-blur-md border-t border-gray-800 p-4 z-50">
-            <div className="max-w-4xl mx-auto flex items-center justify-between">
+         <div className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-slate-200 shadow-lg p-4 z-50">
+            <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
                <div className="flex flex-col">
-                  <span className="text-gray-400 text-xs uppercase">
+                  <span className="text-slate-400 text-xs uppercase tracking-wider font-medium">
                      Ghế đã chọn
                   </span>
-                  <span className="text-white font-bold text-lg">
+                  <span className="text-slate-800 font-bold text-lg leading-tight">
                      {selectedSeats.size > 0
                         ? mergedSeats
                              .filter((s) => selectedSeats.has(s.id))
                              .map((s) => s.seatNumber)
                              .sort()
                              .join(", ")
-                        : "Chưa chọn"}
+                        : "Chưa chọn ghế"}
                   </span>
                </div>
 
@@ -284,14 +292,14 @@ const SeatSelectPage: React.FC = () => {
                   onClick={handleCheckout}
                   disabled={selectedSeats.size === 0}
                   className={cn(
-                     "flex items-center gap-2 px-8 py-3 rounded-full font-bold transition-all duration-300",
+                     "flex items-center gap-2 px-8 py-3 rounded-full font-bold transition-all duration-300 text-sm",
                      selectedSeats.size > 0
-                        ? "bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30 hover:scale-105 active:scale-95"
-                        : "bg-gray-800 text-gray-500 cursor-not-allowed",
+                        ? "bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-lg shadow-amber-400/30 hover:scale-105 active:scale-95 hover:shadow-amber-400/50"
+                        : "bg-slate-100 text-slate-400 cursor-not-allowed",
                   )}
                >
                   Tiếp tục thanh toán
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4" />
                </button>
             </div>
          </div>

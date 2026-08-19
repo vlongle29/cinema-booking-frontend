@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { X, Save } from "lucide-react";
@@ -14,7 +14,7 @@ const staffSchema = z.object({
    name: z.string().min(1, "Họ tên là bắt buộc"),
    email: z.string().email("Email không hợp lệ"),
    phone: z.string().min(1, "Số điện thoại là bắt buộc"),
-   branchId: z.string().uuid("Vui lòng chọn chi nhánh"),
+   branchId: z.string().uuid("Chi nhánh không hợp lệ").optional().or(z.literal("")),
    positionId: z.string().uuid("Vui lòng chọn chức vụ"),
    salary: z.coerce.number().optional(),
    hireDate: z.string().optional(),
@@ -25,7 +25,7 @@ type StaffFormValues = z.infer<typeof staffSchema>;
 interface StaffFormProps {
    initialData?: Employee | null;
    branchOptions: { value: string; label: string }[];
-   positionOptions: { value: string; label: string }[];
+   positionOptions: { value: string; label: string; code?: string }[];
    onCancel: () => void;
    onSuccess: () => void;
 }
@@ -45,6 +45,7 @@ const StaffForm: React.FC<StaffFormProps> = ({
       handleSubmit,
       formState: { errors },
       reset,
+      control,
    } = useForm<StaffFormValues>({
       resolver: zodResolver(staffSchema),
       defaultValues: {
@@ -74,6 +75,13 @@ const StaffForm: React.FC<StaffFormProps> = ({
       }
    }, [initialData, reset]);
 
+   const selectedPositionId = useWatch({
+      control,
+      name: "positionId",
+   });
+
+   const isBranchManager = positionOptions.find((p) => p.value === selectedPositionId)?.code === "BRANCH_MANAGER";
+
    const onSubmit = async (data: StaffFormValues) => {
       if (!isEdit) {
          if (!data.username?.trim()) {
@@ -88,12 +96,15 @@ const StaffForm: React.FC<StaffFormProps> = ({
 
       setLoading(true);
       try {
+         const branchManagerCheck = positionOptions.find((p) => p.value === data.positionId)?.code === "BRANCH_MANAGER";
+         const finalBranchId = branchManagerCheck ? (data.branchId === "" ? null : data.branchId) : null;
+
          if (isEdit) {
             await employeeService.update(initialData!.userId, {
                name: data.name,
                email: data.email,
                phone: data.phone,
-               branchId: data.branchId,
+               branchId: finalBranchId,
                positionId: data.positionId,
                salary: data.salary,
                hireDate: data.hireDate || undefined,
@@ -106,7 +117,7 @@ const StaffForm: React.FC<StaffFormProps> = ({
                name: data.name,
                email: data.email,
                phone: data.phone,
-               branchId: data.branchId,
+               branchId: finalBranchId,
                positionId: data.positionId,
                salary: data.salary,
                hireDate: data.hireDate || undefined,
@@ -206,27 +217,29 @@ const StaffForm: React.FC<StaffFormProps> = ({
 
 
 
-            <div className="space-y-2">
-               <label className="text-sm font-medium text-gray-300">
-                  Chi nhánh *
-               </label>
-               <select
-                  {...register("branchId")}
-                  className="w-full bg-[#1a1a1d] border border-gray-700 rounded-md p-2 text-white focus:border-rose-500 outline-none"
-               >
-                  <option value="">Chọn chi nhánh</option>
-                  {branchOptions.map((opt) => (
-                     <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                     </option>
-                  ))}
-               </select>
-               {errors.branchId && (
-                  <p className="text-rose-500 text-xs">
-                     {errors.branchId.message}
-                  </p>
-               )}
-            </div>
+            {isBranchManager && (
+               <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-300">
+                     Chi nhánh (Tùy chọn)
+                  </label>
+                  <select
+                     {...register("branchId")}
+                     className="w-full bg-[#1a1a1d] border border-gray-700 rounded-md p-2 text-white focus:border-rose-500 outline-none"
+                  >
+                     <option value="">Chọn chi nhánh</option>
+                     {branchOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                           {opt.label}
+                        </option>
+                     ))}
+                  </select>
+                  {errors.branchId && (
+                     <p className="text-rose-500 text-xs">
+                        {errors.branchId.message}
+                     </p>
+                  )}
+               </div>
+            )}
 
             <div className="space-y-2">
                <label className="text-sm font-medium text-gray-300">

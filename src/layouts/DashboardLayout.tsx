@@ -90,7 +90,7 @@ const DashboardLayout: React.FC = () => {
             </Link>
          </header>
 
-         <aside className="fixed left-0 top-[72px] w-[245px] h-[calc(100vh-72px)] bg-[#09090b] border-r border-[#393939] z-40">
+         <aside className="fixed left-0 top-[72px] w-[245px] h-[calc(100vh-72px)] bg-[#09090b] border-r border-[#393939] z-40 flex flex-col">
             <div className="flex flex-col items-center py-8 border-b border-[#393939]">
                <img
                   src={userInfo?.avatar || profileImg}
@@ -110,7 +110,7 @@ const DashboardLayout: React.FC = () => {
                )}
             </div>
 
-            <nav className="py-6">
+            <nav className="py-6 flex-1 overflow-y-auto sidebar-scroll">
                <ul className="space-y-0">
                   {visibleItems.map((item) => (
                      <li

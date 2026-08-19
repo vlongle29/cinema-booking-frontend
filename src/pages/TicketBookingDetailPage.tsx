@@ -65,7 +65,7 @@ export default function TicketBookingDetailPage() {
          </div>
 
          {/* 3. Phần phim đề xuất */}
-         <RecommendedMovies />
+         {/* <RecommendedMovies /> */}
       </div>
    );
 }

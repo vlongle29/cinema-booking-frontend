@@ -22,11 +22,11 @@ const Seat: React.FC<SeatProps> = ({
 
    const styles = {
       available:
-         "border-gray-700 text-gray-400 bg-transparent hover:border-rose-500 hover:text-rose-400",
+         "border-slate-400 text-slate-600 bg-white hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50 font-semibold",
       selected:
-         "bg-rose-600 border-rose-600 text-white shadow-[0_0_15px_rgba(225,29,72,0.6)] transform scale-105",
+         "bg-amber-400 border-amber-400 text-white shadow-[0_0_12px_rgba(251,191,36,0.5)] transform scale-105",
       occupied:
-         "bg-gray-800 border-gray-800 text-gray-600 cursor-not-allowed opacity-50",
+         "bg-slate-200 border-slate-200 text-slate-400 cursor-not-allowed opacity-60",
    };
 
    return (

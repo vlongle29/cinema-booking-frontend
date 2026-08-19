@@ -57,11 +57,16 @@ const BranchForm: React.FC<BranchFormProps> = ({
    const onSubmit = async (data: any) => {
       setLoading(true);
       try {
+         const payload = {
+            ...data,
+            managerId: data.managerId === "" ? null : data.managerId,
+         };
+         
          if (initialData) {
-            await branchService.update(initialData.id, data);
+            await branchService.update(initialData.id, payload);
             toast.success("Cập nhật chi nhánh thành công");
          } else {
-            await branchService.create(data);
+            await branchService.create(payload);
             toast.success("Tạo chi nhánh mới thành công");
          }
          onSuccess();
@@ -129,7 +134,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
 
             <div className="space-y-2">
                <label className="text-sm font-medium text-gray-300">
-                  Người quản lý
+                  Người quản lý (Tùy chọn)
                </label>
                <select
                   {...register("managerId")}
