@@ -25,6 +25,7 @@ export function useDashboardRbac() {
 
   // ───────────────────────── PERMISSION STATE ─────────────────────────────
   const [permissions, setPermissions] = useState<SysPermission[]>([]);
+  const [allPermissionsForPanel, setAllPermissionsForPanel] = useState<SysPermission[]>([]);
   const [isLoadingPermissions, setIsLoadingPermissions] = useState(false);
   const [isCreatingPermission, setIsCreatingPermission] = useState(false);
   const [isEditingPermission, setIsEditingPermission] = useState(false);
@@ -66,10 +67,16 @@ export function useDashboardRbac() {
   const fetchPermissions = useCallback(async () => {
     setIsLoadingPermissions(true);
     try {
+      // Fetch paginated (for metadata display)
       const res = await sysPermissionService.search(debouncedPermissionSearchParams);
       setPermissions(res.data?.content ?? []);
       setPermissionTotalElements(res.data?.totalElements ?? 0);
       setPermissionTotalPages(res.data?.totalPages ?? 0);
+
+      // Fetch all (for grouped panel display)
+      const { page: _p, size: _s, ...searchFilters } = debouncedPermissionSearchParams;
+      const allRes = await sysPermissionService.search({ ...searchFilters, page: 1, size: 1000 });
+      setAllPermissionsForPanel(allRes.data?.content ?? []);
     } catch (err) {
       console.error("Lỗi tải danh sách quyền:", err);
     } finally {
@@ -87,6 +94,17 @@ export function useDashboardRbac() {
     try {
       await sysRoleService.deleteRoles([id]);
       toast.success("Xóa vai trò thành công");
+      fetchRoles();
+    } catch {
+      toast.error("Xóa vai trò thất bại");
+    }
+  };
+
+  const handleDeleteRolesBatch = async (ids: string[]) => {
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa ${ids.length} vai trò đã chọn?`)) return;
+    try {
+      await sysRoleService.deleteRoles(ids);
+      toast.success(`Đã xóa ${ids.length} vai trò thành công`);
       fetchRoles();
     } catch {
       toast.error("Xóa vai trò thất bại");
@@ -247,6 +265,7 @@ export function useDashboardRbac() {
     // Role actions
     roleActions: {
       handleDeleteRole,
+      handleDeleteRolesBatch,
       handleRoleSearchChange,
       handleRoleResetFilters,
       handleRolePageChange,
@@ -258,7 +277,7 @@ export function useDashboardRbac() {
     },
     // Permission state
     permissionState: {
-      permissions,
+      permissions: allPermissionsForPanel,   // grouped display uses ALL permissions
       isLoadingPermissions,
       permissionSearchParams,
       permissionTotalElements,

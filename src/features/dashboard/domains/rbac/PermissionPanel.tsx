@@ -9,16 +9,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
-const ACTION_COLOR: Record<string, string> = {
-  view:   "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  create: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  update: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  delete: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-  manage: "bg-violet-500/10 text-violet-400 border-violet-500/20",
-  export: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-  refund: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-};
-const ACTION_DEFAULT = "bg-[#252529] text-[#d1d5dc] border-[#393939]";
+const BADGE_BASE = "bg-[#1e1e22] text-[#d1d5dc] border-[#393939]";
 
 const GROUP_TRANSLATION: Record<string, string> = {
   city: "Thành phố",
@@ -27,7 +18,7 @@ const GROUP_TRANSLATION: Record<string, string> = {
   employee: "Nhân viên",
   payment: "Thanh toán",
   movie: "Phim",
-  room: "Phòng",
+  room: "Phòng chiếu",
   showtime: "Suất chiếu",
   ticket: "Vé",
   promotion: "Khuyến mãi",
@@ -37,29 +28,54 @@ const GROUP_TRANSLATION: Record<string, string> = {
   permission: "Quyền hạn",
   role: "Vai trò",
   dashboard: "Bảng điều khiển",
+  user: "Người dùng",
+  booking: "Đặt vé",
+  seat: "Ghế ngồi",
+  statistic: "Thống kê",
+  report: "Báo cáo",
+  auth: "Xác thực",
   other: "Khác",
 };
 
 const ACTION_TRANSLATION: Record<string, string> = {
   view: "Xem",
+  read: "Xem",
+  list: "Xem danh sách",
   create: "Tạo mới",
+  add: "Thêm mới",
   update: "Cập nhật",
+  edit: "Chỉnh sửa",
   delete: "Xóa",
+  remove: "Xóa",
   manage: "Quản lý",
-  export: "Xuất file",
+  export: "Xuất dữ liệu",
+  import: "Nhập dữ liệu",
   refund: "Hoàn tiền",
+  cancel: "Hủy",
+  search: "Tìm kiếm",
+  assign: "Phân quyền",
+  transfer: "Điều chuyển",
+  lock: "Khóa",
+  unlock: "Mở khóa",
+  deactivate: "Vô hiệu hóa",
+  activate: "Kích hoạt",
+  report: "Báo cáo",
+  stats: "Thống kê",
+  statistic: "Thống kê",
 };
 
-function getActionColor(action: string) {
-  return ACTION_COLOR[action.toLowerCase()] ?? ACTION_DEFAULT;
+function getActionColor(_action: string) {
+  return BADGE_BASE;
 }
 
 function translateGroup(group: string) {
-  return GROUP_TRANSLATION[group.toLowerCase()] || group;
+  const lower = group.toLowerCase();
+  return GROUP_TRANSLATION[lower] || group;
 }
 
 function translateAction(action: string) {
-  return ACTION_TRANSLATION[action.toLowerCase()] || action;
+  const lower = action.toLowerCase();
+  return ACTION_TRANSLATION[lower] || action;
 }
 
 function groupPermissions(perms: SysPermission[]) {
@@ -86,84 +102,102 @@ function GroupCard({
   group, perms, selectedIds, onToggleSelect, onToggleGroup, onEdit, onDelete,
 }: GroupCardProps) {
   const [expanded, setExpanded] = useState(true);
-  const allSelected = perms.every((p) => selectedIds.has(p.id));
+  const allSelected = perms.length > 0 && perms.every((p) => selectedIds.has(p.id));
   const someSelected = perms.some((p) => selectedIds.has(p.id));
 
   return (
-    <div className="border border-[#2a2a2e] rounded-xl overflow-hidden bg-[#111114]">
+    <div className="border border-[#2e2e34] rounded-xl overflow-hidden bg-[#16161a]">
       {/* Card header */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-[#1a1a1e] hover:bg-[#1e1e22] transition-colors">
-        {/* Group checkbox */}
-        <button
-          onClick={() => onToggleGroup(perms)}
-          className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
-            allSelected
-              ? "bg-[#f84565] border-[#f84565]"
-              : someSelected
-                ? "bg-[#f84565]/30 border-[#f84565]/50"
-                : "border-[#393939] bg-transparent hover:border-[#f84565]/50"
-          }`}
-        >
-          {(allSelected || someSelected) && (
-            <span className="block w-2 h-0.5 bg-white rounded" />
-          )}
-        </button>
+      <div 
+        onClick={() => setExpanded((v) => !v)}
+        className="flex items-center justify-between px-4 py-2.5 bg-[#202025] hover:bg-[#25252b] border-b border-[#2e2e34] transition-colors cursor-pointer select-none"
+      >
+        <div className="flex items-center gap-3">
+          {/* Group checkbox */}
+          <input
+            type="checkbox"
+            checked={allSelected}
+            ref={(el) => {
+              if (el) el.indeterminate = someSelected && !allSelected;
+            }}
+            onChange={(e) => {
+              e.stopPropagation();
+              onToggleGroup(perms);
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-4.5 h-4.5 rounded border-[#393939] bg-[#252529] text-[#f84565] accent-[#f84565] focus:ring-[#f84565] cursor-pointer"
+          />
 
-        {/* Icon + name */}
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <ShieldCheck size={14} className="text-[#f84565] flex-shrink-0" />
-          <span className="font-semibold text-white text-sm uppercase tracking-wide truncate">
-            {translateGroup(group)}
-          </span>
-          <span className="text-[11px] text-[#555] bg-[#252529] px-1.5 py-0.5 rounded-md">
-            {perms.length}
-          </span>
+          {/* Icon + name */}
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck size={17} className="text-[#f84565]" />
+            <span className="font-bold text-white text-sm uppercase tracking-wider">
+              {translateGroup(group)}
+            </span>
+            <span className="text-xs font-semibold text-zinc-400 bg-[#2b2b32] px-2 py-0.5 rounded border border-white/5">
+              {perms.length}
+            </span>
+          </div>
         </div>
 
         {/* Expand toggle */}
-        <button
-          onClick={() => setExpanded((v) => !v)}
-          className="text-[#555] hover:text-white transition-colors"
-        >
-          {expanded ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
-        </button>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-zinc-400 font-medium">
+            {expanded ? "Thu gọn" : "Mở rộng"}
+          </span>
+          <span className="text-zinc-400">
+            {expanded ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
+          </span>
+        </div>
       </div>
 
       {/* Permission chips */}
       {expanded && (
-        <div className="p-4 flex flex-wrap gap-2">
+        <div className="p-4 flex flex-wrap gap-2.5 bg-[#16161a]/90">
           {perms.map((perm) => {
             const action = perm.permission.includes(":") ? perm.permission.split(":")[1] : perm.permission;
             const isSelected = selectedIds.has(perm.id);
             return (
               <div
                 key={perm.id}
-                className={`group relative flex items-center gap-1.5 border rounded-lg px-2.5 py-1.5 transition-all cursor-pointer select-none ${
-                  isSelected ? "ring-1 ring-[#f84565] shadow-sm shadow-rose-500/20" : ""
-                } ${getActionColor(action)}`}
                 onClick={() => onToggleSelect(perm.id)}
-                title={perm.description ?? perm.permission}
+                className={`group relative flex items-center gap-2.5 border rounded-md px-3.5 py-2 text-sm transition-colors cursor-pointer select-none ${
+                  isSelected
+                    ? "ring-1 ring-[#f84565]"
+                    : "hover:border-zinc-500"
+                } ${getActionColor(action)}`}
+                title={perm.description || perm.permission}
               >
-                <span className="text-xs font-mono font-medium">{translateAction(action)}</span>
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => {}}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-4 h-4 border-[#393939] accent-[#f84565] pointer-events-none"
+                />
+
+                <span className="font-semibold text-sm">{translateAction(action)}</span>
 
                 {/* Hover actions */}
                 <div
-                  className="hidden group-hover:flex items-center gap-0.5 ml-1 border-l border-current/20 pl-1.5"
+                  className="flex items-center gap-1 ml-1.5 border-l border-current/20 pl-1.5"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
+                    type="button"
                     onClick={() => onEdit(perm)}
-                    className="hover:text-white transition-colors opacity-70 hover:opacity-100"
-                    title="Sửa"
+                    className="p-1 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                    title="Chỉnh sửa"
                   >
-                    <Edit2 size={11} />
+                    <Edit2 size={13} />
                   </button>
                   <button
+                    type="button"
                     onClick={() => onDelete(perm.id)}
-                    className="hover:text-rose-400 transition-colors opacity-70 hover:opacity-100"
+                    className="p-1 text-zinc-400 hover:text-rose-400 transition-colors cursor-pointer"
                     title="Xóa"
                   >
-                    <Trash2 size={11} />
+                    <Trash2 size={13} />
                   </button>
                 </div>
               </div>
@@ -219,14 +253,23 @@ export default function PermissionPanel({
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  // Client-side filter by search input (on top of server search)
+  // Client-side & Server-side unified search
   const filtered = useMemo(
     () =>
-      permissions.filter(
-        (p) =>
-          p.permission.toLowerCase().includes(search.toLowerCase()) ||
-          (p.description ?? "").toLowerCase().includes(search.toLowerCase()),
-      ),
+      permissions.filter((p) => {
+        if (!search.trim()) return true;
+        const q = search.toLowerCase();
+        const action = p.permission.includes(":") ? p.permission.split(":")[1] : p.permission;
+        const group = p.permission.includes(":") ? p.permission.split(":")[0] : "other";
+        const translatedAct = translateAction(action).toLowerCase();
+        const translatedGrp = translateGroup(group).toLowerCase();
+        return (
+          p.permission.toLowerCase().includes(q) ||
+          (p.description ?? "").toLowerCase().includes(q) ||
+          translatedAct.includes(q) ||
+          translatedGrp.includes(q)
+        );
+      }),
     [permissions, search],
   );
 
@@ -249,13 +292,9 @@ export default function PermissionPanel({
     });
   }, [selectedIds]);
 
-  const handleServerSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearchChange("permission", e.target.value);
-  };
-
   const handleDeleteBatch = () => {
     if (!selectedIds.size) return;
-    if (!window.confirm(`Xóa ${selectedIds.size} quyền đã chọn?`)) return;
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa ${selectedIds.size} quyền đã chọn?`)) return;
     onDeleteBatch(Array.from(selectedIds));
     setSelectedIds(new Set());
   };
@@ -272,102 +311,104 @@ export default function PermissionPanel({
   return (
     <div className="space-y-4">
       {/* ── Toolbar ── */}
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Server search */}
-        <div className="relative flex-1 min-w-[180px] max-w-xs">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555]" />
-          <input
-            placeholder="Tìm quyền theo tên..."
-            onChange={handleServerSearch}
-            className="w-full bg-[#1a1a1e] border border-[#393939] rounded-lg pl-8 pr-3 py-2 text-sm text-white placeholder-[#555] focus:outline-none focus:border-[#f84565] transition-colors"
-          />
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 flex-wrap flex-1">
+          {/* Smart Unified search */}
+          <div className="relative min-w-[260px] max-w-md flex-1">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <input
+              value={search}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearch(val);
+                onSearchChange("permission", val);
+              }}
+              placeholder="Tìm kiếm quyền (ví dụ: Phim, Xem, Tạo mới, Xóa...)"
+              className="w-full bg-[#202025] border border-[#393939] rounded-md pl-8 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-[#f84565] transition-colors"
+            />
+          </div>
 
-        {/* Local filter */}
-        <div className="relative flex-1 min-w-[180px] max-w-xs">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555]" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Lọc nhanh trong trang..."
-            className="w-full bg-[#1a1a1e] border border-[#393939] rounded-lg pl-8 pr-3 py-2 text-sm text-white placeholder-[#555] focus:outline-none focus:border-[#f84565] transition-colors"
-          />
-        </div>
-
-        <button
-          onClick={onResetFilters}
-          className="flex items-center gap-1.5 px-3 py-2 text-xs text-[#d1d5dc] border border-[#393939] rounded-lg hover:bg-white/5 transition-colors"
-        >
-          <RefreshCw size={13} /> Reset
-        </button>
-
-        <div className="flex-1" />
-
-        {/* Batch delete */}
-        {selectedIds.size > 0 && (
           <button
-            onClick={handleDeleteBatch}
-            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-rose-400 border border-rose-500/30 bg-rose-500/10 rounded-lg hover:bg-rose-500/20 transition-colors"
+            type="button"
+            onClick={() => {
+              setSearch("");
+              onResetFilters();
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-zinc-300 border border-[#393939] rounded-md bg-[#202025] hover:bg-white/5 transition-colors cursor-pointer"
           >
-            <Trash2 size={13} />
-            Xóa {selectedIds.size} quyền
+            <RefreshCw size={12} /> Đặt lại
           </button>
-        )}
+        </div>
 
         {/* Add permission */}
         <button
+          type="button"
           onClick={toggleCreatingPermission}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-[#f84565] rounded-lg hover:bg-[#d63352] transition-colors shadow-lg shadow-rose-500/20"
+          className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[#f84565] hover:bg-[#d63451] rounded-md transition-colors cursor-pointer"
         >
-          <Plus size={15} /> Thêm Quyền
+          <Plus size={14} /> Thêm Quyền
         </button>
       </div>
 
-      {/* ── Stats bar ── */}
-      <div className="flex items-center gap-4 text-xs text-[#555]">
-        <span>
-          <span className="text-white font-medium">{totalElements}</span> quyền tổng cộng
-        </span>
-        <span>·</span>
-        <span>
-          <span className="text-white font-medium">{Object.keys(grouped).length}</span> nhóm
-        </span>
-        {selectedIds.size > 0 && (
-          <>
-            <span>·</span>
-            <span>
-              Đã chọn{" "}
-              <span className="text-[#f84565] font-medium">{selectedIds.size}</span>
+      {/* ── Stats / Selection Bar ── */}
+      {selectedIds.size > 0 ? (
+        <div className="bg-[#f84565]/10 border border-[#f84565]/25 px-4 py-2.5 rounded-lg flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-[#f84565] animate-pulse" />
+            <span className="text-white text-xs font-medium">
+              Đã chọn <span className="font-bold text-[#f84565]">{selectedIds.size}</span> quyền
             </span>
+          </div>
+          <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => setSelectedIds(new Set())}
-              className="text-[#797b7d] hover:text-white underline"
+              className="text-zinc-400 hover:text-white text-xs px-2.5 py-1 rounded hover:bg-white/5 transition-colors cursor-pointer"
             >
               Bỏ chọn tất cả
             </button>
-          </>
-        )}
-      </div>
+            <button
+              type="button"
+              onClick={handleDeleteBatch}
+              className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-white bg-[#f84565] hover:bg-[#d63451] rounded-md transition-all cursor-pointer"
+            >
+              <Trash2 size={12} />
+              Xóa ({selectedIds.size})
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-3 text-xs text-zinc-400">
+          <span>
+            Tổng cộng: <span className="text-white font-semibold">{totalElements}</span> quyền
+          </span>
+          <span>•</span>
+          <span>
+            Phân loại: <span className="text-white font-semibold">{Object.keys(grouped).length}</span> nhóm
+          </span>
+        </div>
+      )}
 
       {/* ── Content ── */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-20 gap-2 text-[#797b7d]">
+        <div className="flex items-center justify-center py-20 gap-2 text-zinc-400">
           <Loader2 size={20} className="animate-spin text-[#f84565]" />
-          <span>Đang tải danh sách quyền...</span>
+          <span className="text-sm">Đang tải danh sách quyền...</span>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-3 border border-dashed border-[#2a2a2e] rounded-xl">
-          <Key size={40} className="text-[#2a2a2e]" />
-          <p className="text-[#555] text-sm">Không tìm thấy quyền nào</p>
+        <div className="flex flex-col items-center justify-center py-16 gap-3 border border-dashed border-[#2e2e34]">
+          <Key size={36} className="text-zinc-600" />
+          <p className="text-zinc-400 text-sm">Không tìm thấy quyền nào</p>
           <button
+            type="button"
             onClick={toggleCreatingPermission}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm text-white bg-[#f84565] rounded-lg hover:bg-[#d63352] transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs text-white bg-[#f84565] hover:bg-[#d63451] rounded-md transition-colors cursor-pointer"
           >
-            <Plus size={14} /> Thêm quyền mới
+            <Plus size={13} /> Thêm quyền mới
           </button>
         </div>
       ) : (
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           {Object.entries(grouped)
             .sort(([a], [b]) => a.localeCompare(b))
             .map(([group, perms]) => (
@@ -388,39 +429,43 @@ export default function PermissionPanel({
       {/* ── Pagination ── */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
-          <span className="text-xs text-[#555]">Trang {currentPage} / {totalPages}</span>
-          <div className="flex gap-1">
+          <span className="text-xs text-zinc-400">
+            Trang {currentPage} / {totalPages}
+          </span>
+          <div className="flex items-center gap-1">
             <button
+              type="button"
               disabled={currentPage <= 1}
               onClick={() => onPageChange(currentPage - 1)}
-              className="px-3 py-1.5 text-xs border border-[#393939] rounded-lg text-[#d1d5dc] hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="px-2.5 py-1 text-xs border border-[#393939] rounded text-zinc-300 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Trước
             </button>
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
               .map((p, idx, arr) => (
-                <>
+                <div key={p} className="flex items-center">
                   {idx > 0 && arr[idx - 1] !== p - 1 && (
-                    <span key={`el-${p}`} className="px-2 text-[#555] self-center">…</span>
+                    <span className="px-1.5 text-zinc-500 text-xs">…</span>
                   )}
                   <button
-                    key={p}
+                    type="button"
                     onClick={() => onPageChange(p)}
-                    className={`px-3 py-1.5 text-xs border rounded-lg transition-colors ${
+                    className={`px-2.5 py-1 text-xs border rounded transition-colors cursor-pointer ${
                       p === currentPage
                         ? "bg-[#f84565] border-[#f84565] text-white"
-                        : "border-[#393939] text-[#d1d5dc] hover:bg-white/5"
+                        : "border-[#393939] text-zinc-300 hover:bg-white/5"
                     }`}
                   >
                     {p}
                   </button>
-                </>
+                </div>
               ))}
             <button
+              type="button"
               disabled={currentPage >= totalPages}
               onClick={() => onPageChange(currentPage + 1)}
-              className="px-3 py-1.5 text-xs border border-[#393939] rounded-lg text-[#d1d5dc] hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="px-2.5 py-1 text-xs border border-[#393939] rounded text-zinc-300 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Sau
             </button>
@@ -461,7 +506,7 @@ export default function PermissionPanel({
             <div>
               <h2 className="text-white font-semibold text-base">Chỉnh sửa quyền</h2>
               <p className="text-[#797b7d] text-xs mt-0.5">
-                <span className="font-mono text-emerald-400">{editingPermission?.permission}</span>
+                <span className="font-mono text-[#797b7d]">{editingPermission?.permission}</span>
               </p>
             </div>
             <button onClick={toggleEditingPermission} className="text-[#797b7d] hover:text-white transition-colors">✕</button>

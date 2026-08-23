@@ -10,6 +10,7 @@ export default function ListBookings() {
    const [isCreating, setIsCreating] = useState(false);
    const [isEditing, setIsEditing] = useState(false);
    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
    // ── Detail dialog state ──────────────────────────────────────────────────
    const [isViewingDetail, setIsViewingDetail] = useState(false);
@@ -18,6 +19,23 @@ export default function ListBookings() {
 
    const { bookings, isLoading, searchParams, setSearchParams, pagination } =
       useBookingList();
+
+   const handleBulkDelete = async (ids: string[]) => {
+      if (!window.confirm(`Bạn có chắc chắn muốn xóa ${ids.length} đơn đặt vé đã chọn?`))
+         return;
+
+      setIsBulkDeleting(true);
+      try {
+         await Promise.allSettled(ids.map((id) => bookingService.deleteBooking(id)));
+         toast.success(`Đã xóa ${ids.length} đơn đặt vé thành công`);
+         setSelectedIds([]);
+         setSearchParams((prev: any) => ({ ...prev }));
+      } catch {
+         toast.error("Có lỗi xảy ra khi xóa đơn hàng");
+      } finally {
+         setIsBulkDeleting(false);
+      }
+   };
 
    const handleViewDetail = useCallback(async (booking: any) => {
       setIsViewingDetail(true);
@@ -106,6 +124,8 @@ export default function ListBookings() {
             selection={{
                selectedIds,
                onSelectionChange: setSelectedIds,
+               onBulkDelete: handleBulkDelete,
+               isDeleting: isBulkDeleting,
             }}
             pagination={{
                ...pagination,

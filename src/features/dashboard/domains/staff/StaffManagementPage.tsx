@@ -17,6 +17,29 @@ export default function StaffManagementPage() {
    const { state, actions } = useStaffManagement();
    const { staffPermissions, hasRole } = useAuthz();
    const isManager = hasRole("MANAGER") && !hasRole("SUPER_ADMIN");
+   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
+   const handleBulkDelete = async (ids: string[]) => {
+      if (
+         !window.confirm(
+            `Bạn có chắc chắn muốn vô hiệu hóa ${ids.length} nhân sự đã chọn không?`,
+         )
+      )
+         return;
+
+      setIsBulkDeleting(true);
+      try {
+         await Promise.allSettled(ids.map((id) => employeeService.deactivate(id)));
+         toast.success(`Đã vô hiệu hóa ${ids.length} nhân sự thành công`);
+         setSelectedIds([]);
+         actions.handleFormSuccess();
+      } catch {
+         toast.error("Có lỗi xảy ra khi xóa nhân sự");
+      } finally {
+         setIsBulkDeleting(false);
+      }
+   };
 
    const [branchOptions, setBranchOptions] = useState<
       { value: string; label: string }[]
@@ -42,7 +65,7 @@ export default function StaffManagementPage() {
                branchList.map((b: any) => ({
                   value: b.id,
                   label: b.name,
-                  code: b.code
+                  code: b.code,
                }))
             );
 
@@ -115,6 +138,12 @@ export default function StaffManagementPage() {
             data={state.employees}
             columns={columns}
             isLoading={state.isLoading}
+            selection={{
+               selectedIds,
+               onSelectionChange: setSelectedIds,
+               onBulkDelete: handleBulkDelete,
+               isDeleting: isBulkDeleting,
+            }}
             pagination={{
                currentPage: state.searchParams.page || 1,
                pageSize: state.searchParams.size || 10,

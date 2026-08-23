@@ -15,6 +15,75 @@ interface AssignPermissionsDialogProps {
   onSave: (permissionIds: string[]) => Promise<void>;
 }
 
+const GROUP_TRANSLATION: Record<string, string> = {
+  city: "Thành phố",
+  genre: "Thể loại",
+  customer: "Khách hàng",
+  employee: "Nhân viên",
+  payment: "Thanh toán",
+  movie: "Phim",
+  room: "Phòng chiếu",
+  showtime: "Suất chiếu",
+  ticket: "Vé",
+  promotion: "Khuyến mãi",
+  review: "Đánh giá",
+  branch: "Chi nhánh",
+  position: "Chức vụ",
+  permission: "Quyền hạn",
+  role: "Vai trò",
+  dashboard: "Bảng điều khiển",
+  user: "Người dùng",
+  booking: "Đặt vé",
+  seat: "Ghế ngồi",
+  statistic: "Thống kê",
+  report: "Báo cáo",
+  auth: "Xác thực",
+  other: "Khác",
+};
+
+const ACTION_TRANSLATION: Record<string, string> = {
+  view: "Xem",
+  read: "Xem",
+  list: "Xem danh sách",
+  create: "Tạo mới",
+  add: "Thêm mới",
+  update: "Cập nhật",
+  edit: "Chỉnh sửa",
+  delete: "Xóa",
+  remove: "Xóa",
+  manage: "Quản lý",
+  export: "Xuất dữ liệu",
+  import: "Nhập dữ liệu",
+  refund: "Hoàn tiền",
+  cancel: "Hủy",
+  search: "Tìm kiếm",
+  assign: "Phân quyền",
+  transfer: "Điều chuyển",
+  lock: "Khóa",
+  unlock: "Mở khóa",
+  deactivate: "Vô hiệu hóa",
+  activate: "Kích hoạt",
+  report: "Báo cáo",
+  stats: "Thống kê",
+  statistic: "Thống kê",
+};
+
+function translateGroup(group: string) {
+  const lower = group.toLowerCase();
+  return GROUP_TRANSLATION[lower] || group;
+}
+
+function translateAction(action: string) {
+  const lower = action.toLowerCase();
+  return ACTION_TRANSLATION[lower] || action;
+}
+
+function getPermissionDisplayName(perm: SysPermission) {
+  const action = perm.permission.includes(":") ? perm.permission.split(":")[1] : perm.permission;
+  const group = perm.permission.includes(":") ? perm.permission.split(":")[0] : "other";
+  return `${translateAction(action)} ${translateGroup(group).toLowerCase()}`;
+}
+
 export default function AssignPermissionsDialog({
   role,
   allPermissions,
@@ -35,10 +104,20 @@ export default function AssignPermissionsDialog({
     }
   }, [role, currentPermissions]);
 
-  const filteredPermissions = allPermissions.filter((p) =>
-    p.permission.toLowerCase().includes(search.toLowerCase()) ||
-    (p.description ?? "").toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredPermissions = allPermissions.filter((p) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    const action = p.permission.includes(":") ? p.permission.split(":")[1] : p.permission;
+    const group = p.permission.includes(":") ? p.permission.split(":")[0] : "other";
+    const translatedAct = translateAction(action).toLowerCase();
+    const translatedGrp = translateGroup(group).toLowerCase();
+    return (
+      p.permission.toLowerCase().includes(q) ||
+      (p.description ?? "").toLowerCase().includes(q) ||
+      translatedAct.includes(q) ||
+      translatedGrp.includes(q)
+    );
+  });
 
   // Group by prefix (e.g. "role:", "movie:", etc.)
   const grouped = filteredPermissions.reduce<Record<string, SysPermission[]>>(
@@ -88,33 +167,33 @@ export default function AssignPermissionsDialog({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-[#2a2a2e] bg-gradient-to-r from-[#1a1a1e] to-[#131316]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center">
-              <Shield size={16} className="text-[#f84565]" />
+            <div className="w-9 h-9 rounded-lg bg-rose-500/10 flex items-center justify-center">
+              <Shield size={18} className="text-[#f84565]" />
             </div>
             <div>
-              <h2 className="text-white font-semibold text-base leading-none">
+              <h2 className="text-white font-bold text-base md:text-lg leading-tight">
                 Phân quyền vai trò
               </h2>
-              <p className="text-[#797b7d] text-xs mt-1">
-                {role?.name} · {role?.code}
+              <p className="text-zinc-400 text-sm mt-0.5 font-medium">
+                {role?.name}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center text-[#797b7d] hover:text-white transition-colors rounded-lg hover:bg-white/5"
+            className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-white/5 cursor-pointer"
           >
-            <X size={16} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="px-6 py-4 flex flex-col gap-4 max-h-[70vh]">
+        <div className="px-6 py-5 flex flex-col gap-4 max-h-[70vh]">
           {/* Stats bar */}
-          <div className="flex items-center justify-between text-xs text-[#797b7d]">
+          <div className="flex items-center justify-between text-sm text-zinc-300">
             <span>
               Đã chọn{" "}
-              <span className="text-[#f84565] font-semibold">{selected.size}</span>
+              <span className="text-[#f84565] font-bold text-base">{selected.size}</span>
               {" "}/ {allPermissions.length} quyền
             </span>
             <button
@@ -123,7 +202,7 @@ export default function AssignPermissionsDialog({
                   ? setSelected(new Set())
                   : setSelected(new Set(allPermissions.map((p) => p.id)))
               }
-              className="text-[#f84565] hover:underline font-medium"
+              className="text-[#f84565] hover:underline font-semibold cursor-pointer"
             >
               {selected.size === allPermissions.length ? "Bỏ chọn tất cả" : "Chọn tất cả"}
             </button>
@@ -131,24 +210,24 @@ export default function AssignPermissionsDialog({
 
           {/* Search */}
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555]" />
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Tìm quyền theo tên..."
-              className="w-full bg-[#1e1e22] border border-[#393939] rounded-lg pl-8 pr-4 py-2.5 text-sm text-white placeholder-[#555] focus:outline-none focus:border-[#f84565] transition-colors"
+              placeholder="Tìm kiếm quyền (ví dụ: Nhân viên, Phim, Xóa, Cập nhật...)"
+              className="w-full bg-[#1e1e22] border border-[#393939] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#f84565] transition-colors"
             />
           </div>
 
           {/* Permission list */}
-          <div className="overflow-y-auto flex-1 space-y-4 pr-1">
+          <div className="overflow-y-auto flex-1 space-y-3.5 pr-1">
             {isLoading ? (
-              <div className="flex items-center justify-center py-10 gap-2 text-[#797b7d]">
-                <Loader2 size={18} className="animate-spin text-[#f84565]" />
-                <span>Đang tải...</span>
+              <div className="flex items-center justify-center py-10 gap-2 text-zinc-400">
+                <Loader2 size={20} className="animate-spin text-[#f84565]" />
+                <span className="text-sm">Đang tải...</span>
               </div>
             ) : Object.keys(grouped).length === 0 ? (
-              <p className="text-center text-[#555] py-10">Không tìm thấy quyền nào</p>
+              <p className="text-center text-zinc-400 text-sm py-10">Không tìm thấy quyền nào</p>
             ) : (
               Object.entries(grouped).map(([group, perms]) => {
                 const allGroupSelected = perms.every((p) => selected.has(p.id));
@@ -158,28 +237,28 @@ export default function AssignPermissionsDialog({
                     {/* Group header */}
                     <button
                       onClick={() => toggleGroup(perms)}
-                      className="w-full flex items-center justify-between px-4 py-3 bg-gray-800 hover:bg-gray-700 transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-3 bg-[#202025] hover:bg-[#25252b] transition-colors cursor-pointer"
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <div
-                          className={`w-4 h-4 rounded border-white flex items-center justify-center transition-colors ${
+                          className={`w-4.5 h-4.5 rounded border flex items-center justify-center transition-colors ${
                             allGroupSelected
                               ? "bg-[#f84565] border-[#f84565]"
                               : someGroupSelected
                                 ? "bg-white border-white"
-                                : "bg-transparent border-white"
+                                : "bg-transparent border-[#393939]"
                           }`}
                         >
                           {(allGroupSelected || someGroupSelected) && (
-                            <Check size={10} className="text-white" />
+                            <Check size={12} className="text-white font-bold" />
                           )}
                         </div>
-                        <span className="text-xs font-bold text-[#f84565] uppercase tracking-wider">
-                          {group}
+                        <span className="text-sm font-bold text-[#f84565] uppercase tracking-wider">
+                          {translateGroup(group)}
                         </span>
-                        <span className="text-xs text-white">({perms.length})</span>
+                        <span className="text-sm text-zinc-300 font-medium">({perms.length})</span>
                       </div>
-                      <span className="text-xs text-white">
+                      <span className="text-sm text-zinc-300 font-medium">
                         {perms.filter((p) => selected.has(p.id)).length}/{perms.length}
                       </span>
                     </button>
@@ -189,28 +268,23 @@ export default function AssignPermissionsDialog({
                         <button
                           key={perm.id}
                           onClick={() => toggle(perm.id)}
-                          className="w-full flex items-center gap-3 px-4 py-3 bg-[#1a1a1e] hover:bg-[#252529] transition-colors text-left"
+                          className="w-full flex items-center gap-3.5 px-4 py-3 bg-[#16161a] hover:bg-[#1f1f24] transition-colors text-left cursor-pointer"
                         >
                           <div
-                            className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
+                            className={`w-4.5 h-4.5 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
                               selected.has(perm.id)
                                 ? "bg-[#f84565] border-[#f84565]"
-                                : "bg-transparent border-white"
+                                : "bg-transparent border-[#393939]"
                             }`}
                           >
                             {selected.has(perm.id) && (
-                              <Check size={10} className="text-white" />
+                              <Check size={12} className="text-white font-bold" />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm text-white font-mono truncate">
-                              {perm.permission}
+                            <p className="text-sm font-medium text-zinc-100 truncate">
+                              {getPermissionDisplayName(perm)}
                             </p>
-                            {perm.description && (
-                              <p className="text-xs text-[#797b7d] truncate">
-                                {perm.description}
-                              </p>
-                            )}
                           </div>
                         </button>
                       ))}

@@ -155,6 +155,7 @@ export default function ShowtimeSelection() {
                            <TheaterCard
                               key={theater.id}
                               theater={theater}
+                              selectedShowtimeId={selectedShowtime?.showtime.id}
                               onShowtimeSelect={(t: Theater, s: Showtime) =>
                                  setSelectedShowtime({
                                     theater: t,

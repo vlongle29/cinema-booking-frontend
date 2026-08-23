@@ -32,6 +32,7 @@ const sidebarItems: SidebarItem[] = [
       roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF],
    },
    { label: "Quản lý chi nhánh", path: "/dashboard/branch-manage", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN] },
+   { label: "Quản lý thành phố", path: "/dashboard/city-manage", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN] },
    { label: "Quản lý phòng chiếu", path: "/dashboard/room-manage", roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MANAGER] },
    {
       label: "Vai trò & Phân quyền",

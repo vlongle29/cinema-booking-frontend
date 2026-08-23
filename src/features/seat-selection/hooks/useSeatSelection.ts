@@ -17,6 +17,11 @@ export const useSeatSelection = (
             seat.currentStatus,
          )
       ) {
+         if (selectedSeats.has(seat.id)) {
+            const newSelected = new Set(selectedSeats);
+            newSelected.delete(seat.id);
+            setSelectedSeats(newSelected);
+         }
          return;
       }
       const newSelected = new Set(selectedSeats);
@@ -71,6 +76,7 @@ export const useSeatSelection = (
          });
       } catch (error) {
          console.error("Lỗi khi tạo đơn hàng:", error);
+         setSelectedSeats(new Set());
          alert("Không thể đặt ghế lúc này. Vui lòng thử lại!");
       }
    };

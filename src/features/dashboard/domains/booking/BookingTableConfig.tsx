@@ -20,6 +20,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+const getCustomerName = (booking: any) => {
+   if (booking.customerName && booking.customerName.trim()) return booking.customerName.trim();
+   if (booking.customer?.name && booking.customer.name.trim()) return booking.customer.name.trim();
+   if (booking.fullName && booking.fullName.trim()) return booking.fullName.trim();
+   if (booking.name && booking.name.trim()) return booking.name.trim();
+   if (booking.userFullName && booking.userFullName.trim()) return booking.userFullName.trim();
+   if (booking.userName && booking.userName.trim()) return booking.userName.trim();
+   if (booking.user?.name && booking.user.name.trim()) return booking.user.name.trim();
+   if (booking.user?.fullName && booking.user.fullName.trim()) return booking.user.fullName.trim();
+   if (booking.email && booking.email.trim()) {
+      return booking.email.split("@")[0];
+   }
+   if (booking.customerEmail && booking.customerEmail.trim()) {
+      return booking.customerEmail.split("@")[0];
+   }
+   if (booking.phoneNumber || booking.customerPhone || booking.phone) {
+      return `Khách (${booking.phoneNumber || booking.customerPhone || booking.phone})`;
+   }
+   return "Khách vãng lai";
+};
+
 export const getBookingColumns = (handlers: {
    onView: (booking: any) => void;
    onDelete: (id: string) => void;
@@ -39,22 +60,33 @@ export const getBookingColumns = (handlers: {
    {
       id: "customer",
       label: "Khách hàng",
-      render: (booking) => (
-         <div>
-            <div className="text-white text-sm font-medium flex items-center gap-1.5">
-               <User size={14} className="text-[#797b7d]" />
-               {booking.customerId
-                  ? `${booking.customerName}`
-                  : "Khách vãng lai"}
+      render: (booking) => {
+         const name = getCustomerName(booking);
+         const email = booking.email || booking.customerEmail || booking.customer?.email;
+         const phone = booking.phoneNumber || booking.phone || booking.customerPhone || booking.customer?.phone;
+         const isWalkIn = name === "Khách vãng lai";
+
+         return (
+            <div>
+               <div className="text-white text-sm font-medium flex items-center gap-1.5">
+                  <User size={14} className={isWalkIn ? "text-[#797b7d]" : "text-[#f84565]"} />
+                  <span className={isWalkIn ? "text-zinc-400" : "text-white font-semibold"}>
+                     {name}
+                  </span>
+               </div>
+               {email && (
+                  <div className="text-zinc-400 text-xs mt-1 flex items-center gap-1">
+                     {email}
+                  </div>
+               )}
+               {phone && (
+                  <div className="text-zinc-400 text-xs mt-0.5 flex items-center gap-1">
+                     {phone}
+                  </div>
+               )}
             </div>
-            <div className="text-[#797b7d] text-[11px] mt-1 flex items-center gap-1">
-               {booking.email}
-            </div>
-            <div className="text-[#797b7d] text-[11px] mt-1 flex items-center gap-1">
-               {booking.phoneNumber}
-            </div>
-         </div>
-      ),
+         );
+      },
    },
    {
       id: "bookingDate",
@@ -97,7 +129,7 @@ export const getBookingColumns = (handlers: {
          };
          return (
             <span
-               className={`px-2 py-0.5 rounded-[4px] text-[10px] font-bold border uppercase tracking-wider ${styles[status] || styles.PENDING}`}
+               className={`inline-block whitespace-nowrap px-2 py-0.5 rounded-[4px] text-[10px] font-bold border uppercase tracking-wider ${styles[status] || styles.PENDING}`}
             >
                {status}
             </span>

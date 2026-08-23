@@ -1,6 +1,5 @@
-import React from "react";
 import { FiEdit2, FiTrash2, FiCheckSquare } from "react-icons/fi";
-import type { Column, FilterField } from "../DashboardEntityList";
+import type { Column, FilterField } from "../../shared/DashboardEntityList";
 
 interface SeatTemplate {
    id: string;
@@ -19,7 +18,7 @@ export const getSeatTemplateColumns = (
    {
       id: "name",
       label: "Tên sơ đồ",
-      render: (template) => (
+      render: (template: SeatTemplate) => (
          <div className="flex flex-col">
             <p className="text-white text-sm font-semibold hover:text-[#f84565] transition-colors">
                {template.name}
@@ -33,7 +32,7 @@ export const getSeatTemplateColumns = (
    {
       id: "layout",
       label: "Bố cục",
-      render: (template) => (
+      render: (template: SeatTemplate) => (
          <div className="text-white text-sm font-medium">
             {template.rows} Hàng x {template.columns} Cột
          </div>
@@ -42,7 +41,7 @@ export const getSeatTemplateColumns = (
    {
       id: "capacity",
       label: "Sức chứa",
-      render: (template) => (
+      render: (template: SeatTemplate) => (
          <div className="text-white text-sm font-medium">
             {template.totalSeats} Ghế
          </div>
@@ -52,7 +51,7 @@ export const getSeatTemplateColumns = (
       id: "actions",
       label: "Thao tác",
       align: "right",
-      render: (template) => (
+      render: (template: SeatTemplate) => (
          <div className="flex justify-end gap-2">
             <button
                onClick={() => onApply(template)}

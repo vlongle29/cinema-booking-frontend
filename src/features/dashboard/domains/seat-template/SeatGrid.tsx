@@ -28,26 +28,29 @@ const SeatCell = memo(
                if (!readOnly) onContextMenu?.(index);
             }}
             className={`
-        w-8 h-8 sm:w-10 sm:h-10 rounded-t-xl rounded-b-md 
-        flex items-center justify-center text-[10px] sm:text-xs font-medium select-none 
-        transition-all duration-200
-        ${readOnly ? "cursor-default opacity-80" : "cursor-pointer hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(0,0,0,0.5)] active:scale-95"}
+        w-8 h-8 sm:w-9 sm:h-9 rounded-[6px]
+        flex items-center justify-center text-xs font-bold select-none 
+        transition-all duration-150
+        ${
+           readOnly
+              ? "cursor-default opacity-80"
+              : "cursor-pointer hover:scale-105 active:scale-95 shadow-sm"
+        }
         ${
            isAisle
-              ? "bg-transparent border-2 border-dashed border-[#393939] text-[#797b7d] hover:translate-y-0 hover:shadow-none hover:bg-[#393939]/20"
-              : "text-white shadow-sm ring-1 ring-white/10"
+              ? "bg-transparent border border-dashed border-[#393939] text-[#555] hover:bg-[#252529]/40"
+              : "text-white ring-1 ring-white/15"
         }
       `}
-            // Use inline-style for background color because Hex code is returned dynamically from Database
             style={
                !isAisle && seatType ? { backgroundColor: seatType.color } : {}
             }
             title={
-               !isAisle ? `${seat.seatNumber} - ${seatType?.name}` : "Aisle"
+               !isAisle ? `${seat.seatNumber} (${seatType?.name || ""})` : "Lối đi"
             }
          >
             {!isAisle && (
-               <span className="text-xs sm:text-sm font-bold text-white drop-shadow-md tracking-tight">
+               <span className="leading-none text-white tracking-tight">
                   {seat.seatNumber}
                </span>
             )}
@@ -63,7 +66,7 @@ const SeatGrid = ({
    onSeatClick,
    onSeatRightClick,
    readOnly = false,
-}: {
+ }: {
    seats: any[];
    columns: number;
    seatTypes: any[];
@@ -72,19 +75,18 @@ const SeatGrid = ({
    readOnly?: boolean;
 }) => {
    return (
-      <div className="w-full overflow-x-auto p-6 sm:p-8 bg-[#1a1a1e] rounded-2xl border border-[#393939] shadow-inner">
+      <div className="w-full overflow-x-auto p-4 sm:p-6 bg-[#141417] rounded-lg border border-[#393939]">
          {/* Screen Indicator */}
-         <div className="mb-14 flex flex-col items-center justify-center select-none w-full min-w-[300px]">
-            <div className="w-full max-w-xl h-2 bg-gradient-to-r from-transparent via-[#f84565] to-transparent rounded-full mb-3 opacity-80 shadow-[0_4px_20px_rgba(248,69,101,0.4)]"></div>
-            <span className="text-[#797b7d] font-bold tracking-[0.4em] uppercase text-xs">
+         <div className="mb-6 sm:mb-8 flex flex-col items-center justify-center select-none w-full min-w-[260px]">
+            <div className="w-full max-w-sm h-1.5 bg-gradient-to-r from-transparent via-[#f84565]/80 to-transparent rounded-full mb-2.5 shadow-[0_2px_8px_rgba(248,69,101,0.3)]" />
+            <span className="text-[#797b7d] font-semibold tracking-[0.25em] uppercase text-xs">
                Màn hình
             </span>
          </div>
 
          <div
-            className="grid gap-2 sm:gap-2.5 mx-auto"
+            className="grid gap-1.5 sm:gap-2 mx-auto justify-center"
             style={{
-               // Set dynamic columns based on state
                gridTemplateColumns: `repeat(${columns}, minmax(0, max-content))`,
                width: "max-content",
             }}

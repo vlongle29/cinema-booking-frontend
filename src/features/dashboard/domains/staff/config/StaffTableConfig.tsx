@@ -122,7 +122,11 @@ export const getStaffColumns = (handlers: {
                         size={14}
                         className="mr-2 text-orange-400"
                      />
-                     <span>Chuyển chi nhánh</span>
+                     <span>
+                        {employee.branchName && employee.branchName !== "—"
+                           ? "Chuyển / Gỡ chi nhánh"
+                           : "Gán chi nhánh"}
+                     </span>
                   </DropdownMenuItem>
                )}
                {handlers.permissions.canDelete && (

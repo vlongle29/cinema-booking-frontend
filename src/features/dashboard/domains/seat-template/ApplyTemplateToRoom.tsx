@@ -82,7 +82,7 @@ const ApplyTemplateToRoom: React.FC<ApplyTemplateProps> = ({
             });
             toast.success("Áp dụng template vào phòng thành công!");
             onClose?.();
-         } catch (error) {
+         } catch (error: any) {
             toast.error(error.response?.data?.message || "Có lỗi xảy ra");
          }
       }

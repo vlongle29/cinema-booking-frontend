@@ -26,6 +26,7 @@ import {
    Search as SearchIcon,
    ChevronLeft,
    ChevronRight,
+   Trash2,
 } from "lucide-react";
 import {
    Pagination,
@@ -58,14 +59,21 @@ export interface FilterField {
    disabled?: boolean;
 }
 
+export interface SelectionConfig {
+   selectedIds: string[];
+   onSelectionChange: (ids: string[]) => void;
+   onBulkDelete?: (ids: string[]) => void | Promise<void>;
+   isDeleting?: boolean;
+}
+
 interface DashboardEntityListProps<T> {
    title: string;
    entityName: string;
    canCreate?: boolean;
    isCreating: boolean;
    onToggleCreating: () => void;
-   isEditing: boolean;
-   onToggleEditing: () => void;
+   isEditing?: boolean;
+   onToggleEditing?: () => void;
 
    // Filters
    filters: FilterField[];
@@ -88,16 +96,13 @@ interface DashboardEntityListProps<T> {
    onPageChange: (newPage: number) => void;
 
    // Form
-   renderCreateForm: () => ReactNode;
-   renderEditForm: () => ReactNode;
+   renderCreateForm?: () => ReactNode;
+   renderEditForm?: () => ReactNode;
    renderCustomList?: (data: T[]) => ReactNode; // Giữ lại để dự phòng
    renderTopContent?: (data: T[]) => ReactNode; // Thêm slot mới
 
    // Selection
-   selection?: {
-      selectedIds: string[];
-      onSelectionChange: (ids: string[]) => void;
-   };
+   selection?: SelectionConfig;
 
    // Custom Messages
    emptyMessage?: string;
@@ -115,8 +120,8 @@ export default function DashboardEntityList<T>({
    canCreate = true,
    isCreating,
    onToggleCreating,
-   isEditing,
-   onToggleEditing,
+   isEditing = false,
+   onToggleEditing = () => {},
    filters,
    searchParams,
    onSearchChange,
@@ -248,7 +253,7 @@ export default function DashboardEntityList<T>({
                </div>
                {/* Body */}
                <div className="px-6 py-6 max-h-[75vh] overflow-y-auto">
-                  {renderCreateForm()}
+                  {renderCreateForm?.()}
                </div>
             </DialogContent>
          </Dialog>
@@ -326,8 +331,10 @@ export default function DashboardEntityList<T>({
                   </Box>
 
                   <Grid container spacing={2}>
-                     {filters.map((filter) => (
-                        <Grid
+                     {filters.map((filter) => {
+                        const GridItem = Grid as any;
+                        return (
+                        <GridItem
                            item
                            xs={12}
                            sm={6}
@@ -414,8 +421,9 @@ export default function DashboardEntityList<T>({
                                  }}
                               />
                            )}
-                        </Grid>
-                     ))}
+                        </GridItem>
+                        );
+                     })}
                   </Grid>
 
                   <Box
@@ -479,7 +487,46 @@ export default function DashboardEntityList<T>({
                   <Box
                      sx={{ display: "flex", flexDirection: "column", gap: 3 }}
                   >
-                     {renderTopContent && renderTopContent(data)}
+                      {renderTopContent ? (
+                         renderTopContent(data)
+                      ) : selection && selection.selectedIds.length > 0 ? (
+                         <div className="bg-[#f84565]/10 border border-[#f84565]/25 px-4 py-3 rounded-xl flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-200">
+                            <div className="flex items-center gap-2.5">
+                               <span className="w-2 h-2 rounded-full bg-[#f84565] animate-pulse" />
+                               <span className="text-white text-sm font-medium">
+                                  Đã chọn{" "}
+                                  <span className="font-bold text-[#f84565]">
+                                     {selection.selectedIds.length}
+                                  </span>{" "}
+                                  {entityName}
+                               </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                               <button
+                                  type="button"
+                                  onClick={() => selection.onSelectionChange([])}
+                                  className="text-zinc-400 hover:text-white text-xs px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+                               >
+                                  Bỏ chọn
+                               </button>
+                               {selection.onBulkDelete && (
+                                  <button
+                                     type="button"
+                                     onClick={() =>
+                                        selection.onBulkDelete!(selection.selectedIds)
+                                     }
+                                     disabled={selection.isDeleting}
+                                     className="bg-[#f84565] hover:bg-[#d63451] active:scale-95 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-md shadow-[#f84565]/20 transition-all cursor-pointer disabled:opacity-50"
+                                  >
+                                     <Trash2 size={13} />
+                                     <span>
+                                        Xóa ({selection.selectedIds.length})
+                                     </span>
+                                  </button>
+                               )}
+                            </div>
+                         </div>
+                      ) : null}
                      {renderCustomList ? (
                         renderCustomList(data)
                      ) : (
@@ -500,7 +547,7 @@ export default function DashboardEntityList<T>({
                                           <TableCell sx={{ width: 50, borderBottom: `1px solid ${DASHBOARD_BORDER}`, px: 3 }}>
                                              <input
                                                 type="checkbox"
-                                                className="w-4 h-4 rounded border-gray-300 text-[#f84565] focus:ring-[#f84565] cursor-pointer"
+                                                className="w-4 h-4 rounded border-[#393939] bg-[#252529] text-[#f84565] accent-[#f84565] focus:ring-[#f84565] cursor-pointer"
                                                 onChange={handleSelectAll}
                                                 checked={
                                                    data.length > 0 &&
@@ -523,6 +570,7 @@ export default function DashboardEntityList<T>({
                                                 borderBottom: `1px solid ${DASHBOARD_BORDER}`,
                                                 px: 3,
                                                 py: 2,
+                                                whiteSpace: "nowrap",
                                              }}
                                           >
                                              {col.label}
@@ -535,7 +583,10 @@ export default function DashboardEntityList<T>({
                                        <TableRow
                                           key={item.id || index}
                                           sx={{
+                                             opacity: item.status === "CLOSED" || item.status === "ENDED" ? 0.75 : 1,
+                                             transition: "opacity 0.2s ease, background-color 0.2s ease",
                                              "&:hover": {
+                                                opacity: 1,
                                                 bgcolor:
                                                    "rgba(255,255,255,0.02)",
                                              },
@@ -550,7 +601,7 @@ export default function DashboardEntityList<T>({
                                              <TableCell>
                                                 <input
                                                    type="checkbox"
-                                                   className="w-4 h-4 rounded border-gray-300 text-[#f84565] focus:ring-[#f84565] cursor-pointer"
+                                                   className="w-4 h-4 rounded border-[#393939] bg-[#252529] text-[#f84565] accent-[#f84565] focus:ring-[#f84565] cursor-pointer"
                                                    checked={selection.selectedIds.includes(item.id)}
                                                    onChange={() => handleSelectRow(item.id)}
                                                 />
@@ -700,6 +751,10 @@ export default function DashboardEntityList<T>({
                      elevation={0}
                      sx={{
                         p: 12,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
                         textAlign: "center",
                         bgcolor: DASHBOARD_BG,
                         border: `1px solid ${DASHBOARD_BORDER}`,

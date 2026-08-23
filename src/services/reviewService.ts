@@ -1,5 +1,4 @@
 import apiService from "./apiService";
-import type { ApiResponse } from "./apiService";
 
 const REVIEW_API_PATH = "/reviews";
 

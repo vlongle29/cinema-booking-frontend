@@ -7,6 +7,7 @@ import {
    Trash2,
    Edit2,
    EllipsisVertical,
+   Film,
 } from "lucide-react";
 import type { Showtime } from "../../../showtime/types/showtime.types";
 import type { Column, FilterField } from "../../shared/DashboardEntityList";
@@ -19,6 +20,64 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+const ShowtimeMovieCell: React.FC<{ movie?: Showtime["movie"] }> = ({ movie }) => {
+   const [imgError, setImgError] = React.useState(false);
+   const posterUrl = movie?.posterUrl
+      ? movie.posterUrl.startsWith("http")
+         ? movie.posterUrl
+         : `${API_BASE_URL}${movie.posterUrl.startsWith("/") ? "" : "/"}${movie.posterUrl}`
+      : null;
+
+   const isMovieAvailable = Boolean(movie && movie.title);
+
+   return (
+      <div className="flex items-center gap-3.5">
+         <div className="w-12 h-16 rounded-[6px] bg-[#1a1a1e] flex-shrink-0 overflow-hidden border border-[#2e2e34] flex items-center justify-center relative shadow-sm group">
+            {posterUrl && !imgError ? (
+               <img
+                  src={posterUrl}
+                  alt={movie?.title || "Phim"}
+                  onError={() => setImgError(true)}
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+               />
+            ) : (
+               <div className="flex flex-col items-center justify-center w-full h-full bg-[#18181c] text-[#55575e] p-1 text-center select-none">
+                  <Film className="w-5 h-5 text-[#52525b] mb-1" />
+                  <span className="text-[8px] font-semibold text-[#71717a] uppercase tracking-wider leading-none">
+                     No Poster
+                  </span>
+               </div>
+            )}
+         </div>
+         <div className="max-w-[160px]">
+            {isMovieAvailable ? (
+               <>
+                  <p
+                     className="text-white text-sm font-semibold truncate hover:text-[#f84565] transition-colors"
+                     title={movie?.title}
+                  >
+                     {movie?.title}
+                  </p>
+                  <p className="text-[#797b7d] text-[11px] mt-1 truncate">
+                     {movie?.durationMinutes ? `${movie.durationMinutes} phút` : ""} {movie?.rated ? `| ${movie.rated}` : ""}
+                  </p>
+               </>
+            ) : (
+               <>
+                  <p className="text-zinc-400 text-xs font-semibold flex items-center gap-1.5">
+                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500/80 inline-block" />
+                     Phim đã gỡ
+                  </p>
+                  <p className="text-[#52525b] text-[11px] mt-0.5">
+                     Không có thông tin
+                  </p>
+               </>
+            )}
+         </div>
+      </div>
+   );
+};
+
 // Hàm trả về mảng columns, nhận vào hàm xử lý delete để gắn vào nút Trash2
 export const getShowtimeColumns = (handlers: {
    onEdit: (show: Showtime) => void;
@@ -27,27 +86,7 @@ export const getShowtimeColumns = (handlers: {
    {
       id: "movie",
       label: "Phim",
-      render: (show) => (
-         <div className="flex items-center gap-4">
-            <div className="w-12 h-16 rounded-[4px] bg-[#252529] flex-shrink-0 overflow-hidden border border-[#393939]">
-               <img
-                  src={`${API_BASE_URL}${show.movie?.posterUrl}`}
-                  alt={show.movie?.title || "Unknown Movie"}
-                  className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
-               />
-            </div>
-            <div className="max-w-[150px]">
-               <p className="text-white text-sm font-semibold truncate hover:text-[#f84565] transition-colors">
-                  {show.movie?.title || "Movie Deleted"}
-               </p>
-               <p className="text-[#797b7d] text-[11px] mt-1">
-                  {show.movie
-                     ? `${show.movie.durationMinutes} mins | ${show.movie.rated}`
-                     : "N/A"}
-               </p>
-            </div>
-         </div>
-      ),
+      render: (show) => <ShowtimeMovieCell movie={show.movie} />,
    },
    {
       id: "branch",
@@ -104,17 +143,26 @@ export const getShowtimeColumns = (handlers: {
    {
       id: "status",
       label: "Tình trạng",
-      render: (show) => (
-         <span
-            className={`px-2 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-wider ${
-               show.status === "OPEN"
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                  : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-            }`}
-         >
-            {show.status}
-         </span>
-      ),
+      render: (show) => {
+         const isClosed = show.status === "CLOSED";
+         const isOpen = show.status === "OPEN";
+         return (
+            <span
+               className={`inline-flex items-center gap-1.5 whitespace-nowrap px-2.5 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-wider ${
+                  isOpen
+                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                     : "bg-zinc-500/15 text-zinc-400 border border-zinc-600/30"
+               }`}
+            >
+               <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                     isOpen ? "bg-emerald-400 animate-pulse" : "bg-zinc-500"
+                  }`}
+               />
+               {isOpen ? "Đang mở" : isClosed ? "Đã đóng" : show.status}
+            </span>
+         );
+      },
    },
    {
       id: "actions",

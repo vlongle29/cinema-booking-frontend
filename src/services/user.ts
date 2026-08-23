@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { UserInfoResponse, SysUserSearchDTO, UserCreateRequest, UserUpdateRequest, UserIdRequest } from "../types/user";
-import type { ApiResponse, PageResponse } from "@/services/apiService";
+import type { ApiResponse } from "@/services/apiService";
 
 
 const API_URL = "http://localhost:8080/api";

@@ -25,6 +25,7 @@ const SeatTemplateList = () => {
       setSearchParams,
       pagination,
       handleDelete,
+      refetch,
    } = useSeatTemplateList();
 
    const handleSearchChange = (name: string, value: any) => {
@@ -87,8 +88,7 @@ const SeatTemplateList = () => {
                   onClose={() => setIsModalOpen(false)}
                   onSubmit={() => {
                      setIsModalOpen(false);
-                     // Trigger re-fetch of templates after successful creation
-                     setSearchParams((prev) => ({ ...prev }));
+                     refetch();
                   }}
                />
             )}
@@ -122,7 +122,7 @@ const SeatTemplateList = () => {
                      onClose={() => setIsEditModalOpen(false)} // Close modal
                      onSubmit={() => {
                         setIsEditModalOpen(false);
-                        setSearchParams((prev) => ({ ...prev })); // Trigger re-fetch
+                        refetch();
                      }}
                   />
                </div>
@@ -144,7 +144,7 @@ const SeatTemplateList = () => {
                      roomId={selectedTemplate.roomId}
                      onClose={() => {
                         setIsApplyModalOpen(false);
-                        setSearchParams((prev) => ({ ...prev })); // Trigger re-fetch
+                        refetch();
                      }}
                   />
                </div>

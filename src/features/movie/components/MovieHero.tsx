@@ -52,7 +52,6 @@ export const MovieHero = ({ movie, onBuyTicketClick }: MovieHeroProps) => {
 
          {/* Movie Info */}
          <div className="flex-1 relative">
-            <BlurredCircle className="z-50 -top-24 -left-24" />
             <span className="text-amber-600 text-sm font-semibold tracking-wider uppercase">
                {movie?.language || "LOADING..."}
             </span>

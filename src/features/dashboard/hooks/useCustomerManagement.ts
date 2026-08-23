@@ -29,7 +29,7 @@ export function useCustomerManagement() {
          const response = await customerService.search(debouncedSearchParams);
          if (response.success) {
             const rows = response.data.content;
-            setCustomers(rows);
+            setCustomers(rows as unknown as Customer[]);
             setTotalElements(response.data.totalElements);
             setTotalPages(response.data.totalPages);
          }

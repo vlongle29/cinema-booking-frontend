@@ -18,7 +18,14 @@ export const getPermissionColumns = (handlers: {
     id: "permission",
     label: "Tên quyền",
     render: (perm) => (
-      <span className="font-mono text-sm text-emerald-400">{perm.permission}</span>
+      <span className="font-medium text-sm text-white">{perm.permission}</span>
+    ),
+  },
+  {
+    id: "code",
+    label: "Mã quyền",
+    render: (perm) => (
+      <span className="font-mono text-sm text-emerald-400">{perm.code || "—"}</span>
     ),
   },
   {

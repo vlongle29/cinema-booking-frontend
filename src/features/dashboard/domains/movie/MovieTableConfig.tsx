@@ -5,6 +5,7 @@ import {
    Trash2,
    Edit2,
    EllipsisVertical,
+   Film,
 } from "lucide-react";
 import type { Movie } from "@/types/movie"; // Updated path
 import type {
@@ -27,6 +28,43 @@ const MOVIE_STATUS_TRANSLATION: Record<string, string> = {
    END: "ĐÃ KẾT THÚC",
 };
 
+const MovieCell: React.FC<{ movie: Movie }> = ({ movie }) => {
+   const [imgError, setImgError] = React.useState(false);
+   const posterUrl = movie?.posterUrl
+      ? movie.posterUrl.startsWith("http")
+         ? movie.posterUrl
+         : `${API_BASE_URL}${movie.posterUrl.startsWith("/") ? "" : "/"}${movie.posterUrl}`
+      : null;
+
+   return (
+      <div className="flex items-center gap-4">
+         <div className="w-16 h-24 rounded-[6px] bg-[#1a1a1e] flex-shrink-0 overflow-hidden border border-[#2e2e34] flex items-center justify-center relative shadow-sm group">
+            {posterUrl && !imgError ? (
+               <img
+                  src={posterUrl}
+                  alt={movie.title}
+                  onError={() => setImgError(true)}
+                  className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
+               />
+            ) : (
+               <div className="flex flex-col items-center justify-center w-full h-full bg-[#18181c] text-[#55575e] p-1 text-center select-none">
+                  <Film className="w-6 h-6 text-[#52525b] mb-1" />
+                  <span className="text-[9px] font-semibold text-[#71717a] uppercase tracking-wider">No Poster</span>
+               </div>
+            )}
+         </div>
+         <div className="max-w-[200px]">
+            <p className="text-white text-sm font-semibold truncate hover:text-[#f84565] transition-colors" title={movie.title}>
+               {movie.title}
+            </p>
+            <p className="text-[#797b7d] text-[11px] mt-1">
+               {movie.durationMinutes} mins | {movie.rated}
+            </p>
+         </div>
+      </div>
+   );
+};
+
 export const getMovieColumns = (handlers: {
    onEdit: (movie: Movie) => void;
    onDelete: (id: string) => void;
@@ -34,25 +72,7 @@ export const getMovieColumns = (handlers: {
    {
       id: "movie",
       label: "Phim",
-      render: (movie) => (
-         <div className="flex items-center gap-4">
-            <div className="w-16 h-24 rounded-[4px] bg-[#252529] flex-shrink-0 overflow-hidden border border-[#393939]">
-               <img
-                  src={`${API_BASE_URL}${movie.posterUrl}`}
-                  alt={movie.title}
-                  className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
-               />
-            </div>
-            <div className="max-w-[200px]">
-               <p className="text-white text-sm font-semibold truncate hover:text-[#f84565] transition-colors">
-                  {movie.title}
-               </p>
-               <p className="text-[#797b7d] text-[11px] mt-1">
-                  {movie.durationMinutes} mins | {movie.rated}
-               </p>
-            </div>
-         </div>
-      ),
+      render: (movie) => <MovieCell movie={movie} />,
    },
    {
       id: "director",
@@ -94,7 +114,7 @@ export const getMovieColumns = (handlers: {
          const label = MOVIE_STATUS_TRANSLATION[status] || status.replace("_", " ");
          return (
             <span
-               className={`px-2 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-wider ${
+               className={`inline-block whitespace-nowrap px-2.5 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-wider ${
                   status === "SHOWING"
                      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                      : status === "COMING_SOON"

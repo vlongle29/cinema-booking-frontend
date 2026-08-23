@@ -48,11 +48,12 @@ export const getUserColumns = (handlers: {
                <div className="font-medium text-white flex items-center gap-1">
                   {user.name}
                   {user.systemFlag === "1" && (
-                     <ShieldCheck
-                        size={14}
-                        className="text-blue-500"
-                        title="Hệ thống"
-                     />
+                     <span title="Hệ thống">
+                        <ShieldCheck
+                           size={14}
+                           className="text-blue-500"
+                        />
+                     </span>
                   )}
                </div>
                <div className="text-xs text-[#797b7d]">@{user.username}</div>

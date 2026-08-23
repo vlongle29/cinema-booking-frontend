@@ -36,7 +36,7 @@ export function useStaffManagement() {
          const response = await employeeService.search(debouncedSearchParams);
          if (response.success) {
             const rows = response.data.content;
-            setEmployees(rows);
+            setEmployees(rows as unknown as Employee[]);
             setTotalElements(response.data.totalElements);
             setTotalPages(response.data.totalPages);
          }
@@ -92,17 +92,26 @@ export function useStaffManagement() {
 
    const handleTransfer = async (userId: string, branchId: string) => {
       try {
-         const res = await employeeService.transfer(userId, { branchId });
-         if (res.success) {
-            toast.success("Chuyển chi nhánh thành công");
-            setTransferTarget(null);
-            fetchEmployees();
+         if (branchId === "UNASSIGN" || !branchId) {
+            const res = await employeeService.update(userId, { branchId: null as any });
+            if (res.success) {
+               toast.success("Đã gỡ nhân sự khỏi chi nhánh thành công");
+               setTransferTarget(null);
+               fetchEmployees();
+            }
+         } else {
+            const res = await employeeService.transfer(userId, { branchId });
+            if (res.success) {
+               toast.success("Chuyển chi nhánh thành công");
+               setTransferTarget(null);
+               fetchEmployees();
+            }
          }
       } catch (error: any) {
          toast.error(
             error.response?.data?.message ||
                error.message ||
-               "Không thể chuyển chi nhánh",
+               "Không thể thực hiện thao tác",
          );
       }
    };

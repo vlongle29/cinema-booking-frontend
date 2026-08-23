@@ -13,6 +13,18 @@ import type {
 const ROLE_API = "/roles";
 const PERMISSION_API = "/permissions";
 
+const cleanParams = (params: any) => {
+  const cleaned: any = {};
+  if (!params) return cleaned;
+  Object.keys(params).forEach((key) => {
+    const val = params[key];
+    if (val !== undefined && val !== null && val !== "") {
+      cleaned[key] = val;
+    }
+  });
+  return cleaned;
+};
+
 // ============================================================
 // Role Service
 // ============================================================
@@ -26,7 +38,9 @@ export const sysRoleService = {
 
   /** Tìm kiếm phân trang */
   search: (params: SysRoleSearchDTO) =>
-    apiService.get<ApiResponse<any>>(`${ROLE_API}/search`, { params }),
+    apiService.get<ApiResponse<any>>(`${ROLE_API}/search`, {
+      params: cleanParams(params),
+    }),
 
   /** Tạo role mới */
   create: (data: SysRoleRequest) =>
@@ -60,7 +74,9 @@ export const sysRoleService = {
 export const sysPermissionService = {
   /** Tìm kiếm phân trang */
   search: (params: SysPermissionSearchDTO) =>
-    apiService.get<ApiResponse<any>>(`${PERMISSION_API}/search`, { params }),
+    apiService.get<ApiResponse<any>>(`${PERMISSION_API}/search`, {
+      params: cleanParams(params),
+    }),
 
   /** Chi tiết permission theo id */
   getById: (id: string) =>

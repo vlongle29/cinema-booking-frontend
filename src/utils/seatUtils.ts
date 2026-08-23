@@ -16,6 +16,8 @@ export const generateSeats = (rows: number, cols: number, defaultSeatTypeId: str
          grid.push({
             seatNumber: `${getRowChar(i)}${j}`,
             seatTypeId: defaultSeatTypeId,
+            rowIndex: i,
+            colIndex: j - 1,
             isAisle: false,
          });
       }

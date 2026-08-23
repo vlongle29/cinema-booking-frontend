@@ -7,10 +7,14 @@ import CreateShowtimeForm from "./CreateShowtimeForm";
 import EditShowtimeForm from "./EditShowtimeForm";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { Showtime } from "@/features/showtime/types/showtime.types";
+import { showtimeService } from "@/services/showtimeService";
+import { toast } from "react-hot-toast";
 
 export default function ListShows() {
    const [isCreating, setIsCreating] = useState(false);
    const [editingShowtime, setEditingShowtime] = useState<Showtime | null>(null);
+   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
    // Hook xử lý form tạo mới
    const { formData, updateField, toggleSlot, submitForm, options, status } =
@@ -26,6 +30,23 @@ export default function ListShows() {
       handleDelete,
       fetchShowtimes,
    } = useShowtimeList(isCreating);
+
+   const handleBulkDelete = async (ids: string[]) => {
+      if (!window.confirm(`Bạn có chắc chắn muốn xóa ${ids.length} suất chiếu đã chọn?`))
+         return;
+
+      setIsBulkDeleting(true);
+      try {
+         await Promise.allSettled(ids.map((id) => showtimeService.deleteShowtime(id)));
+         toast.success(`Đã xóa ${ids.length} suất chiếu thành công`);
+         setSelectedIds([]);
+         fetchShowtimes(searchParams);
+      } catch {
+         toast.error("Có lỗi xảy ra khi xóa suất chiếu");
+      } finally {
+         setIsBulkDeleting(false);
+      }
+   };
 
    // Xử lý thay đổi filter (có kết hợp updateField của hook CreateShowtime)
    const handleSearchChange = (name: string, value: any) => {
@@ -100,6 +121,12 @@ export default function ListShows() {
             data={showtimes}
             columns={columns}
             isLoading={isLoadingList}
+            selection={{
+               selectedIds,
+               onSelectionChange: setSelectedIds,
+               onBulkDelete: handleBulkDelete,
+               isDeleting: isBulkDeleting,
+            }}
             isEditing={!!editingShowtime}
             onToggleEditing={() => setEditingShowtime(null)}
             pagination={{

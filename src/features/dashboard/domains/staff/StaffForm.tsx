@@ -104,7 +104,7 @@ const StaffForm: React.FC<StaffFormProps> = ({
                name: data.name,
                email: data.email,
                phone: data.phone,
-               branchId: finalBranchId,
+               branchId: finalBranchId || undefined,
                positionId: data.positionId,
                salary: data.salary,
                hireDate: data.hireDate || undefined,
@@ -112,12 +112,12 @@ const StaffForm: React.FC<StaffFormProps> = ({
             toast.success("Cập nhật nhân sự thành công");
          } else {
             await employeeService.create({
-               username: data.username!,
+               username: data.username || "",
                password: data.password!,
                name: data.name,
                email: data.email,
                phone: data.phone,
-               branchId: finalBranchId,
+               branchId: finalBranchId || "",
                positionId: data.positionId,
                salary: data.salary,
                hireDate: data.hireDate || undefined,

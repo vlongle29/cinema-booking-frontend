@@ -1,11 +1,12 @@
 import React from "react";
-import type { Theater, Showtime } from "../../types/showtime";
-import { MapPin, Clock, Layout } from "lucide-react";
+import type { Theater, Showtime } from "../types/showtime.types";
+import { MapPin, Layout } from "lucide-react";
 
 const TheaterCard: React.FC<{
    theater: Theater;
+   selectedShowtimeId?: string;
    onShowtimeSelect: (theater: Theater, showtime: Showtime) => void;
-}> = ({ theater, onShowtimeSelect }) => {
+}> = ({ theater, selectedShowtimeId, onShowtimeSelect }) => {
    // Nhóm suất chiếu theo tên phòng
    const groupedShowtimes = theater.showtimes.reduce(
       (acc: Record<string, Showtime[]>, showtime: Showtime) => {
@@ -42,31 +43,37 @@ const TheaterCard: React.FC<{
                   </div>
 
                   <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                     {showtimes.map((showtime) => (
-                        <button
-                           key={showtime.id}
-                           onClick={() => onShowtimeSelect(theater, showtime)}
-                           disabled={showtime.isSoldOut}
-                           className={`py-2 px-1 rounded-md font-semibold text-xs transition-all border ${
-                              showtime.isSoldOut
-                                 ? "bg-slate-100 text-slate-400 border-transparent cursor-not-allowed"
-                                 : showtime.isPeak
-                                   ? "bg-amber-500 text-white border-amber-500 hover:bg-amber-600"
-                                   : "bg-white text-slate-700 border-slate-200 hover:border-amber-500 hover:text-amber-600 shadow-sm"
-                           }`}
-                        >
-                           <div className="flex flex-col items-center gap-1">
-                              <span className="text-[13px]">
-                                 {showtime.time}
-                              </span>
-                              {showtime.isSoldOut && (
-                                 <span className="text-[9px] uppercase">
-                                    Hết vé
+                     {(showtimes as Showtime[]).map((showtime: Showtime) => {
+                        const isSelected = showtime.id === selectedShowtimeId;
+
+                        return (
+                           <button
+                              key={showtime.id}
+                              onClick={() => onShowtimeSelect(theater, showtime)}
+                              disabled={showtime.isSoldOut}
+                              className={`py-2 px-1 rounded-md font-semibold text-xs transition-colors border ${
+                                 showtime.isSoldOut
+                                    ? "bg-slate-100 text-slate-400 border-transparent cursor-not-allowed"
+                                    : isSelected
+                                      ? "bg-slate-900 text-white border-slate-900 font-bold"
+                                      : showtime.isPeak
+                                        ? "bg-amber-500 text-white border-amber-500 hover:bg-amber-600"
+                                        : "bg-white text-slate-700 border-slate-200 hover:border-amber-500 hover:text-amber-600 shadow-sm"
+                              }`}
+                           >
+                              <div className="flex flex-col items-center gap-1">
+                                 <span className="text-[13px]">
+                                    {showtime.time}
                                  </span>
-                              )}
-                           </div>
-                        </button>
-                     ))}
+                                 {showtime.isSoldOut && (
+                                    <span className="text-[9px] uppercase">
+                                       Hết vé
+                                    </span>
+                                 )}
+                              </div>
+                           </button>
+                        );
+                     })}
                   </div>
                </div>
             ))}

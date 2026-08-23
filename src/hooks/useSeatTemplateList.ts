@@ -99,5 +99,6 @@ export const useSeatTemplateList = () => {
          pageSize: searchParams.size,
       },
       handleDelete,
+      refetch: fetchAllTemplates,
    };
 };

@@ -8,6 +8,7 @@ import SeatTemplateManagementPage from "./domains/seat-template/SeatTemplateMana
 import CustomerManagementPage from "./domains/customer/CustomerManagementPage";
 import StaffManagementPage from "./domains/staff/StaffManagementPage";
 import BranchManagementPage from "./domains/branch/BranchManagementPage";
+import CityManagementPage from "./domains/city/CityManagementPage";
 import RoomManagementPage from "./domains/room/RoomManagementPage";
 import RbacManagementPage from "./domains/rbac/RbacManagementPage";
 import { useAuthz, ROLES } from "@/hooks/useAuthz";
@@ -113,6 +114,14 @@ export default function Dashboard() {
                element={
                   <RoleRoute allowedRoles={[ROLES.SUPER_ADMIN, ROLES.ADMIN]}>
                      <BranchManagementPage />
+                  </RoleRoute>
+               }
+            />
+            <Route
+               path="city-manage"
+               element={
+                  <RoleRoute allowedRoles={[ROLES.SUPER_ADMIN, ROLES.ADMIN]}>
+                     <CityManagementPage />
                   </RoleRoute>
                }
             />

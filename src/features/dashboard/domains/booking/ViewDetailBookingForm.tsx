@@ -191,13 +191,20 @@ const BookingDetailModal: React.FC<BookingDetailModalProps> = ({
                         {/* Customer */}
                         <div className="bg-[#1e1e22] border border-[#2a2a2e] rounded-lg p-4 space-y-3">
                            <SectionHeading icon={User}>Khách hàng</SectionHeading>
-                           <InfoRow label="Họ tên:" value={data.customer.name || "Khách vãng lai"} />
+                           <InfoRow
+                              label="Họ tên:"
+                              value={
+                                 data.customer?.name ||
+                                 (data.customer?.email ? data.customer.email.split("@")[0] : null) ||
+                                 (data.customer?.phone ? `Khách (${data.customer.phone})` : "Khách vãng lai")
+                              }
+                           />
                            <InfoRow
                               label="SĐT:"
                               value={
                                  <span className="flex items-center gap-1">
                                     <Phone size={10} />
-                                    {data.customer.phone || "---"}
+                                    {data.customer?.phone || "---"}
                                  </span>
                               }
                            />

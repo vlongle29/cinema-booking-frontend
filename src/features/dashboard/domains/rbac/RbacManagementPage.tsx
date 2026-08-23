@@ -11,11 +11,24 @@ type ActiveTab = "roles" | "permissions";
 
 export default function RbacManagementPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("roles");
+  const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
   const {
     roleState, roleActions,
     permissionState, permissionActions,
     assignState, assignActions,
   } = useDashboardRbac();
+
+  const handleBulkDeleteRoles = async (ids: string[]) => {
+    setIsBulkDeleting(true);
+    try {
+      await roleActions.handleDeleteRolesBatch(ids);
+      setSelectedRoleIds([]);
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
 
   const roleColumns = useMemo(
     () =>
@@ -28,39 +41,43 @@ export default function RbacManagementPage() {
   );
 
   return (
-    <div className="w-full space-y-6">
-      {/* Page Header */}
-      <div className="mt-2 mb-2 flex items-start gap-4">
-        <div>
-          <h1 className="text-xl font-semibold text-white">
-            Quản lý Vai trò &amp;{" "}
-            <span className="text-[#f84565] underline decoration-[#f84565]">Phân quyền</span>
-          </h1>
-        </div>
-      </div>
+    <div className="w-full space-y-4">
+      {/* Page Header & Tab Switcher */}
+      <div className="mt-2 mb-2 flex items-center justify-between flex-wrap gap-3">
+        <h1 className="text-xl font-semibold text-white">
+          Quản lý{" "}
+          <span className="text-[#f84565] underline decoration-[#f84565]">
+            Vai trò &amp; Phân quyền
+          </span>
+        </h1>
 
-      {/* Tab Switcher */}
-      <div className="flex gap-1 bg-[#1a1a1e] border border-[#393939] rounded-xl p-1 w-fit">
-        <button
-          onClick={() => setActiveTab("roles")}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-            activeTab === "roles"
-              ? "bg-[#f84565] text-white shadow-lg shadow-rose-500/25"
-              : "text-[#797b7d] hover:text-white hover:bg-white/5"
-          }`}
-        >
-          Vai trò
-        </button>
-        <button
-          onClick={() => setActiveTab("permissions")}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-            activeTab === "permissions"
-              ? "bg-[#f84565] text-white shadow-lg shadow-rose-500/25"
-              : "text-[#797b7d] hover:text-white hover:bg-white/5"
-          }`}
-        >
-          Quyền hạn
-        </button>
+        {/* Tab Switcher */}
+        <div className="flex items-center gap-1 bg-[#1a1a1e] border border-[#393939] rounded-lg p-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab("roles")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 cursor-pointer ${
+              activeTab === "roles"
+                ? "bg-[#f84565] text-white shadow-sm shadow-rose-500/25"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            {/* <Shield size={13} /> */}
+            Vai trò
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("permissions")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 cursor-pointer ${
+              activeTab === "permissions"
+                ? "bg-[#f84565] text-white shadow-sm shadow-rose-500/25"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            {/* <Key size={13} /> */}
+            Quyền hạn
+          </button>
+        </div>
       </div>
 
       {/* ROLE TAB */}
@@ -81,6 +98,12 @@ export default function RbacManagementPage() {
             data={roleState.roles}
             columns={roleColumns}
             isLoading={roleState.isLoadingRoles}
+            selection={{
+              selectedIds: selectedRoleIds,
+              onSelectionChange: setSelectedRoleIds,
+              onBulkDelete: handleBulkDeleteRoles,
+              isDeleting: isBulkDeleting,
+            }}
             pagination={{
               currentPage: roleState.roleSearchParams.page,
               pageSize: roleState.roleSearchParams.size,

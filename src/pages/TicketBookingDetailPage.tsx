@@ -1,8 +1,7 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import {
    MovieHero,
-   RecommendedMovies,
    useMovieDetails,
 } from "@/features/movie/index";
 import ShowtimeSelection from "@/features/showtime/components/ShowtimeSelection";
@@ -61,7 +60,7 @@ export default function TicketBookingDetailPage() {
 
          <div>
             {/* 4. Phần đánh giá (Feature khác) */}
-            <MovieReviews movieId={movieId} />
+            <MovieReviews movieId={movieId || ""} />
          </div>
 
          {/* 3. Phần phim đề xuất */}

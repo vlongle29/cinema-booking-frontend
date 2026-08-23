@@ -6,15 +6,36 @@ import { getRoomColumns } from "./RoomTableConfig";
 import { useDashboardRoom } from "../../hooks/useDashboardRoom";
 import { getRoomFilters } from "./config/roomFilters";
 import { branchService } from "@/features/dashboard/services/dashboard.branch.service";
+import { roomService } from "@/features/dashboard/services/dashboard.room.service";
 import useAuth from "@/features/auth/hooks/useAuth";
 import { useAuthz } from "@/hooks/useAuthz";
 import type { Room } from "@/types/room";
+import { toast } from "react-hot-toast";
 
 export default function RoomManagementPage() {
    const { state, actions } = useDashboardRoom();
    const { userInfo } = useAuth();
    const { hasRole } = useAuthz();
    const isManager = hasRole("MANAGER") && !hasRole("SUPER_ADMIN");
+   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
+   const handleBulkDelete = async (ids: string[]) => {
+      if (!window.confirm(`Bạn có chắc chắn muốn xóa ${ids.length} phòng chiếu đã chọn?`))
+         return;
+
+      setIsBulkDeleting(true);
+      try {
+         await Promise.allSettled(ids.map((id) => roomService.delete(id)));
+         toast.success(`Đã xóa ${ids.length} phòng chiếu thành công`);
+         setSelectedIds([]);
+         actions.handleFormSuccess();
+      } catch {
+         toast.error("Có lỗi xảy ra khi xóa phòng chiếu");
+      } finally {
+         setIsBulkDeleting(false);
+      }
+   };
 
    const [branchOptions, setBranchOptions] = useState<
       { value: string; label: string }[]
@@ -76,12 +97,18 @@ export default function RoomManagementPage() {
             // Filters & Search
             filters={getRoomFilters(branchOptions, isManager)}
             searchParams={state.searchParams}
-            onSearchChange={actions.handleSearchChange}
+            onSearchChange={(name, value) => actions.handleSearchChange(name as any, value)}
             onResetFilters={actions.handleResetFilters}
             // Data & Table
             data={state.rooms}
             columns={columns}
             isLoading={state.isLoading}
+            selection={{
+               selectedIds,
+               onSelectionChange: setSelectedIds,
+               onBulkDelete: handleBulkDelete,
+               isDeleting: isBulkDeleting,
+            }}
             // Pagination
             pagination={{
                currentPage: state.searchParams.page,

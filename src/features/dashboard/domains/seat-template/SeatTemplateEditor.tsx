@@ -1,12 +1,12 @@
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo, useEffect } from "react";
 import SeatTypeSelector from "./SeatTypeSelector";
 import SeatGrid from "./SeatGrid";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import { seatTemplateService } from "../../../../services/seatTemplateService";
 import type { Seat } from "../../../../types/booking";
 import toast from "react-hot-toast";
 import { generateSeats, countSeatsByType } from "../../../../utils/seatUtils";
+import { Loader2, RotateCcw, Save, X } from "lucide-react";
 
 interface SeatTemplateEditorProps {
    template?: any;
@@ -78,8 +78,6 @@ const SeatTemplateEditor: React.FC<SeatTemplateEditorProps> = ({
       if (templateId) fetchInitialData();
    }, [templateId]);
 
-   console.log("seatGrid", seatGrid);
-
    // 2. Logic for processing seat click (Coloring the chair)
    // Use useCallback + Functional Update to optimization performance React.memo
    const handleSeatClick = useCallback(
@@ -131,6 +129,8 @@ const SeatTemplateEditor: React.FC<SeatTemplateEditorProps> = ({
          const payload = seatGrid.map((seat) => ({
             seatNumber: seat.seatNumber,
             seatTypeId: seat.seatTypeId,
+            rowIndex: seat.rowIndex,
+            colIndex: seat.colIndex,
             isAisle: seat.isAisle,
          }));
          await seatTemplateService.addSeatsToTemplate(
@@ -169,31 +169,45 @@ const SeatTemplateEditor: React.FC<SeatTemplateEditorProps> = ({
 
    if (isLoading) {
       return (
-         <div className="flex justify-center items-center h-64 text-gray-500">
-            Đang tải sơ đồ rạp...
+         <div className="flex flex-col justify-center items-center h-64 text-[#797b7d] bg-[#1a1a1e] rounded-xl border border-[#393939] gap-3">
+            <Loader2 className="w-6 h-6 animate-spin text-[#f84565]" />
+            <span className="text-xs font-medium">Đang tải sơ đồ rạp...</span>
          </div>
       );
    }
 
    if (!template) {
       return (
-         <div className="text-center text-red-500 mt-10">
+         <div className="text-center text-rose-400 bg-[#1a1a1e] p-8 rounded-xl border border-[#393939] text-sm font-medium">
             Không tìm thấy Template!
          </div>
       );
    }
 
+   const totalBookableSeats = seatGrid.filter((s) => !s.isAisle).length;
+
    return (
-      <div>
+      <div className="bg-[#1a1a1e] p-5 sm:p-6 rounded-xl border border-[#393939] shadow-2xl text-white">
          {/* Header */}
-         <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">
-               Chỉnh sửa: <span className="text-blue-600">{template.name}</span>
-            </h1>
-            <p className="text-gray-500 text-sm mt-1">
-               Kích thước: {template.rows} hàng × {template.columns} cột. Kéo
-               thả / click để chọn loại ghế. Click chuột phải để tạo lối đi.
-            </p>
+         <div className="mb-4 flex items-start justify-between gap-4 border-b border-[#393939]/70 pb-3.5">
+            <div>
+               <h1 className="text-lg sm:text-xl font-bold text-white leading-snug">
+                  Chỉnh sửa: <span className="text-[#f84565]">{template.name}</span>
+               </h1>
+               <p className="text-[#797b7d] text-sm mt-1">
+                  Kích thước: {template.rows} hàng × {template.columns} cột • Click chuột trái để tô ghế, chuột phải để bật/tắt lối đi.
+               </p>
+            </div>
+            {onClose && (
+               <button
+                  type="button"
+                  onClick={onClose}
+                  className="p-1.5 rounded-md text-[#797b7d] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                  title="Đóng"
+               >
+                  <X className="w-5 h-5" />
+               </button>
+            )}
          </div>
 
          {/* Toolbar Chọn loại ghế */}
@@ -204,7 +218,7 @@ const SeatTemplateEditor: React.FC<SeatTemplateEditorProps> = ({
          />
 
          {/* Grid display seats */}
-         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden">
+         <div className="mb-4">
             <SeatGrid
                seats={seatGrid}
                columns={template.columns}
@@ -214,73 +228,79 @@ const SeatTemplateEditor: React.FC<SeatTemplateEditorProps> = ({
             />
          </div>
 
-         {/* Phần Tổng kết (Summary) & Buttons */}
-         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            {/* Bảng đếm ghế */}
-            <div className="flex flex-wrap gap-4">
-               <div className="pr-4 border-r border-gray-200">
-                  <span className="text-xs text-gray-500 uppercase font-bold">
-                     Tổng số ghế bán
+         {/* Footer: Summary & Buttons */}
+         <div className="bg-[#252529] border border-[#393939] rounded-lg p-3.5 sm:px-5 sm:py-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            {/* Seat count summary */}
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+               <div className="flex items-center gap-2 pr-4 border-r border-[#393939]">
+                  <span className="text-[#797b7d] uppercase font-semibold text-xs tracking-wide">
+                     Tổng ghế bán:
                   </span>
-                  <div className="text-xl font-bold text-gray-800">
-                     {seatGrid.filter((s) => !s.isAisle).length}
-                  </div>
+                  <span className="text-base font-bold text-white">
+                     {totalBookableSeats}
+                  </span>
                </div>
 
                {seatTypes.map((type) => (
-                  <div key={type.id}>
-                     <span className="text-xs text-gray-500 uppercase font-bold">
-                        {type.name}
+                  <div key={type.id} className="flex items-center gap-1.5">
+                     <span
+                        className="w-2.5 h-2.5 rounded-full inline-block"
+                        style={{ backgroundColor: type.color }}
+                     />
+                     <span className="text-[#d1d5dc]">{type.name}:</span>
+                     <span className="font-bold text-white">
+                        {summary[type.id] || 0}
                      </span>
-                     <div
-                        className="text-lg font-bold text-gray-800"
-                        style={{ color: type.color }}
-                     >
-                        {summary[type.id] || 0}{" "}
-                        <span className="text-sm font-normal text-gray-500">
-                           ghế
-                        </span>
-                     </div>
                   </div>
                ))}
 
-               <div>
-                  <span className="text-xs text-gray-500 uppercase font-bold">
-                     Lối đi
+               <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full border border-dashed border-[#797b7d] inline-block" />
+                  <span className="text-[#797b7d]">Lối đi:</span>
+                  <span className="font-bold text-[#a1a1aa]">
+                     {summary["AISLE"] || 0}
                   </span>
-                  <div className="text-lg font-bold text-gray-400">
-                     {summary["AISLE"] || 0}{" "}
-                     <span className="text-sm font-normal">ô</span>
-                  </div>
                </div>
             </div>
 
-            {/* Nút Action */}
-            <div className="flex gap-3 w-full md:w-auto">
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2.5 w-full md:w-auto justify-end">
                <button
+                  type="button"
                   onClick={() =>
-                     onClose ? onClose() : navigate("/admin/seat-template")
+                     onClose ? onClose() : navigate("/dashboard/seat-template")
                   }
-                  className="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                  className="px-4 py-2 rounded-md border border-[#393939] text-[#d1d5dc] hover:bg-[#393939]/50 font-medium text-sm transition-colors cursor-pointer"
                >
                   Quay lại
                </button>
                <button
+                  type="button"
                   onClick={handleReset}
-                  className="px-5 py-2.5 rounded-lg text-red-600 hover:bg-red-50 font-medium transition-colors"
+                  className="px-4 py-2 rounded-md border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 font-medium text-sm transition-colors flex items-center gap-1.5 cursor-pointer"
                >
-                  Reset
+                  <RotateCcw className="w-4 h-4" />
+                  Làm lại
                </button>
                <button
+                  type="button"
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm transition-colors disabled:opacity-70 flex items-center gap-2"
+                  className="px-5 py-2 rounded-md bg-[#f84565] hover:bg-[#f84565]/90 text-white font-semibold text-sm transition-colors disabled:opacity-60 flex items-center gap-1.5 cursor-pointer shadow-[0_0_12px_rgba(248,69,101,0.25)]"
                >
-                  {isSaving ? "Đang lưu..." : "Lưu Template"}
+                  {isSaving ? (
+                     <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Đang lưu...</span>
+                     </>
+                  ) : (
+                     <>
+                        <Save className="w-4 h-4" />
+                        <span>Lưu sơ đồ</span>
+                     </>
+                  )}
                </button>
             </div>
-
-            {/* Footer */}
          </div>
       </div>
    );

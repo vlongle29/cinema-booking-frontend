@@ -31,12 +31,14 @@ export interface SysRoleSearchDTO {
 export interface SysPermission {
   id: string;
   permission: string;
+  code?: string;
   description?: string;
 }
 
 export interface SysPermissionRequest {
   id?: string;
   permission: string;
+  code: string;
   description?: string;
 }
 

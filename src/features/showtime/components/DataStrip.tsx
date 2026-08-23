@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { DateOption } from "../../types/showtime";
+import type { DateOption } from "../types/showtime.types";
 
 interface DateStripProps {
    dates: DateOption[];
@@ -15,7 +15,6 @@ const DateStrip: React.FC<DateStripProps> = ({
    onSelectDate,
    loading,
 }) => {
-   const [scrollPos, setScrollPos] = useState(0);
    const containerRef = React.useRef<HTMLDivElement>(null);
 
    const scroll = (direction: "left" | "right") => {

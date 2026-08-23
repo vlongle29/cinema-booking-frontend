@@ -5,10 +5,14 @@ import { useMovieList } from "@/hooks/useMovieList";
 import { getMovieColumns, getMovieFilters } from "./MovieTableConfig";
 import type { Movie } from "@/types/movie";
 import EditMovieForm from "./EditMovieForm";
+import { movieService } from "@/services/movieService";
+import { toast } from "react-hot-toast";
 
 export default function ListMovies() {
    const [isCreating, setIsCreating] = useState(false);
    const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
+   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
    const {
       movies,
@@ -19,6 +23,23 @@ export default function ListMovies() {
       fetchMovies,
       handleDelete,
    } = useMovieList(isCreating);
+
+   const handleBulkDelete = async (ids: string[]) => {
+      if (!window.confirm(`Bạn có chắc chắn muốn xóa ${ids.length} phim đã chọn?`))
+         return;
+
+      setIsBulkDeleting(true);
+      try {
+         await Promise.allSettled(ids.map((id) => movieService.deleteMovie(id)));
+         toast.success(`Đã xóa ${ids.length} phim thành công`);
+         setSelectedIds([]);
+         fetchMovies(searchParams);
+      } catch {
+         toast.error("Có lỗi xảy ra khi xóa phim");
+      } finally {
+         setIsBulkDeleting(false);
+      }
+   };
 
    const handleSearchChange = (name: string, value: any) => {
       setSearchParams((prev: any) => ({
@@ -74,6 +95,12 @@ export default function ListMovies() {
          data={movies}
          columns={columns}
          isLoading={isLoading}
+         selection={{
+            selectedIds,
+            onSelectionChange: setSelectedIds,
+            onBulkDelete: handleBulkDelete,
+            isDeleting: isBulkDeleting,
+         }}
          pagination={{
             ...pagination,
             currentPage: searchParams.page,

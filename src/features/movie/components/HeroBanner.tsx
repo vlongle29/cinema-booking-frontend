@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Play, Star, Clock, Calendar, ChevronRight } from "lucide-react";
-import { FiVolume2, FiVolumeX } from "react-icons/fi";
 import marvellogo from "@/assets/icons/marvelLogo.svg";
 import { Link } from "react-router-dom";
 
 const GENRES = ["Hành động", "Phiêu lưu", "Viễn tưởng"];
 
 export const HeroBanner: React.FC = () => {
-   const [isMuted, setIsMuted] = useState(true);
    const [isVisible, setIsVisible] = useState(false);
 
    useEffect(() => {
@@ -25,40 +23,15 @@ export const HeroBanner: React.FC = () => {
                className="w-full h-full object-cover"
                style={{ transform: "scaleX(-1)" }}
             />
-            {/* Multi-layer cinematic gradients */}
+            {/* Multi-layer cinematic dark gradient */}
             <div
                className="absolute inset-0"
                style={{
                   background:
-                     "linear-gradient(105deg, rgba(10,8,20,0.92) 0%, rgba(10,8,20,0.75) 40%, rgba(10,8,20,0.25) 70%, rgba(10,8,20,0.1) 100%)",
-               }}
-            />
-            {/* Bottom fade to page bg */}
-            <div
-               className="absolute bottom-0 left-0 right-0 h-48"
-               style={{
-                  background: "linear-gradient(to bottom, transparent, #fefce8)",
-               }}
-            />
-            {/* Subtle vignette */}
-            <div
-               className="absolute inset-0"
-               style={{
-                  background:
-                     "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.35) 100%)",
+                     "linear-gradient(105deg, rgba(10,8,20,0.92) 0%, rgba(10,8,20,0.75) 40%, rgba(10,8,20,0.3) 70%, rgba(10,8,20,0.15) 100%)",
                }}
             />
          </div>
-
-         {/* ── Animated film-grain overlay ── */}
-         <div
-            className="absolute inset-0 z-[1] pointer-events-none opacity-[0.03]"
-            style={{
-               backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-               backgroundRepeat: "repeat",
-               backgroundSize: "128px",
-            }}
-         />
 
          {/* ── Main Content ── */}
          <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-12">
@@ -72,9 +45,7 @@ export const HeroBanner: React.FC = () => {
             >
                {/* Now Playing badge */}
                <div className="inline-flex items-center gap-2 mb-6">
-                  <span
-                     className="relative flex h-2.5 w-2.5"
-                  >
+                  <span className="relative flex h-2.5 w-2.5">
                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
                   </span>
@@ -102,14 +73,7 @@ export const HeroBanner: React.FC = () => {
                >
                   Guardians
                   <br />
-                  <span
-                     style={{
-                        WebkitTextStroke: "1px rgba(255,255,255,0.5)",
-                        color: "transparent",
-                     }}
-                  >
-                     of the Galaxy
-                  </span>
+                  of the Galaxy
                </h1>
 
                {/* Genre tags */}
@@ -189,44 +153,9 @@ export const HeroBanner: React.FC = () => {
                      </div>
                      Xem Trailer
                   </button>
-
-                  {/* Mute toggle */}
-                  <button
-                     onClick={() => setIsMuted(!isMuted)}
-                     className="rounded-full flex items-center justify-center text-white/60 hover:text-white border border-white/20 transition-all duration-300 hover:bg-white/10 hover:border-white/40"
-                     title={isMuted ? "Bật âm thanh" : "Tắt âm thanh"}
-                  >
-                     {isMuted ? <FiVolumeX size={16} /> : <FiVolume2 size={16} />}
-                  </button>
                </div>
             </div>
          </div>
-
-         {/* ── Scroll indicator ── */}
-         <div
-            className="absolute bottom-28 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5"
-            style={{
-               opacity: isVisible ? 0.5 : 0,
-               transition: "opacity 1.2s ease 0.6s",
-            }}
-         >
-            <span className="text-white text-[10px] font-semibold uppercase tracking-[0.2em]">
-               Cuộn xuống
-            </span>
-            <div className="w-5 h-8 border border-white/40 rounded-full flex items-start justify-center p-1">
-               <div
-                  className="w-1 h-2 bg-white/60 rounded-full"
-                  style={{ animation: "scroll-dot 1.8s ease infinite" }}
-               />
-            </div>
-         </div>
-
-         <style>{`
-            @keyframes scroll-dot {
-               0%, 100% { transform: translateY(0); opacity: 1; }
-               50% { transform: translateY(8px); opacity: 0.3; }
-            }
-         `}</style>
       </section>
    );
 };

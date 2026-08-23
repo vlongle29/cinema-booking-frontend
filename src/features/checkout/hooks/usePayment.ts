@@ -25,7 +25,7 @@ export const usePayment = (
 
          if (["vnpay", "international", "atm"].includes(paymentMethod)) {
             const bankCode = paymentMethod === "vnpay" ? " " : " ";
-            const vnpAmount = (totalAmount * 100).toString();
+            const vnpAmount = totalAmount.toString();
 
             const response = await paymentService.createVNPayPayment({
                amount: vnpAmount,

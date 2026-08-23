@@ -118,6 +118,12 @@ const SeatSelectPage: React.FC = () => {
          seat.currentStatus === SEAT_STATUS.LOCKED ||
          seat.currentStatus === "HELD"
       ) {
+         // Nếu ghế đang bị chọn nhưng bị chuyển trạng thái bận, cho phép bỏ chọn
+         if (selectedSeats.has(seat.id)) {
+            const newSelected = new Set(selectedSeats);
+            newSelected.delete(seat.id);
+            setSelectedSeats(newSelected);
+         }
          return;
       }
 
@@ -182,6 +188,21 @@ const SeatSelectPage: React.FC = () => {
          console.log("Booking confirmation response:", response);
       } catch (error) {
          console.error("Lỗi khi tạo đơn hàng:", error);
+         // Tự động xóa danh sách ghế đang chọn để nhả active
+         setSelectedSeats(new Set());
+
+         // Cập nhật lại trạng thái mới nhất từ server để hiện ghế vừa bị giữ
+         if (showtimeId) {
+            try {
+               const statusRes = await showtimeService.getAllSeatStatus(showtimeId);
+               if (statusRes.data?.seats) {
+                  setSeatStatuses(statusRes.data.seats);
+               }
+            } catch (err) {
+               console.error("Lỗi khi tải lại trạng thái ghế:", err);
+            }
+         }
+
          alert("Không thể đặt ghế lúc này. Vui lòng thử lại!");
       }
    };
