@@ -47,8 +47,8 @@ export const getBranchColumns = (handlers: {
       id: "city",
       label: "Thành phố",
       render: (branch) => (
-         <span className="text-[#d1d5dc] text-xs font-medium bg-white/5 px-2 py-1 rounded">
-            {branch.cityName} {/* Trong thực tế nên map với City Name */}
+         <span className="text-[#d1d5dc] text-xs font-medium bg-white/5 px-2 py-1 rounded inline-block whitespace-nowrap">
+            {branch.cityName}
          </span>
       ),
    },

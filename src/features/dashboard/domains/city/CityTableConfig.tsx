@@ -27,7 +27,7 @@ export const getCityColumns = (handlers: {
       render: (city) => (
          <div className="flex items-center gap-2">
             <MapPin size={14} className="text-rose-500 shrink-0" />
-            <span className="text-white text-sm font-semibold">{city.name}</span>
+            <span className="text-white text-sm font-semibold whitespace-nowrap">{city.name}</span>
          </div>
       ),
    },
